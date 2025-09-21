@@ -1,0 +1,93 @@
+.eventCard {
+  min-height: 300px;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.dateTime {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.content {
+  flex: 1;
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  font-family: var(--font-accent);
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+  line-height: var(--line-height-tight);
+}
+
+.description {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  margin-bottom: var(--space-4);
+  opacity: 0.9;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  opacity: 0.8;
+}
+
+.locationIcon {
+  font-size: var(--font-size-base);
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.logo svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Адаптивность */
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .dateTime {
+    order: -1;
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .description {
+    font-size: var(--font-size-sm);
+  }
+}

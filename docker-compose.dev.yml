@@ -1,0 +1,39 @@
+
+services:
+  # Frontend сервис для разработки
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile.dev
+    container_name: finance-game-frontend-dev
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "5173:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - finance-network-dev
+    restart: unless-stopped
+    command: npm run dev
+
+  # Nginx сервис для разработки
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile.dev
+    container_name: finance-game-nginx-dev
+    ports:
+      - "3000:80"
+    depends_on:
+      - frontend
+    networks:
+      - finance-network-dev
+    restart: unless-stopped
+    volumes:
+      - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+
+networks:
+  finance-network-dev:
+    driver: bridge

@@ -1,0 +1,28 @@
+FROM node:20-alpine
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Создаем пользователя для безопасности
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+# Устанавливаем git для возможных зависимостей
+RUN apk add --no-cache git
+
+# Копируем package.json и устанавливаем зависимости
+COPY package*.json ./
+RUN npm install && npm cache clean --force
+
+# Копируем исходный код
+COPY . .
+
+# Меняем права на файлы
+RUN chown -R nextjs:nodejs /app
+USER nextjs
+
+# Открываем порт для Vite dev server
+EXPOSE 3000
+
+# Запускаем development сервер
+CMD ["npm", "run", "dev"]

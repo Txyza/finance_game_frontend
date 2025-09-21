@@ -1,0 +1,164 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  font-family: inherit;
+  color: inherit;
+  text-align: left;
+  transition: all var(--duration-normal) var(--ease-out);
+  overflow: hidden;
+  position: relative;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  transform: translateY(-4px);
+}
+
+.clickable:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(88, 255, 255, 0.3);
+}
+
+/* Фоны */
+.solid.violet {
+  background-color: var(--color-violet);
+  color: var(--color-white);
+}
+
+.solid.black {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+.solid.mint {
+  background-color: var(--color-mint);
+  color: var(--color-black);
+}
+
+.solid.raspberry {
+  background-color: var(--color-raspberry);
+  color: var(--color-white);
+}
+
+.solid.iris {
+  background-color: var(--color-iris);
+  color: var(--color-white);
+}
+
+.solid.cumin {
+  background-color: var(--color-cumin);
+  color: var(--color-white);
+}
+
+/* Градиенты */
+.gradient.mint-melissa {
+  background: var(--gradient-mint-melissa);
+  color: var(--color-black);
+}
+
+.gradient.mint-violet {
+  background: var(--gradient-mint-violet);
+  color: var(--color-white);
+}
+
+.gradient.raspberry-sakura {
+  background: var(--gradient-raspberry-sakura);
+  color: var(--color-white);
+}
+
+.gradient.raspberry-violet {
+  background: var(--gradient-raspberry-violet);
+  color: var(--color-white);
+}
+
+.gradient.violet-cumin {
+  background: var(--gradient-violet-cumin);
+  color: var(--color-white);
+}
+
+.gradient.black-cumin {
+  background: var(--gradient-black-cumin);
+  color: var(--color-white);
+}
+
+/* Изображения */
+.image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: var(--color-white);
+}
+
+.overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(6, 6, 152, 0.4) 100%);
+  z-index: 1;
+}
+
+.overlay > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Отступы */
+.padding-none {
+  padding: 0;
+}
+
+.padding-small {
+  padding: var(--space-4);
+}
+
+.padding-medium {
+  padding: var(--space-6);
+}
+
+.padding-large {
+  padding: var(--space-8);
+}
+
+/* Радиусы */
+.radius-small {
+  border-radius: var(--radius-md);
+}
+
+.radius-medium {
+  border-radius: var(--radius-lg);
+}
+
+.radius-large {
+  border-radius: var(--radius-xl);
+}
+
+.radius-xl {
+  border-radius: var(--radius-2xl);
+}
+
+/* Тени */
+.shadow {
+  box-shadow: var(--shadow-lg);
+}
+
+.clickable.shadow:hover {
+  box-shadow: var(--shadow-xl);
+}
+
+/* Адаптивность */
+@media (max-width: 640px) {
+  .padding-large {
+    padding: var(--space-6);
+  }
+
+  .padding-medium {
+    padding: var(--space-4);
+  }
+}

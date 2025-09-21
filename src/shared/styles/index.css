@@ -1,0 +1,4 @@
+/* Импорт всех стилей дизайн-системы */
+@import './fonts.css';
+@import './tokens.css';
+@import './base.css';

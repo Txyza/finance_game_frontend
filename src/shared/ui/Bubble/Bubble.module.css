@@ -1,0 +1,107 @@
+.bubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-bubble);
+  font-family: var(--font-primary);
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  white-space: nowrap;
+  transition: all var(--duration-normal) var(--ease-out);
+  user-select: none;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.clickable:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(88, 255, 255, 0.3);
+}
+
+/* Размеры */
+.small {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-xs);
+  gap: var(--space-1);
+}
+
+.medium {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  gap: var(--space-2);
+}
+
+.large {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-base);
+  gap: var(--space-2);
+}
+
+/* Варианты */
+.primary {
+  background-color: var(--color-violet);
+  color: var(--color-white);
+}
+
+.mint {
+  background-color: var(--color-mint);
+  color: var(--color-black);
+}
+
+.raspberry {
+  background-color: var(--color-raspberry);
+  color: var(--color-white);
+}
+
+.violet {
+  background-color: var(--color-iris);
+  color: var(--color-white);
+}
+
+.black {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border: 1px solid var(--color-gray);
+}
+
+.outline {
+  background-color: transparent;
+  color: var(--color-mint);
+  border: 1px solid var(--color-mint);
+}
+
+.gradient-mint {
+  background: var(--gradient-mint-melissa);
+  color: var(--color-black);
+}
+
+.gradient-raspberry {
+  background: var(--gradient-raspberry-sakura);
+  color: var(--color-white);
+}
+
+/* Иконка */
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon svg {
+  width: 1em;
+  height: 1em;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+}
