@@ -1,0 +1,121 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  position: relative;
+  z-index: 2;
+}
+
+/* Верхняя строка с уровнем и ресурсами */
+.topRow {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+/* Компактный блок уровня - 1/3 экрана */
+.levelBlock {
+  flex: 0 0 calc(33.333% - var(--space-2));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.levelText {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  text-align: center;
+}
+
+.levelProgress {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 16px;
+  width: 100%;
+}
+
+.expOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-white);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Ресурсы - остальные 2/3 экрана */
+.resources {
+  flex: 1;
+  display: flex;
+  gap: var(--space-1);
+  justify-content: center;
+  align-items: center;
+}
+
+/* Показатели */
+.indicators {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: space-between;
+}
+
+/* Адаптивность для мобильных A4 */
+@media (max-width: 480px) {
+  .header {
+    padding: var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .topRow {
+    gap: var(--space-2);
+  }
+
+  .levelBlock {
+    flex: 0 0 calc(30% - var(--space-1));
+  }
+
+  .levelText {
+    font-size: var(--font-size-sm);
+  }
+
+  .expOverlay {
+    font-size: 10px;
+  }
+
+  .resources {
+    gap: var(--space-1);
+    flex-wrap: nowrap;
+  }
+
+  .indicators {
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 360px) {
+  .header {
+    padding: var(--space-2);
+  }
+
+  .levelBlock {
+    flex: 0 0 calc(35% - var(--space-1));
+  }
+
+  .levelText {
+    font-size: var(--font-size-xs);
+  }
+
+  .expOverlay {
+    font-size: 9px;
+  }
+}

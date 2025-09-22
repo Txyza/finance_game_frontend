@@ -1,0 +1,176 @@
+.characterArea {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-6);
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-height: 70vh;
+}
+
+.characterRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: var(--space-8);
+  flex: 1;
+}
+
+/* Боковые элементы */
+.sideLeft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.sideRight {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+/* Иконки без рамок */
+.iconButton {
+  background: none;
+  border: none;
+  font-size: 3rem;
+  padding: var(--space-3);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.iconButton:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+
+.iconButton:active {
+  transform: scale(0.95);
+}
+
+/* Центральный персонаж */
+.character {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+  flex: 0 1 auto;
+}
+
+.crownIcon {
+  font-size: 4rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  animation: gentle-pulse 3s ease-in-out infinite;
+}
+
+@keyframes gentle-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.maskotImage {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Основные действия - прижать к низу */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 300px;
+  margin-top: auto;
+  padding-bottom: var(--space-4);
+}
+
+/* Адаптивность для мобильных A4 */
+@media (max-width: 480px) {
+  .characterArea {
+    padding: var(--space-4);
+    min-height: 65vh;
+  }
+
+  .characterRow {
+    gap: var(--space-6);
+  }
+
+  .sideLeft,
+  .sideRight {
+    gap: var(--space-4);
+  }
+
+  .iconButton {
+    font-size: 2.5rem;
+    padding: var(--space-2);
+  }
+
+  .crownIcon {
+    font-size: 3rem;
+  }
+
+  .maskotImage {
+    width: 160px;
+    height: 160px;
+  }
+
+  .actions {
+    gap: var(--space-3);
+    max-width: 280px;
+    padding-bottom: var(--space-3);
+  }
+}
+
+@media (max-width: 360px) {
+  .characterArea {
+    padding: var(--space-3);
+  }
+
+  .characterRow {
+    gap: var(--space-4);
+  }
+
+  .sideLeft,
+  .sideRight {
+    gap: var(--space-3);
+  }
+
+  .iconButton {
+    font-size: 2rem;
+  }
+
+  .crownIcon {
+    font-size: 2.5rem;
+  }
+
+  .maskotImage {
+    width: 120px;
+    height: 120px;
+  }
+
+  .actions {
+    max-width: 260px;
+    padding-bottom: var(--space-2);
+  }
+}
+
+/* Touch-friendly для мобильных */
+@media (hover: none) and (pointer: coarse) {
+  .iconButton {
+    min-height: 56px;
+    min-width: 56px;
+  }
+}

@@ -1,0 +1,124 @@
+.bottomNav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: var(--space-4) var(--space-3);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 3;
+  gap: var(--space-2);
+  height: 80px;
+}
+
+/* Квадратные кнопки с иконкой */
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+}
+
+.navButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.navButton:active {
+  transform: translateY(0);
+}
+
+/* Активная кнопка */
+.activeButton {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--color-mint);
+  transform: translateY(-2px);
+}
+
+.activeButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Иконка */
+.navIcon {
+  font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Иконка-изображение */
+.navIconImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  padding: 2px;
+}
+
+/* Адаптивность для мобильных A4 */
+@media (max-width: 480px) {
+  .bottomNav {
+    padding: var(--space-3);
+    gap: var(--space-1);
+    height: 72px;
+  }
+
+  .navButton {
+    width: 54px;
+    height: 54px;
+    padding: 0;
+  }
+
+  .navIcon {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .bottomNav {
+    padding: var(--space-2);
+    gap: 8px;
+    height: 68px;
+  }
+
+  .navButton {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+  }
+
+  .navIcon {
+    font-size: 2.2rem;
+  }
+}
+
+/* Touch-friendly для мобильных */
+@media (hover: none) and (pointer: coarse) {
+  .navButton {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  .navButton:hover {
+    transform: none;
+  }
+}
+
+/* Safe area для новых iPhone */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .bottomNav {
+    padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  }
+}
