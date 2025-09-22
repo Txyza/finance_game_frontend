@@ -24,23 +24,23 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   }
 
   return (
-    <header className={styles.header}>
+    <header className="common-header">
       {/* Уровень с прогресс-баром */}
-      <div className={styles.levelBlock}>
-        <span className={styles.levelText}>Lv {level}</span>
-        <div className={styles.levelProgress}>
+      <div className="common-header-level-block">
+        <span className="common-header-level-text">Lv {level}</span>
+        <div className="common-header-level-progress">
           <ProgressBar
             current={currentExp}
             max={maxExp}
             variant="mint"
             size="small"
           />
-          <span className={styles.expOverlay}>{currentExp}/{maxExp}</span>
+          <span className="common-header-exp-overlay">{currentExp}/{maxExp}</span>
         </div>
       </div>
 
       {/* Ресурсы */}
-      <div className={styles.resources}>
+      <div className="common-header-resources">
         <Bubble variant="black" size="small" icon="⚡" outline>
           {energy}/{maxEnergy}
         </Bubble>

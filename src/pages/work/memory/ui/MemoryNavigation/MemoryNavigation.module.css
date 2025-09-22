@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-4) var(--space-4);
+  padding: var(--space-3) var(--space-4);
   background: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -11,8 +11,7 @@
   top: 70px;
   left: 0;
   right: 0;
-  z-index: 9;
-  height: 90px;
+  z-index: 2;
 }
 
 .leftSection,
@@ -36,7 +35,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
   min-width: 0;
 }
 
@@ -48,27 +47,36 @@
   text-align: center;
 }
 
-.scoreBlock {
+.gameStats {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.statBlock {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
+  min-width: 60px;
 }
 
-.scoreLabel {
+.statLabel {
   color: rgba(255, 255, 255, 0.8);
   font-family: var(--font-primary);
   font-size: var(--font-size-xs);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-align: center;
 }
 
-.scoreValue {
+.statValue {
   color: var(--color-white);
   font-family: var(--font-accent);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   font-weight: 700;
+  text-align: center;
 }
 
 .backButton,
@@ -79,10 +87,9 @@
 /* Адаптивность для мобильных A4 */
 @media (max-width: 480px) {
   .navigation {
-    padding: var(--space-3) var(--space-3);
+    padding: var(--space-2) var(--space-3);
     gap: var(--space-2);
     top: 65px;
-    height: 75px;
   }
 
   .leftSection,
@@ -94,20 +101,27 @@
     font-size: var(--font-size-lg);
   }
 
-  .scoreValue {
-    font-size: var(--font-size-base);
+  .gameStats {
+    gap: var(--space-3);
   }
 
-  .scoreLabel {
+  .statBlock {
+    min-width: 50px;
+  }
+
+  .statValue {
+    font-size: var(--font-size-sm);
+  }
+
+  .statLabel {
     font-size: 10px;
   }
 }
 
 @media (max-width: 360px) {
   .navigation {
-    padding: var(--space-2) var(--space-2);
+    padding: var(--space-1) var(--space-2);
     top: 60px;
-    height: 70px;
   }
 
   .leftSection,
@@ -119,11 +133,19 @@
     font-size: var(--font-size-base);
   }
 
-  .scoreValue {
-    font-size: var(--font-size-sm);
+  .gameStats {
+    gap: var(--space-2);
   }
 
-  .scoreLabel {
+  .statBlock {
+    min-width: 45px;
+  }
+
+  .statValue {
+    font-size: var(--font-size-xs);
+  }
+
+  .statLabel {
     font-size: 9px;
   }
 }

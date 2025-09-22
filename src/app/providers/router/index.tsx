@@ -3,6 +3,7 @@ import { BrandbookPage } from '@pages/brandbook'
 import { MainPage } from '@pages/main'
 import { WorkPage } from '@pages/work'
 import { Game2048Page } from '@pages/work/2048'
+import { MemoryPage } from '../../../pages/work/memory'
 
 export const RouterProvider = () => {
   return (
@@ -16,6 +17,7 @@ export const RouterProvider = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="/work" element={<WorkPage />} />
         <Route path="/work/2048" element={<Game2048Page />} />
+        <Route path="/work/memory" element={<MemoryPage />} />
         <Route path="/brandbook" element={<BrandbookPage />} />
       </Routes>
     </BrowserRouter>

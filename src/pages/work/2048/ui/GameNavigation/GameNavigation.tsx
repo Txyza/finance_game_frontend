@@ -30,7 +30,7 @@ export const GameNavigation: React.FC = () => {
       </div>
 
       <div className={styles.centerSection}>
-        <div className={styles.gameTitle}>2048</div>
+        <div className="common-game-title">2048</div>
         <div className={styles.scoreBlock}>
           <div className={styles.scoreLabel}>Очки</div>
           <div className={styles.scoreValue}>{score.toLocaleString()}</div>

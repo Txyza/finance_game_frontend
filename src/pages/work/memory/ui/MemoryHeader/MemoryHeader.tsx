@@ -1,8 +1,8 @@
-import { FC } from 'react'
-import { Bubble, ProgressBar } from '@shared/ui'
-import styles from './WorkHeader.module.css'
+import React from 'react'
+import { Bubble, ProgressBar } from '../../../../../shared/ui'
+import styles from './MemoryHeader.module.css'
 
-interface WorkHeaderProps {
+interface MemoryHeaderProps {
   level: number
   currentExp: number
   maxExp: number
@@ -11,7 +11,7 @@ interface WorkHeaderProps {
   money: number
 }
 
-export const WorkHeader: FC<WorkHeaderProps> = ({
+export const MemoryHeader: React.FC<MemoryHeaderProps> = ({
   level,
   currentExp,
   maxExp,

@@ -28,43 +28,42 @@ export const PlayerStatsHeader: FC<PlayerStatsHeaderProps> = ({
   }
 
   return (
-    <div className={styles.header}>
-      {/* Верхняя строка: Уровень + Ресурсы */}
+    <header className={styles.header}>
       <div className={styles.topRow}>
-        {/* Компактный блок уровня */}
-        <div className={styles.levelBlock}>
-          <span className={styles.levelText}>Lv {level}</span>
-          <div className={styles.levelProgress}>
+        {/* Уровень с прогресс-баром */}
+        <div className="common-header-level-block">
+          <span className="common-header-level-text">Lv {level}</span>
+          <div className="common-header-level-progress">
             <ProgressBar
               current={currentExp}
               max={maxExp}
               variant="mint"
-              size="medium"
+              size="small"
             />
-            <span className={styles.expOverlay}>{currentExp}/{maxExp}</span>
+            <span className="common-header-exp-overlay">{currentExp}/{maxExp}</span>
           </div>
         </div>
 
-        {/* Ресурсы */}
-        <div className={styles.resources}>
+        {/* Основные ресурсы */}
+        <div className="common-header-resources">
           <Bubble variant="black" size="small" icon="⚡" outline>
             {energy}/{maxEnergy}
           </Bubble>
           <Bubble variant="black" size="small" icon="₽" outline>
-            {formatMoney(money)}
+            {formatMoney(money)} ₽
           </Bubble>
         </div>
       </div>
 
-      {/* Финансовые показатели */}
-      <div className={styles.indicators}>
-        <Bubble variant="violet" size="small" icon="📈" outline>
+      {/* Экономические показатели */}
+      <div className={styles.bottomRow}>
+        <Bubble variant="raspberry" size="small" icon="📈" outline>
           {bankRate}% Ставка
         </Bubble>
-        <Bubble variant="violet" size="small" icon="📊" outline>
+        <Bubble variant="raspberry" size="small" icon="📊" outline>
           {inflation}% Инфляция
         </Bubble>
       </div>
-    </div>
+    </header>
   )
 }

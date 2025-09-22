@@ -1,0 +1,87 @@
+.gamePage {
+  min-height: 100vh;
+  background: var(--gradient-black-cumin);
+  color: var(--color-white);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.content {
+  padding-top: 140px;
+  padding-bottom: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  min-height: calc(100vh - 140px);
+}
+
+.gameContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.instructions {
+  text-align: center;
+  max-width: 500px;
+  margin: var(--space-2) auto 0;
+  flex: 0 0 auto;
+}
+
+.instructionText {
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  margin: 0 0 var(--space-3) 0;
+  line-height: 1.5;
+}
+
+.instructionText:last-child {
+  margin-bottom: 0;
+}
+
+/* Адаптивность для мобильных A4 */
+@media (max-width: 480px) {
+  .content {
+    padding-top: 120px;
+    padding-bottom: var(--space-6);
+    gap: var(--space-4);
+    min-height: calc(100vh - 120px);
+  }
+
+  .gameContainer {
+    max-width: 100%;
+    padding: 0 var(--space-3);
+  }
+
+  .instructionText {
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 360px) {
+  .content {
+    padding-top: 110px;
+    padding-bottom: var(--space-4);
+    gap: var(--space-3);
+    min-height: calc(100vh - 110px);
+  }
+
+  .gameContainer {
+    padding: 0 var(--space-2);
+  }
+
+  .instructions {
+    max-width: 320px;
+  }
+
+  .instructionText {
+    font-size: var(--font-size-sm);
+  }
+}

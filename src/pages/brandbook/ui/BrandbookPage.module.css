@@ -163,6 +163,217 @@
   gap: var(--space-6);
 }
 
+/* Компоненты игры 2048 */
+.tilesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-4);
+  max-width: 800px;
+}
+
+.tileWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tileWrapper > div {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+}
+
+.tileLabel {
+  color: var(--color-white);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-align: center;
+}
+
+.gameComponentWrapper {
+  background: var(--gradient-violet-cumin);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.gameComponentWrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 0;
+}
+
+.gameComponentWrapper > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Демо компоненты навигации */
+.navigationDemo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+}
+
+.leftSection,
+.rightSection {
+  flex: 0 0 auto;
+  min-width: 80px;
+}
+
+.leftSection {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.rightSection {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.centerSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.gameTitle {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  text-align: center;
+}
+
+.scoreBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.scoreLabel {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.scoreValue {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+/* Демо модального окна */
+.modalDemo {
+  padding: var(--space-4);
+}
+
+.modalContent {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  max-width: 400px;
+  margin: 0 auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modalHeader {
+  text-align: center;
+  margin-bottom: var(--space-4);
+}
+
+.modalTitle {
+  color: var(--color-black);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin: 0;
+}
+
+.modalBody {
+  margin-bottom: var(--space-6);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.statItem {
+  text-align: center;
+  padding: var(--space-3);
+  background: var(--gradient-violet-cumin);
+  border-radius: var(--radius-md);
+  color: var(--color-white);
+}
+
+.statLabel {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-1);
+  opacity: 0.8;
+}
+
+.statValue {
+  font-family: var(--font-accent);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+.achievement {
+  text-align: center;
+  padding: var(--space-4);
+  background: linear-gradient(135deg, var(--color-raspberry), var(--color-sakura));
+  border-radius: var(--radius-md);
+}
+
+.achievementText {
+  color: var(--color-white);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  margin: 0;
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+.modalActions button {
+  flex: 1;
+  min-width: 120px;
+}
+
 /* Типографика */
 .typographyExample {
   background: rgba(255, 255, 255, 0.05);
@@ -184,6 +395,60 @@
 
 .typographyExample p:last-child {
   margin-bottom: 0;
+}
+
+/* Компоненты игры Memory */
+.memoryCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-4);
+  max-width: 600px;
+}
+
+.memoryCardWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.memoryCardWrapper > div {
+  width: 80px;
+  height: 80px;
+}
+
+.memoryCardLabel {
+  color: var(--color-white);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-align: center;
+}
+
+.memoryNavigationDemo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+}
+
+.memoryGameStats {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.memoryStatBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 60px;
 }
 
 /* Адаптивность */

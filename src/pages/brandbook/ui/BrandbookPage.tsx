@@ -7,6 +7,8 @@ import { GameTile } from '@pages/work/2048/ui/GameTile/GameTile'
 import { GameNavigation } from '@pages/work/2048/ui/GameNavigation/GameNavigation'
 import { GameHeader } from '@pages/work/2048/ui/GameHeader/GameHeader'
 import { GameEndModal } from '@pages/work/2048/ui/GameEndModal/GameEndModal'
+import { MemoryCard } from '../../work/memory/ui/MemoryCard/MemoryCard'
+import { MemoryHeader } from '../../work/memory/ui/MemoryHeader/MemoryHeader'
 import styles from './BrandbookPage.module.css'
 
 export const BrandbookPage: FC = () => {
@@ -74,6 +76,16 @@ export const BrandbookPage: FC = () => {
     maxEnergy: 24,
     money: 12500
   }
+
+  // Mock данные для карточек игры Memory
+  const mockMemoryCards = [
+    { id: '1', pairId: 'pair_1', emoji: '🎯', isFlipped: false, isMatched: false, position: 0 },
+    { id: '2', pairId: 'pair_1', emoji: '🎯', isFlipped: true, isMatched: false, position: 1 },
+    { id: '3', pairId: 'pair_2', emoji: '🎨', isFlipped: true, isMatched: true, position: 2 },
+    { id: '4', pairId: 'pair_2', emoji: '🎨', isFlipped: true, isMatched: true, position: 3 },
+    { id: '5', pairId: 'pair_3', emoji: '🎭', isFlipped: false, isMatched: false, position: 4 },
+    { id: '6', pairId: 'pair_4', emoji: '🎪', isFlipped: false, isMatched: false, position: 5 }
+  ]
 
   return (
     <div className={styles.page}>
@@ -424,6 +436,142 @@ export const BrandbookPage: FC = () => {
                       variant="primary"
                       size="medium"
                       onClick={() => handleBrandbookAction('Back to Work')}
+                    >
+                      Вернуться к работам
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Компоненты игры Memory */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Компоненты игры Memory</h2>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Карточки Memory</h3>
+            <div className={styles.memoryCardsGrid}>
+              {mockMemoryCards.map((card) => (
+                <div key={card.id} className={styles.memoryCardWrapper}>
+                  <MemoryCard
+                    card={card}
+                    onClick={() => handleBrandbookAction(`Memory Card: ${card.emoji}`)}
+                  />
+                  <span className={styles.memoryCardLabel}>{card.emoji} - {card.isFlipped ? 'Открыта' : 'Закрыта'}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Заголовок игры Memory</h3>
+            <div className={styles.gameComponentWrapper}>
+              <MemoryHeader
+                level={mockPlayerStats.level}
+                currentExp={mockPlayerStats.currentExp}
+                maxExp={mockPlayerStats.maxExp}
+                energy={mockPlayerStats.energy}
+                maxEnergy={mockPlayerStats.maxEnergy}
+                money={mockPlayerStats.money}
+              />
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Навигация игры Memory</h3>
+            <div className={styles.gameComponentWrapper}>
+              <div className={styles.memoryNavigationDemo}>
+                <div className={styles.leftSection}>
+                  <Button
+                    variant="gradient-mint"
+                    size="small"
+                    onClick={() => handleBrandbookAction('Memory Back')}
+                  >
+                    ← Назад
+                  </Button>
+                </div>
+
+                <div className={styles.centerSection}>
+                  <div className={styles.gameTitle}>Memory</div>
+                  <div className={styles.memoryGameStats}>
+                    <div className={styles.memoryStatBlock}>
+                      <div className={styles.statLabel}>Очки</div>
+                      <div className={styles.statValue}>2,750</div>
+                    </div>
+                    <div className={styles.memoryStatBlock}>
+                      <div className={styles.statLabel}>Время</div>
+                      <div className={styles.statValue}>1:15</div>
+                    </div>
+                    <div className={styles.memoryStatBlock}>
+                      <div className={styles.statLabel}>Раунд</div>
+                      <div className={styles.statValue}>3</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.rightSection}>
+                  <Button
+                    variant="gradient-mint"
+                    size="small"
+                    onClick={() => handleBrandbookAction('Memory New Game')}
+                  >
+                    Новая игра
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Модальное окно завершения Memory</h3>
+            <div className={styles.gameComponentWrapper}>
+              <div className={styles.modalDemo}>
+                <div className={styles.modalContent}>
+                  <div className={styles.modalHeader}>
+                    <h2 className={styles.modalTitle}>🧠 Время вышло!</h2>
+                  </div>
+
+                  <div className={styles.modalBody}>
+                    <div className={styles.statsGrid}>
+                      <div className={styles.statItem}>
+                        <div className={styles.statLabel}>Итоговые очки</div>
+                        <div className={styles.statValue}>2,750</div>
+                      </div>
+                      <div className={styles.statItem}>
+                        <div className={styles.statLabel}>Раундов завершено</div>
+                        <div className={styles.statValue}>3</div>
+                      </div>
+                      <div className={styles.statItem}>
+                        <div className={styles.statLabel}>Пар найдено</div>
+                        <div className={styles.statValue}>22</div>
+                      </div>
+                      <div className={styles.statItem}>
+                        <div className={styles.statLabel}>Точность</div>
+                        <div className={styles.statValue}>85%</div>
+                      </div>
+                    </div>
+
+                    <div className={styles.achievement}>
+                      <div className={styles.achievementText}>
+                        Отличная память! Вы завершили 3 раунда!
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.modalActions}>
+                    <Button
+                      variant="gradient-mint"
+                      size="medium"
+                      onClick={() => handleBrandbookAction('Memory New Game from Modal')}
+                    >
+                      Новая игра
+                    </Button>
+                    <Button
+                      variant="primary"
+                      size="medium"
+                      onClick={() => handleBrandbookAction('Memory Back to Work')}
                     >
                       Вернуться к работам
                     </Button>

@@ -36,17 +36,17 @@
 .instructions {
   flex: 0 0 auto;
   text-align: center;
-  margin-top: var(--space-2);
+  margin-top: var(--space-4);
 }
 
 .instructionText {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   font-family: var(--font-primary);
-  font-size: var(--font-size-sm);
-  font-weight: 400;
+  font-size: var(--font-size-base);
+  font-weight: 500;
   margin: 0;
-  max-width: 300px;
-  line-height: 1.4;
+  max-width: 400px;
+  line-height: 1.5;
 }
 
 /* Адаптивность для мобильных A4 */
@@ -62,8 +62,8 @@
   }
 
   .instructionText {
-    font-size: var(--font-size-xs);
-    max-width: 280px;
+    font-size: var(--font-size-sm);
+    max-width: 320px;
   }
 }
 
@@ -79,8 +79,8 @@
   }
 
   .instructionText {
-    font-size: 12px;
-    max-width: 260px;
+    font-size: var(--font-size-xs);
+    max-width: 280px;
   }
 }
 

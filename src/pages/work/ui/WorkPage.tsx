@@ -1,6 +1,7 @@
 import { FC, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { generateGameUUID } from '../2048/model/gameStore'
+import { generateGameUUID as generateMemoryUUID } from '../memory/model/gameStore'
 import { ParticleBackground } from '@shared/ui'
 import { BottomNavigation } from '@pages/main/ui/BottomNavigation'
 import { WorkHeader } from './WorkHeader'
@@ -33,15 +34,6 @@ export const WorkPage: FC = () => {
       isAvailable: true
     },
     {
-      id: 'match3',
-      name: 'Три в ряд',
-      description: 'Собирай линии из одинаковых элементов',
-      icon: '💎',
-      multiplier: 1.5,
-      energyCost: 3,
-      isAvailable: true
-    },
-    {
       id: 'memory',
       name: 'Память',
       description: 'Находи пары одинаковых карточек',
@@ -60,6 +52,10 @@ export const WorkPage: FC = () => {
       // Генерируем новый UUID для сессии игры
       const gameSessionId = generateGameUUID()
       navigate(`/work/2048?id=${gameSessionId}`)
+    } else if (gameId === 'memory') {
+      // Генерируем новый UUID для сессии игры Memory
+      const gameSessionId = generateMemoryUUID()
+      navigate(`/work/memory?id=${gameSessionId}`)
     } else {
       // Для других игр пока что показываем уведомление
       console.log(`Game ${gameId} is not implemented yet`)
@@ -79,7 +75,7 @@ export const WorkPage: FC = () => {
   }, [])
 
   return (
-    <div className={styles.workPage}>
+    <div className="common-page-background">
       {/* Анимированный фон с частицами */}
       <ParticleBackground
         particleCount={20}
@@ -98,7 +94,7 @@ export const WorkPage: FC = () => {
       />
 
       {/* Основной контент */}
-      <div className={styles.content}>
+      <div className="common-content">
         {/* Список игр */}
         <WorkList
           games={availableGames}

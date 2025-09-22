@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
-import { useGameStore, generateGameUUID } from '../../model/gameStore'
-import { GameHeader } from '../GameHeader/GameHeader'
-import { GameNavigation } from '../GameNavigation/GameNavigation'
-import { GameBoard } from '../GameBoard/GameBoard'
-import { GameEndModal } from '../GameEndModal/GameEndModal'
+import { useSearchParams } from 'react-router-dom'
+import { useMemoryGameStore, generateGameUUID } from '../../model/gameStore'
+import { MemoryHeader } from '../MemoryHeader/MemoryHeader'
+import { MemoryNavigation } from '../MemoryNavigation/MemoryNavigation'
+import { MemoryBoard } from '../MemoryBoard/MemoryBoard'
+import { MemoryEndModal } from '../MemoryEndModal/MemoryEndModal'
 import { ParticleBackground } from '../../../../../shared/ui'
-import styles from './Game2048Page.module.css'
+import styles from './MemoryPage.module.css'
 
-export const Game2048Page: React.FC = () => {
+export const MemoryPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const navigate = useNavigate()
-  const { initGame, isGameOver, isWon } = useGameStore()
+  const { initGame, isGameEnded } = useMemoryGameStore()
   const [showEndModal, setShowEndModal] = useState(false)
 
   // Mock данные игрока (в реальном приложении брать из глобального стора)
@@ -40,7 +39,7 @@ export const Game2048Page: React.FC = () => {
 
   useEffect(() => {
     // Show end modal when game ends
-    if (isGameOver || isWon) {
+    if (isGameEnded) {
       const timer = setTimeout(() => {
         setShowEndModal(true)
       }, 1000) // Delay to show final board state
@@ -49,7 +48,7 @@ export const Game2048Page: React.FC = () => {
     } else {
       setShowEndModal(false)
     }
-  }, [isGameOver, isWon])
+  }, [isGameEnded])
 
   const handleCloseEndModal = () => {
     setShowEndModal(false)
@@ -59,7 +58,7 @@ export const Game2048Page: React.FC = () => {
     <div className="common-page-background">
       <ParticleBackground />
 
-      <GameHeader
+      <MemoryHeader
         level={playerStats.level}
         currentExp={playerStats.currentExp}
         maxExp={playerStats.maxExp}
@@ -68,21 +67,24 @@ export const Game2048Page: React.FC = () => {
         money={playerStats.money}
       />
 
-      <GameNavigation />
+      <MemoryNavigation />
 
       <div className="common-game-content">
         <div className={styles.gameContainer}>
-          <GameBoard />
+          <MemoryBoard />
         </div>
 
         <div className={styles.instructions}>
           <p className={styles.instructionText}>
-            Используйте стрелки или свайпы для перемещения плиток
+            Найдите все пары карточек за 1.5 минуты!
+          </p>
+          <p className={styles.instructionText}>
+            125 очков за каждую пару
           </p>
         </div>
       </div>
 
-      <GameEndModal
+      <MemoryEndModal
         isOpen={showEndModal}
         onClose={handleCloseEndModal}
       />

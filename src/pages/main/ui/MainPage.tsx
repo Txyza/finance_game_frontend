@@ -56,7 +56,7 @@ export const MainPage: FC = () => {
   }, [])
 
   return (
-    <div className={styles.mainPage}>
+    <div className="common-page-background">
       {/* Анимированный фон с частицами */}
       <ParticleBackground
         particleCount={30}

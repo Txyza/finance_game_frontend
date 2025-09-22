@@ -82,12 +82,19 @@ export const GameBoard: React.FC = () => {
   }
 
   const renderBoard = () => {
+    // Проверяем, что board инициализирован
+    if (!board || board.length === 0) {
+      return Array.from({ length: 16 }, (_, index) => (
+        <GameTile key={`empty-${index}`} tile={null} />
+      ))
+    }
+
     const tiles: React.ReactNode[] = []
 
     // Render tiles directly in grid positions
     for (let row = 0; row < 4; row++) {
       for (let col = 0; col < 4; col++) {
-        const tile = board[row][col]
+        const tile = board[row] ? board[row][col] : null
         tiles.push(
           <GameTile
             key={tile ? tile.id : `cell-${row}-${col}`}

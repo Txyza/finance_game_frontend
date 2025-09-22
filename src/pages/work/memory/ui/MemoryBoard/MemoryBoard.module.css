@@ -1,0 +1,52 @@
+.boardContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: var(--space-2);
+  width: calc(100vw - var(--space-8));
+  max-width: 500px;
+  height: calc(100vw - var(--space-8));
+  max-height: 500px;
+  padding: var(--space-3);
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+}
+
+/* Адаптивность для мобильных A4 */
+@media (max-width: 480px) {
+  .boardContainer {
+    padding: var(--space-2);
+  }
+
+  .board {
+    width: calc(100vw - var(--space-4));
+    height: calc(100vw - var(--space-4));
+    gap: var(--space-1);
+    padding: var(--space-2);
+  }
+}
+
+@media (max-width: 360px) {
+  .boardContainer {
+    padding: var(--space-1);
+  }
+
+  .board {
+    width: calc(100vw - var(--space-2));
+    height: calc(100vw - var(--space-2));
+    gap: 4px;
+    padding: var(--space-1);
+  }
+}
