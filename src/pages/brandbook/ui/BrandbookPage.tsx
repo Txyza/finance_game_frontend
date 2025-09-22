@@ -2,9 +2,79 @@ import { FC } from 'react'
 import { Button, Bubble, Card } from '@shared/ui'
 import { EventCard } from '@widgets/EventCard'
 import { WorkshopCard } from '@widgets/WorkshopCard'
+import { WorkCard, WorkGameData } from '@pages/work/ui/WorkCard'
+import { GameTile } from '@pages/work/2048/ui/GameTile/GameTile'
+import { GameNavigation } from '@pages/work/2048/ui/GameNavigation/GameNavigation'
+import { GameHeader } from '@pages/work/2048/ui/GameHeader/GameHeader'
+import { GameEndModal } from '@pages/work/2048/ui/GameEndModal/GameEndModal'
 import styles from './BrandbookPage.module.css'
 
 export const BrandbookPage: FC = () => {
+  // Mock данные для карточек работы
+  const mockGames: WorkGameData[] = [
+    {
+      id: '2048',
+      name: '2048',
+      description: 'Собери плитку 2048 на поле 4x4',
+      icon: '🎲',
+      multiplier: 2.0,
+      energyCost: 5,
+      isAvailable: true
+    },
+    {
+      id: 'match3',
+      name: 'Три в ряд',
+      description: 'Собирай линии из одинаковых элементов',
+      icon: '💎',
+      multiplier: 1.5,
+      energyCost: 3,
+      isAvailable: true
+    },
+    {
+      id: 'memory',
+      name: 'Память',
+      description: 'Находи пары одинаковых карточек',
+      icon: '🧠',
+      multiplier: 1.0,
+      energyCost: 8,
+      isAvailable: false
+    }
+  ]
+
+  const handleGameStart = (gameId: string) => {
+    console.log(`Starting game: ${gameId} (Brandbook demo - no navigation)`)
+  }
+
+  const handleBrandbookAction = (action: string) => {
+    console.log(`${action} clicked (Brandbook demo - no action taken)`)
+  }
+
+  // Mock данные для плиток игры 2048
+  const mockTiles = [
+    { id: '1', value: 2, position: { row: 0, col: 0 } },
+    { id: '2', value: 4, position: { row: 0, col: 1 } },
+    { id: '3', value: 8, position: { row: 0, col: 2 } },
+    { id: '4', value: 16, position: { row: 0, col: 3 } },
+    { id: '5', value: 32, position: { row: 1, col: 0 } },
+    { id: '6', value: 64, position: { row: 1, col: 1 } },
+    { id: '7', value: 128, position: { row: 1, col: 2 } },
+    { id: '8', value: 256, position: { row: 1, col: 3 } },
+    { id: '9', value: 512, position: { row: 2, col: 0 } },
+    { id: '10', value: 1024, position: { row: 2, col: 1 } },
+    { id: '11', value: 2048, position: { row: 2, col: 2 } },
+    { id: '12', value: 4096, position: { row: 2, col: 3 } }
+  ]
+
+  // Mock данные игрока для компонентов игры
+  const mockPlayerStats = {
+    level: 5,
+    currentExp: 20,
+    maxExp: 150,
+    energy: 18,
+    maxEnergy: 24,
+    money: 12500
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.container}>
@@ -220,6 +290,146 @@ export const BrandbookPage: FC = () => {
                 tags={['Tech', 'Beginner']}
                 gradient="mint-melissa"
               />
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Work Game Cards</h3>
+            <div className={styles.compositeGrid}>
+              {mockGames.map((game) => (
+                <WorkCard
+                  key={game.id}
+                  game={game}
+                  onStart={handleGameStart}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Компоненты игры 2048 */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Компоненты игры 2048</h2>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Плитки игры</h3>
+            <div className={styles.tilesGrid}>
+              {mockTiles.map((tile) => (
+                <div key={tile.id} className={styles.tileWrapper}>
+                  <GameTile tile={tile} />
+                  <span className={styles.tileLabel}>{tile.value}</span>
+                </div>
+              ))}
+              <div className={styles.tileWrapper}>
+                <GameTile tile={null} />
+                <span className={styles.tileLabel}>Пустая</span>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Заголовок игры</h3>
+            <div className={styles.gameComponentWrapper}>
+              <GameHeader
+                level={mockPlayerStats.level}
+                currentExp={mockPlayerStats.currentExp}
+                maxExp={mockPlayerStats.maxExp}
+                energy={mockPlayerStats.energy}
+                maxEnergy={mockPlayerStats.maxEnergy}
+                money={mockPlayerStats.money}
+              />
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Навигация игры</h3>
+            <div className={styles.gameComponentWrapper}>
+              <div className={styles.navigationDemo}>
+                <div className={styles.leftSection}>
+                  <Button
+                    variant="gradient-mint"
+                    size="small"
+                    onClick={() => handleBrandbookAction('Back')}
+                  >
+                    ← Назад
+                  </Button>
+                </div>
+
+                <div className={styles.centerSection}>
+                  <div className={styles.gameTitle}>2048</div>
+                  <div className={styles.scoreBlock}>
+                    <div className={styles.scoreLabel}>Очки</div>
+                    <div className={styles.scoreValue}>15,240</div>
+                  </div>
+                </div>
+
+                <div className={styles.rightSection}>
+                  <Button
+                    variant="gradient-mint"
+                    size="small"
+                    onClick={() => handleBrandbookAction('New Game')}
+                  >
+                    Новая игра
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Модальное окно завершения</h3>
+            <div className={styles.gameComponentWrapper}>
+              <div className={styles.modalDemo}>
+                <div className={styles.modalContent}>
+                  <div className={styles.modalHeader}>
+                    <h2 className={styles.modalTitle}>🎉 Победа!</h2>
+                  </div>
+
+                  <div className={styles.modalBody}>
+                    <div className={styles.statsGrid}>
+                      <div className={styles.statItem}>
+                        <div className={styles.statLabel}>Очки</div>
+                        <div className={styles.statValue}>15,240</div>
+                      </div>
+                      <div className={styles.statItem}>
+                        <div className={styles.statLabel}>Максимальная плитка</div>
+                        <div className={styles.statValue}>2048</div>
+                      </div>
+                      <div className={styles.statItem}>
+                        <div className={styles.statLabel}>Количество ходов</div>
+                        <div className={styles.statValue}>127</div>
+                      </div>
+                      <div className={styles.statItem}>
+                        <div className={styles.statLabel}>Время игры</div>
+                        <div className={styles.statValue}>5м 32с</div>
+                      </div>
+                    </div>
+
+                    <div className={styles.achievement}>
+                      <div className={styles.achievementText}>
+                        Поздравляем! Вы достигли плитки 2048!
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.modalActions}>
+                    <Button
+                      variant="gradient-mint"
+                      size="medium"
+                      onClick={() => handleBrandbookAction('New Game from Modal')}
+                    >
+                      Новая игра
+                    </Button>
+                    <Button
+                      variant="primary"
+                      size="medium"
+                      onClick={() => handleBrandbookAction('Back to Work')}
+                    >
+                      Вернуться к работам
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>

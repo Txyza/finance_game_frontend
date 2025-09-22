@@ -3,13 +3,15 @@
   justify-content: space-around;
   align-items: center;
   padding: var(--space-4) var(--space-3);
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
+  background: var(--color-violet);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 3;
   gap: var(--space-2);
-  height: 80px;
+  min-height: 80px;
+  flex-shrink: 0;
 }
 
 /* Квадратные кнопки с иконкой */
@@ -18,8 +20,8 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--duration-normal) var(--ease-out);
@@ -30,6 +32,7 @@
 
 .navButton:hover {
   background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-mint);
   transform: translateY(-2px);
 }
 
@@ -39,13 +42,13 @@
 
 /* Активная кнопка */
 .activeButton {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: var(--color-mint);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.3);
+  border-color: var(--color-white);
+  color: var(--color-white);
 }
 
 .activeButton:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.4);
 }
 
 /* Иконка */
@@ -72,7 +75,7 @@
   .bottomNav {
     padding: var(--space-3);
     gap: var(--space-1);
-    height: 72px;
+    min-height: 72px;
   }
 
   .navButton {
@@ -90,7 +93,7 @@
   .bottomNav {
     padding: var(--space-2);
     gap: 8px;
-    height: 68px;
+    min-height: 68px;
   }
 
   .navButton {

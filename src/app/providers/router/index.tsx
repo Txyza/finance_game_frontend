@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { HomePage } from '@pages/home'
 import { BrandbookPage } from '@pages/brandbook'
 import { MainPage } from '@pages/main'
+import { WorkPage } from '@pages/work'
+import { Game2048Page } from '@pages/work/2048'
 
 export const RouterProvider = () => {
   return (
@@ -12,8 +13,9 @@ export const RouterProvider = () => {
       }}
     >
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/main" element={<MainPage />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/work" element={<WorkPage />} />
+        <Route path="/work/2048" element={<Game2048Page />} />
         <Route path="/brandbook" element={<BrandbookPage />} />
       </Routes>
     </BrowserRouter>

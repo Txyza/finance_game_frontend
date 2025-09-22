@@ -1,0 +1,167 @@
+.gamePage {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--gradient-violet-cumin);
+  color: var(--color-white);
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-primary);
+}
+
+.content {
+  position: fixed;
+  top: 130px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: var(--space-4);
+  gap: var(--space-4);
+}
+
+.gameContainer {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 450px;
+}
+
+.instructions {
+  flex: 0 0 auto;
+  text-align: center;
+  margin-top: var(--space-2);
+}
+
+.instructionText {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  margin: 0;
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+/* Адаптивность для мобильных A4 */
+@media (max-width: 480px) {
+  .content {
+    top: 115px;
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .gameContainer {
+    max-width: 380px;
+  }
+
+  .instructionText {
+    font-size: var(--font-size-xs);
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 360px) {
+  .content {
+    top: 105px;
+    padding: var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .gameContainer {
+    max-width: 340px;
+  }
+
+  .instructionText {
+    font-size: 12px;
+    max-width: 260px;
+  }
+}
+
+/* Portrait ориентация */
+@media (orientation: portrait) {
+  .gamePage {
+    min-height: 100dvh;
+  }
+}
+
+/* Landscape поддержка */
+@media (orientation: landscape) and (max-height: 600px) {
+  .content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    top: 60px;
+    padding: var(--space-2);
+  }
+
+  .gameContainer {
+    flex: 0 0 auto;
+    max-width: 350px;
+  }
+
+  .instructions {
+    flex: 0 0 auto;
+    margin-top: 0;
+    margin-left: var(--space-4);
+  }
+}
+
+/* Safe area для новых iPhone */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .gamePage {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .content {
+    padding-top: 0;
+  }
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .gamePage {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Высокие экраны */
+@media (min-height: 800px) {
+  .content {
+    justify-content: center;
+  }
+}
+
+/* Очень маленькие экраны */
+@media (max-height: 600px) {
+  .content {
+    top: 60px;
+    justify-content: flex-start;
+    padding-top: var(--space-3);
+  }
+}
+
+/* Оптимизация для touch устройств */
+@media (hover: none) and (pointer: coarse) {
+  .gamePage {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* Prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .gamePage *,
+  .gamePage *::before,
+  .gamePage *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
