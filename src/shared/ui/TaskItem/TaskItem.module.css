@@ -1,0 +1,225 @@
+.taskItem {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  backdrop-filter: blur(10px);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.taskItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.taskItem.completed {
+  background: rgba(88, 255, 255, 0.1);
+  border-color: rgba(88, 255, 255, 0.3);
+}
+
+.taskItem.completed:hover {
+  background: rgba(88, 255, 255, 0.15);
+  border-color: rgba(88, 255, 255, 0.4);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.iconSection {
+  flex-shrink: 0;
+}
+
+.taskIcon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-2xl);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin: 0 0 var(--space-1) 0;
+  line-height: 1.3;
+}
+
+.description {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.reward {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.rewardIcon {
+  font-size: var(--font-size-xl);
+  line-height: 1;
+}
+
+.rewardText {
+  color: var(--color-accent);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  text-align: center;
+}
+
+.progressSection {
+  margin-bottom: var(--space-3);
+}
+
+.progressInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.progressText {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.progressPercentage {
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xs);
+}
+
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent), #4ade80);
+  border-radius: var(--radius-sm);
+  transition: width var(--duration-normal) var(--ease-out);
+}
+
+.actionSection {
+  display: flex;
+  justify-content: center;
+}
+
+.claimButton {
+  min-width: 140px;
+}
+
+.claimedSection {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-2);
+}
+
+.claimedText {
+  color: #4ade80;
+  font-family: var(--font-accent);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+  .taskItem {
+    padding: var(--space-3);
+  }
+
+  .header {
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .taskIcon {
+    width: 40px;
+    height: 40px;
+    font-size: var(--font-size-xl);
+  }
+
+  .title {
+    font-size: var(--font-size-base);
+  }
+
+  .description {
+    font-size: var(--font-size-xs);
+  }
+
+  .rewardIcon {
+    font-size: var(--font-size-lg);
+  }
+
+  .rewardText {
+    font-size: var(--font-size-xs);
+  }
+
+  .progressSection {
+    margin-bottom: var(--space-2);
+  }
+
+  .progressBar {
+    height: 6px;
+  }
+
+  .claimButton {
+    min-width: 120px;
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 360px) {
+  .taskItem {
+    padding: var(--space-2);
+  }
+
+  .header {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .iconSection {
+    align-self: flex-start;
+  }
+
+  .reward {
+    flex-direction: row;
+    gap: var(--space-2);
+    align-self: flex-end;
+  }
+
+  .title {
+    font-size: var(--font-size-sm);
+  }
+
+  .claimButton {
+    min-width: 100px;
+  }
+}

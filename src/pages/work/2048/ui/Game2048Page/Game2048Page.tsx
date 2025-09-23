@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useGameStore, generateGameUUID } from '../../model/gameStore'
-import { GameHeader } from '../GameHeader/GameHeader'
+import { GameHeader } from '@shared/ui'
 import { GameNavigation } from '../GameNavigation/GameNavigation'
 import { GameBoard } from '../GameBoard/GameBoard'
 import { GameEndModal } from '../GameEndModal/GameEndModal'
@@ -60,6 +60,7 @@ export const Game2048Page: React.FC = () => {
       <ParticleBackground />
 
       <GameHeader
+        variant="work"
         level={playerStats.level}
         currentExp={playerStats.currentExp}
         maxExp={playerStats.maxExp}

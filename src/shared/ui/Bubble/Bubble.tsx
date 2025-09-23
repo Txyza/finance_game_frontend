@@ -8,6 +8,9 @@ interface BubbleProps {
   icon?: ReactNode
   onClick?: () => void
   className?: string
+  addButton?: {
+    onClick: () => void
+  }
 }
 
 export const Bubble: FC<BubbleProps> = ({
@@ -16,22 +19,37 @@ export const Bubble: FC<BubbleProps> = ({
   children,
   icon,
   onClick,
-  className = ''
+  className = '',
+  addButton
 }) => {
   const classNames = [
     styles.bubble,
     styles[variant],
     styles[size],
-    onClick && styles.clickable,
+    (onClick || addButton) && styles.clickable,
+    addButton && styles.withAddButton,
     className
   ].filter(Boolean).join(' ')
 
-  const Component = onClick ? 'button' : 'div'
+  const Component = (onClick || addButton) ? 'button' : 'div'
+
+  const handleClick = () => {
+    if (addButton) {
+      addButton.onClick()
+    } else if (onClick) {
+      onClick()
+    }
+  }
 
   return (
-    <Component className={classNames} onClick={onClick}>
+    <Component className={classNames} onClick={handleClick}>
       {icon && <span className={styles.icon}>{icon}</span>}
       <span className={styles.content}>{children}</span>
+      {addButton && (
+        <span className={styles.addButton}>
+          +
+        </span>
+      )}
     </Component>
   )
 }

@@ -4,7 +4,7 @@ import { generateGameUUID } from '../2048/model/gameStore'
 import { generateGameUUID as generateMemoryUUID } from '../memory/model/gameStore'
 import { ParticleBackground } from '@shared/ui'
 import { BottomNavigation } from '@pages/main/ui/BottomNavigation'
-import { WorkHeader } from './WorkHeader'
+import { GameHeader } from '@shared/ui'
 import { WorkList } from './WorkList'
 import { WorkGameData } from './WorkCard'
 import styles from './WorkPage.module.css'
@@ -84,7 +84,8 @@ export const WorkPage: FC = () => {
       />
 
       {/* Шапка со статистикой */}
-      <WorkHeader
+      <GameHeader
+        variant="work"
         level={playerStats.level}
         currentExp={playerStats.currentExp}
         maxExp={playerStats.maxExp}

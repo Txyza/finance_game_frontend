@@ -1,7 +1,6 @@
 import { FC, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ParticleBackground } from '@shared/ui'
-import { PlayerStatsHeader } from './PlayerStatsHeader'
+import { ParticleBackground, GameHeader } from '@shared/ui'
 import { CharacterArea } from './CharacterArea'
 import { BottomNavigation, TabType } from './BottomNavigation'
 import { PlayerStats, GameActions } from '../model/types'
@@ -26,16 +25,16 @@ export const MainPage: FC = () => {
   // Обработчики игровых действий
   const gameActions: GameActions = {
     onDailyClick: useCallback(() => {
-      console.log('Daily tasks clicked')
-    }, []),
+      navigate('/tasks')
+    }, [navigate]),
 
     onNotificationsClick: useCallback(() => {
-      console.log('Notifications clicked')
-    }, []),
+      navigate('/news')
+    }, [navigate]),
 
     onLeaderboardClick: useCallback(() => {
-      console.log('Leaderboard clicked')
-    }, []),
+      navigate('/leaderboard')
+    }, [navigate]),
 
     onFriendsClick: useCallback(() => {
       console.log('Friends clicked')
@@ -52,8 +51,20 @@ export const MainPage: FC = () => {
 
   const handleTabChange = useCallback((tab: TabType) => {
     setActiveTab(tab)
-    console.log(`Navigation to ${tab}`)
-  }, [])
+
+    // Navigate to specific pages for certain tabs
+    if (tab === 'analytics') {
+      navigate('/analytics')
+    } else if (tab === 'leaderboard') {
+      navigate('/leaderboard')
+    } else if (tab === 'tasks') {
+      navigate('/tasks')
+    } else if (tab === 'news') {
+      navigate('/news')
+    } else {
+      console.log(`Navigation to ${tab}`)
+    }
+  }, [navigate])
 
   return (
     <div className="common-page-background">
@@ -65,7 +76,7 @@ export const MainPage: FC = () => {
       />
 
       {/* Шапка со статистикой игрока */}
-      <PlayerStatsHeader
+      <GameHeader
         level={playerStats.level}
         currentExp={playerStats.currentExp}
         maxExp={playerStats.maxExp}

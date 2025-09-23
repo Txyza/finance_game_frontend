@@ -32,7 +32,7 @@ export const CharacterArea: FC<CharacterAreaProps> = ({
             🎁
           </button>
           <button className={styles.iconButton} onClick={onNotificationsClick}>
-            🔔
+            📰
           </button>
         </div>
 

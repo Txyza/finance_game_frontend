@@ -1,17 +1,32 @@
-import { FC } from 'react'
-import { Button, Bubble, Card } from '@shared/ui'
+import { FC, useState } from 'react'
+import {
+  Button,
+  Bubble,
+  Card,
+  MonthSelector,
+  CategoryProgressBar,
+  AnalyticsCard,
+  TransactionItem,
+  PieChart,
+  CategoryTag,
+  PeriodSelector,
+  ExpandableAnalyticsCard,
+  ShopItem,
+  PremiumCard
+} from '@shared/ui'
 import { EventCard } from '@widgets/EventCard'
 import { WorkshopCard } from '@widgets/WorkshopCard'
 import { WorkCard, WorkGameData } from '@pages/work/ui/WorkCard'
 import { GameTile } from '@pages/work/2048/ui/GameTile/GameTile'
 import { GameNavigation } from '@pages/work/2048/ui/GameNavigation/GameNavigation'
-import { GameHeader } from '@pages/work/2048/ui/GameHeader/GameHeader'
+import { GameHeader } from '@shared/ui'
 import { GameEndModal } from '@pages/work/2048/ui/GameEndModal/GameEndModal'
 import { MemoryCard } from '../../work/memory/ui/MemoryCard/MemoryCard'
-import { MemoryHeader } from '../../work/memory/ui/MemoryHeader/MemoryHeader'
 import styles from './BrandbookPage.module.css'
 
 export const BrandbookPage: FC = () => {
+  const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'year'>('month')
+
   // Mock данные для карточек работы
   const mockGames: WorkGameData[] = [
     {
@@ -85,6 +100,33 @@ export const BrandbookPage: FC = () => {
     { id: '4', pairId: 'pair_2', emoji: '🎨', isFlipped: true, isMatched: true, position: 3 },
     { id: '5', pairId: 'pair_3', emoji: '🎭', isFlipped: false, isMatched: false, position: 4 },
     { id: '6', pairId: 'pair_4', emoji: '🎪', isFlipped: false, isMatched: false, position: 5 }
+  ]
+
+  // Mock данные для компонентов аналитики
+  const mockCategories = [
+    { name: 'Переводы', amount: 19183, color: '#58ffff', percentage: 25 },
+    { name: 'НКО', amount: 12000, color: '#ffeb3b', percentage: 15 },
+    { name: 'Супермаркеты', amount: 9278, color: '#ff5722', percentage: 12 },
+    { name: 'Фастфуд', amount: 9013, color: '#ff9800', percentage: 12 },
+    { name: 'Маркетплейсы', amount: 6483, color: '#e91e63', percentage: 8 },
+    { name: 'Остальное', amount: 22000, color: '#9e9e9e', percentage: 28 }
+  ]
+
+  const mockTransactions = [
+    { icon: '🔄', name: 'Перевод округлений', category: 'Переводы', amount: -21.20, isPositive: false },
+    { icon: '🛒', name: 'Мария РА', category: 'Супермаркеты', amount: -128.80, isPositive: false },
+    { icon: '💳', name: 'Дружище А.', category: 'Переводы', amount: -2000, isPositive: false },
+    { icon: '🏪', name: 'ООО "Инвест Ресторация"', category: 'Супермаркеты', amount: -479.96, isPositive: false },
+    { icon: '💰', name: 'Зарплата', category: 'Доходы', amount: 75000, isPositive: true }
+  ]
+
+  const mockPieSegments = [
+    { name: 'Переводы', value: 19183, percentage: 25, color: '#58ffff', icon: '🔄' },
+    { name: 'НКО', value: 12000, percentage: 15, color: '#ffeb3b', icon: '?' },
+    { name: 'Супермаркеты', value: 9278, percentage: 12, color: '#ff5722', icon: '🛒' },
+    { name: 'Фастфуд', value: 9013, percentage: 12, color: '#ff9800', icon: '🍔' },
+    { name: 'Маркетплейсы', value: 6483, percentage: 8, color: '#e91e63', icon: '👑' },
+    { name: 'Остальное', value: 22000, percentage: 28, color: '#9e9e9e', icon: '•••' }
   ]
 
   return (
@@ -343,6 +385,7 @@ export const BrandbookPage: FC = () => {
             <h3 className={styles.subsectionTitle}>Заголовок игры</h3>
             <div className={styles.gameComponentWrapper}>
               <GameHeader
+                variant="work"
                 level={mockPlayerStats.level}
                 currentExp={mockPlayerStats.currentExp}
                 maxExp={mockPlayerStats.maxExp}
@@ -468,7 +511,8 @@ export const BrandbookPage: FC = () => {
           <div className={styles.subsection}>
             <h3 className={styles.subsectionTitle}>Заголовок игры Memory</h3>
             <div className={styles.gameComponentWrapper}>
-              <MemoryHeader
+              <GameHeader
+                variant="work"
                 level={mockPlayerStats.level}
                 currentExp={mockPlayerStats.currentExp}
                 maxExp={mockPlayerStats.maxExp}
@@ -577,6 +621,188 @@ export const BrandbookPage: FC = () => {
                     </Button>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Компоненты аналитики */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Компоненты аналитики</h2>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Селектор месяца</h3>
+            <div className={styles.analyticsComponentWrapper}>
+              <MonthSelector
+                month="Сентябрь"
+                onClear={() => handleBrandbookAction('Clear month')}
+                onClick={() => handleBrandbookAction('Select month')}
+              />
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Селектор периода</h3>
+            <div className={styles.analyticsComponentWrapper}>
+              <PeriodSelector
+                selectedPeriod={selectedPeriod}
+                onPeriodChange={setSelectedPeriod}
+              />
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Полоска категорий</h3>
+            <div className={styles.analyticsComponentWrapper}>
+              <CategoryProgressBar categories={mockCategories} />
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Карточки аналитики</h3>
+            <div className={styles.analyticsCardsGrid}>
+              <AnalyticsCard
+                amount={77959}
+                type="expenses"
+                categories={mockCategories}
+                onClick={() => handleBrandbookAction('Open expenses card')}
+              />
+              <AnalyticsCard
+                amount={1740}
+                type="income"
+                categories={mockCategories.slice(0, 3)}
+                onClick={() => handleBrandbookAction('Open income card')}
+              />
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Элементы транзакций</h3>
+            <div className={styles.transactionsList}>
+              {mockTransactions.map((transaction, index) => (
+                <TransactionItem
+                  key={index}
+                  icon={transaction.icon}
+                  name={transaction.name}
+                  category={transaction.category}
+                  amount={transaction.amount}
+                  isPositive={transaction.isPositive}
+                  onClick={() => handleBrandbookAction(`Transaction: ${transaction.name}`)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Круговая диаграмма</h3>
+            <div className={styles.analyticsComponentWrapper}>
+              <PieChart
+                segments={mockPieSegments}
+                size={200}
+                strokeWidth={16}
+              />
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Теги категорий</h3>
+            <div className={styles.categoryTagsGrid}>
+              {mockPieSegments.slice(0, 4).map((segment, index) => (
+                <CategoryTag
+                  key={index}
+                  icon={segment.icon}
+                  name={segment.name}
+                  amount={segment.value}
+                  color={segment.color}
+                  onClick={() => handleBrandbookAction(`Category: ${segment.name}`)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Развернутая карточка аналитики</h3>
+            <div className={styles.analyticsComponentWrapper}>
+              <ExpandableAnalyticsCard
+                amount={77959}
+                type="expenses"
+                segments={mockPieSegments}
+                selectedPeriod={selectedPeriod}
+                onPeriodChange={setSelectedPeriod}
+                onClose={() => handleBrandbookAction('Close expanded card')}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Компоненты магазина */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Компоненты магазина</h2>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Премиум карточка</h3>
+            <div className={styles.shopComponentWrapper}>
+              <PremiumCard
+                onPurchase={() => handleBrandbookAction('Premium purchase')}
+              />
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Товары магазина</h3>
+            <div className={styles.shopItemsGrid}>
+              <ShopItem
+                title="Выпить кофе"
+                icon="☕"
+                reward="+4 энергии"
+                price="4"
+                currency="rub"
+                onPurchase={() => handleBrandbookAction('Coffee purchase')}
+              />
+              <ShopItem
+                title="Выпить энергетик"
+                icon="🥤"
+                reward="+12 энергии"
+                price="8"
+                currency="rub"
+                onPurchase={() => handleBrandbookAction('Energy drink purchase')}
+              />
+              <ShopItem
+                title="Кошель денег"
+                icon="👛"
+                reward="+15,000 ₽"
+                price="15"
+                currency="rub"
+                onPurchase={() => handleBrandbookAction('Money wallet purchase')}
+              />
+              <ShopItem
+                title="Премиум товар"
+                icon="⭐"
+                reward="+50 бонусов"
+                price="10"
+                currency="premium"
+                onPurchase={() => handleBrandbookAction('Premium item purchase')}
+              />
+            </div>
+          </div>
+
+          <div className={styles.subsection}>
+            <h3 className={styles.subsectionTitle}>Заголовки разделов магазина</h3>
+            <div className={styles.shopSectionHeadersWrapper}>
+              <div className={styles.sectionHeaderExample}>
+                <Bubble variant="gradient-mint" size="large" className={styles.shopSectionBubble}>
+                  ⚡ Энергия
+                </Bubble>
+              </div>
+              <div className={styles.sectionHeaderExample}>
+                <Bubble variant="gradient-mint" size="large" className={styles.shopSectionBubble}>
+                  ₽ Деньги
+                </Bubble>
+              </div>
+              <div className={styles.sectionHeaderExample}>
+                <Bubble variant="gradient-mint" size="large" className={styles.shopSectionBubble}>
+                  ⭐ Премиум
+                </Bubble>
               </div>
             </div>
           </div>

@@ -1,0 +1,128 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+  gap: var(--space-4);
+}
+
+.title {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin: 0;
+}
+
+.filters {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.analyticsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.expandedCardContainer {
+  width: 100%;
+  margin-bottom: var(--space-8);
+}
+
+.transactionsSection {
+  width: 100%;
+}
+
+.sectionTitle {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin: 0 0 var(--space-4) 0;
+}
+
+.transactionsList {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  backdrop-filter: blur(10px);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--space-3);
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .filters {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .analyticsGrid {
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .expandedCardContainer {
+    margin-bottom: var(--space-6);
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .sectionTitle {
+    font-size: var(--font-size-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--space-2);
+  }
+
+  .header {
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  .analyticsGrid {
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  .expandedCardContainer {
+    margin-bottom: var(--space-4);
+  }
+
+  .transactionsList {
+    padding: var(--space-3);
+  }
+
+  .title {
+    font-size: var(--font-size-lg);
+  }
+
+  .sectionTitle {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-3);
+  }
+}

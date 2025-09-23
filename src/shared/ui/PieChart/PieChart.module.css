@@ -1,0 +1,45 @@
+.pieChart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.segment {
+  transition: all var(--duration-normal) var(--ease-out);
+  cursor: pointer;
+}
+
+.segment:hover {
+  opacity: 0.8;
+  filter: brightness(1.1);
+}
+
+.percentageText {
+  fill: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: 14px;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+  .chart {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+
+  .percentageText {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .percentageText {
+    font-size: 10px;
+  }
+}

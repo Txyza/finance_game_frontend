@@ -1,1 +1,0 @@
-export { WorkHeader } from './WorkHeader'
