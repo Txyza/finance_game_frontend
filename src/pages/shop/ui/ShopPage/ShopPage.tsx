@@ -1,5 +1,5 @@
-import { FC, useState, useCallback, useEffect } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { FC, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import {
   ShopItem,
   PremiumCard,
@@ -7,13 +7,10 @@ import {
   GameHeader,
   ParticleBackground
 } from '@shared/ui'
-import { BottomNavigation, TabType } from '@pages/main/ui/BottomNavigation'
 import styles from './ShopPage.module.css'
 
 export const ShopPage: FC = () => {
-  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const [bottomTab, setBottomTab] = useState<TabType>('character')
 
   // Mock данные игрока
   const playerStats = {
@@ -39,24 +36,6 @@ export const ShopPage: FC = () => {
       }, 100)
     }
   }, [searchParams])
-
-  const handleTabChange = useCallback((tab: TabType) => {
-    setBottomTab(tab)
-
-    if (tab === 'analytics') {
-      navigate('/analytics')
-    } else if (tab === 'leaderboard') {
-      navigate('/leaderboard')
-    } else if (tab === 'tasks') {
-      navigate('/tasks')
-    } else if (tab === 'news') {
-      navigate('/news')
-    } else if (tab === 'character') {
-      navigate('/')
-    } else {
-      console.log(`Navigation to ${tab}`)
-    }
-  }, [navigate])
 
   const handlePurchase = (itemName: string, cost: string) => {
     console.log(`Покупка: ${itemName} за ${cost}`)
@@ -189,13 +168,6 @@ export const ShopPage: FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Нижняя навигация */}
-      <BottomNavigation
-        activeTab={bottomTab}
-        onTabChange={handleTabChange}
-        onCityClick={() => console.log('City clicked')}
-      />
     </div>
   )
 }

@@ -7,7 +7,6 @@ import {
   ParticleBackground
 } from '@shared/ui'
 import { GameHeader } from '@shared/ui'
-import { BottomNavigation, TabType } from '@pages/main/ui/BottomNavigation/BottomNavigation'
 import styles from './LeaderboardPage.module.css'
 
 type LeaderboardCategory = 'money' | 'game2048' | 'memory'
@@ -15,7 +14,6 @@ type LeaderboardCategory = 'money' | 'game2048' | 'memory'
 export const LeaderboardPage: React.FC = () => {
   const navigate = useNavigate()
   const [activeCategory, setActiveCategory] = useState<LeaderboardCategory>('money')
-  const [activeTab, setActiveTab] = useState<TabType>('leaderboard')
 
   // Mock данные игрока
   const playerStats = {
@@ -99,24 +97,7 @@ export const LeaderboardPage: React.FC = () => {
     console.log('Player clicked:', player.nickname)
   }
 
-  const handleTabChange = useCallback((tab: TabType) => {
-    setActiveTab(tab)
 
-    if (tab === 'character') {
-      navigate('/')
-    } else if (tab === 'analytics') {
-      navigate('/analytics')
-    } else if (tab === 'leaderboard') {
-      // Already on leaderboard page
-      return
-    } else {
-      console.log(`Navigation to ${tab}`)
-    }
-  }, [navigate])
-
-  const handleCityClick = useCallback(() => {
-    console.log('City clicked')
-  }, [])
 
   return (
     <div className="common-page-background">
@@ -191,12 +172,6 @@ export const LeaderboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Нижняя навигация */}
-      <BottomNavigation
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        onCityClick={handleCityClick}
-      />
     </div>
   )
 }

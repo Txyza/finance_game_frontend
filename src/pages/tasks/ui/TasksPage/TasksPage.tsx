@@ -6,7 +6,6 @@ import {
   ParticleBackground
 } from '@shared/ui'
 import { GameHeader } from '@shared/ui'
-import { BottomNavigation, TabType } from '@pages/main/ui/BottomNavigation/BottomNavigation'
 import styles from './TasksPage.module.css'
 
 type TaskCategory = 'tasks' | 'daily' | 'weekly'
@@ -14,7 +13,6 @@ type TaskCategory = 'tasks' | 'daily' | 'weekly'
 export const TasksPage: React.FC = () => {
   const navigate = useNavigate()
   const [activeCategory, setActiveCategory] = useState<TaskCategory>('daily')
-  const [activeTab, setActiveTab] = useState<TabType>('tasks')
   const [tasks, setTasks] = useState<Record<TaskCategory, Task[]>>({
     tasks: [
       {
@@ -135,26 +133,7 @@ export const TasksPage: React.FC = () => {
     })
   }, [])
 
-  const handleTabChange = useCallback((tab: TabType) => {
-    setActiveTab(tab)
 
-    if (tab === 'character') {
-      navigate('/')
-    } else if (tab === 'analytics') {
-      navigate('/analytics')
-    } else if (tab === 'leaderboard') {
-      navigate('/leaderboard')
-    } else if (tab === 'tasks') {
-      // Already on tasks page
-      return
-    } else {
-      console.log(`Navigation to ${tab}`)
-    }
-  }, [navigate])
-
-  const handleCityClick = useCallback(() => {
-    console.log('City clicked')
-  }, [])
 
   const getEmptyStateText = (category: TaskCategory) => {
     switch (category) {
@@ -217,12 +196,6 @@ export const TasksPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Нижняя навигация */}
-      <BottomNavigation
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        onCityClick={handleCityClick}
-      />
     </div>
   )
 }

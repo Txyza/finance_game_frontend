@@ -9,7 +9,6 @@ import {
   ParticleBackground
 } from '@shared/ui'
 import { GameHeader } from '@shared/ui'
-import { BottomNavigation, TabType } from '@pages/main/ui/BottomNavigation/BottomNavigation'
 import styles from './AnalyticsPage.module.css'
 
 type Period = 'week' | 'month' | 'year'
@@ -33,7 +32,6 @@ export const AnalyticsPage: React.FC = () => {
   const navigate = useNavigate()
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
   const [expandedCard, setExpandedCard] = useState<'expenses' | 'income' | null>(null)
-  const [activeTab, setActiveTab] = useState<TabType>('analytics')
 
   // Mock данные игрока
   const playerStats = {
@@ -129,23 +127,7 @@ export const AnalyticsPage: React.FC = () => {
     console.log('Transaction clicked:', transaction.name)
   }
 
-  const handleTabChange = useCallback((tab: TabType) => {
-    setActiveTab(tab)
 
-    // Navigate to specific pages for certain tabs
-    if (tab === 'analytics') {
-      // Already on analytics page
-      return
-    } else if (tab === 'character') {
-      navigate('/')
-    } else {
-      console.log(`Navigation to ${tab}`)
-    }
-  }, [navigate])
-
-  const handleCityClick = useCallback(() => {
-    console.log('City clicked')
-  }, [])
 
   return (
     <div className="common-page-background">
@@ -238,12 +220,6 @@ export const AnalyticsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Нижняя навигация */}
-      <BottomNavigation
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        onCityClick={handleCityClick}
-      />
     </div>
   )
 }

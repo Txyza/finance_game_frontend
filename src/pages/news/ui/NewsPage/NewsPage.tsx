@@ -6,12 +6,10 @@ import {
   ParticleBackground
 } from '@shared/ui'
 import { GameHeader } from '@shared/ui'
-import { BottomNavigation, TabType } from '@pages/main/ui/BottomNavigation/BottomNavigation'
 import styles from './NewsPage.module.css'
 
 export const NewsPage: React.FC = () => {
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<TabType>('news')
   const [news, setNews] = useState<NewsItem[]>([
     {
       id: 'news-1',
@@ -94,28 +92,7 @@ export const NewsPage: React.FC = () => {
     )
   }, [])
 
-  const handleTabChange = useCallback((tab: TabType) => {
-    setActiveTab(tab)
 
-    if (tab === 'character') {
-      navigate('/')
-    } else if (tab === 'analytics') {
-      navigate('/analytics')
-    } else if (tab === 'leaderboard') {
-      navigate('/leaderboard')
-    } else if (tab === 'tasks') {
-      navigate('/tasks')
-    } else if (tab === 'news') {
-      // Already on news page
-      return
-    } else {
-      console.log(`Navigation to ${tab}`)
-    }
-  }, [navigate])
-
-  const handleCityClick = useCallback(() => {
-    console.log('City clicked')
-  }, [])
 
   const unreadCount = news.filter(item => !item.isRead).length
 
@@ -155,12 +132,6 @@ export const NewsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Нижняя навигация */}
-      <BottomNavigation
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        onCityClick={handleCityClick}
-      />
     </div>
   )
 }

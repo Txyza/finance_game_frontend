@@ -1,14 +1,12 @@
-import { FC, useState, useCallback } from 'react'
+import { FC, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ParticleBackground, GameHeader } from '@shared/ui'
 import { CharacterArea } from './CharacterArea'
-import { BottomNavigation, TabType } from './BottomNavigation'
 import { PlayerStats, GameActions } from '../model/types'
 import styles from './MainPage.module.css'
 
 export const MainPage: FC = () => {
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<TabType>('character')
 
   // Mock данные игрока
   const playerStats: PlayerStats = {
@@ -49,23 +47,6 @@ export const MainPage: FC = () => {
     }, [])
   }
 
-  const handleTabChange = useCallback((tab: TabType) => {
-    setActiveTab(tab)
-
-    // Navigate to specific pages for certain tabs
-    if (tab === 'analytics') {
-      navigate('/analytics')
-    } else if (tab === 'leaderboard') {
-      navigate('/leaderboard')
-    } else if (tab === 'tasks') {
-      navigate('/tasks')
-    } else if (tab === 'news') {
-      navigate('/news')
-    } else {
-      console.log(`Navigation to ${tab}`)
-    }
-  }, [navigate])
-
   return (
     <div className="common-page-background">
       {/* Анимированный фон с частицами */}
@@ -99,13 +80,6 @@ export const MainPage: FC = () => {
           onCityClick={gameActions.onCityClick}
         />
       </div>
-
-      {/* Нижняя навигация */}
-      <BottomNavigation
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        onCityClick={gameActions.onCityClick}
-      />
     </div>
   )
 }

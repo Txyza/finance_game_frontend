@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { generateGameUUID } from '../2048/model/gameStore'
 import { generateGameUUID as generateMemoryUUID } from '../memory/model/gameStore'
 import { ParticleBackground } from '@shared/ui'
-import { BottomNavigation } from '@pages/main/ui/BottomNavigation'
 import { GameHeader } from '@shared/ui'
 import { WorkList } from './WorkList'
 import { WorkGameData } from './WorkCard'
@@ -62,17 +61,7 @@ export const WorkPage: FC = () => {
     }
   }, [navigate])
 
-  const handleTabChange = useCallback((tab: string) => {
-    console.log(`Navigation to ${tab}`)
-    if (tab === 'character') {
-      navigate('/')
-    }
-  }, [navigate])
 
-  const handleCityClick = useCallback(() => {
-    console.log('City clicked')
-    // Здесь будет логика перехода в город
-  }, [])
 
   return (
     <div className="common-page-background">
@@ -104,12 +93,6 @@ export const WorkPage: FC = () => {
         />
       </div>
 
-      {/* Нижняя навигация */}
-      <BottomNavigation
-        activeTab="character"
-        onTabChange={handleTabChange}
-        onCityClick={handleCityClick}
-      />
     </div>
   )
 }
