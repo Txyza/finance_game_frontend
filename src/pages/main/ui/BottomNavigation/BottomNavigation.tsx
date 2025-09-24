@@ -1,8 +1,4 @@
 import { FC } from 'react'
-import { Bubble } from '@shared/ui'
-import analyticIcon from '@shared/assets/images/analytic_icon.png'
-import cityIcon from '@shared/assets/images/city_icon.png'
-import profileIcon from '@shared/assets/images/profile_icon.png'
 import styles from './BottomNavigation.module.css'
 
 export type TabType = 'shop' | 'analytics' | 'character'
@@ -22,20 +18,17 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({
     {
       id: 'shop' as TabType,
       icon: '🛒',
-      label: 'Магазин',
-      isImage: false
+      label: 'Магазин'
     },
     {
       id: 'analytics' as TabType,
-      icon: analyticIcon,
-      label: 'Аналитика',
-      isImage: true
+      icon: '📊',
+      label: 'Аналитика'
     },
     {
       id: 'character' as TabType,
-      icon: profileIcon,
-      label: 'Персонаж',
-      isImage: true
+      icon: '👤',
+      label: 'Персонаж'
     }
   ]
 
@@ -47,16 +40,10 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({
           key={tab.id}
           className={`${styles.navButton} ${activeTab === tab.id ? styles.activeButton : ''}`}
           onClick={() => onTabChange(tab.id)}
+          aria-label={tab.label}
         >
-          {tab.isImage ? (
-            <img
-              src={tab.icon as string}
-              alt={tab.label}
-              className={styles.navIconImage}
-            />
-          ) : (
-            <span className={styles.navIcon}>{tab.icon as string}</span>
-          )}
+          <span className={styles.navIcon}>{tab.icon}</span>
+          <span className={styles.navLabel}>{tab.label}</span>
         </button>
       ))}
 
@@ -64,12 +51,10 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({
       <button
         className={`${styles.navButton} ${styles.cityButton}`}
         onClick={onCityClick}
+        aria-label="Город"
       >
-        <img
-          src={cityIcon}
-          alt="Город"
-          className={styles.navIconImage}
-        />
+        <span className={styles.navIcon}>🏙️</span>
+        <span className={styles.navLabel}>Город</span>
       </button>
     </div>
   )

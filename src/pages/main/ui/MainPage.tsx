@@ -1,6 +1,7 @@
 import { FC, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ParticleBackground, GameHeaderContainer } from '@shared/ui'
+import { SEO } from '@shared/components'
 import { CharacterArea } from './CharacterArea'
 import { PlayerStats, GameActions } from '../model/types'
 import styles from './MainPage.module.css'
@@ -48,7 +49,13 @@ export const MainPage: FC = () => {
   }
 
   return (
-    <div className="common-page-background">
+    <>
+      <SEO
+        title="Cash-lvl - Главная | Финансовая образовательная игра"
+        description="Начните свой путь к финансовой грамотности в игре Cash-lvl. Учитесь управлять деньгами, инвестировать и достигать финансовых целей в увлекательной игровой форме."
+        canonicalUrl="https://cash-lvl.ru/"
+      />
+      <div className="common-page-background">
       {/* Анимированный фон с частицами */}
       <ParticleBackground
         particleCount={30}
@@ -75,5 +82,6 @@ export const MainPage: FC = () => {
         />
       </div>
     </div>
+    </>
   )
 }

@@ -11,18 +11,16 @@ import { NewsPage } from '@pages/news/ui/NewsPage'
 import { ShopPage } from '@pages/shop/ui/ShopPage'
 import { CityPage, DistrictPage } from '@pages/city'
 import { OnboardingPage } from '@pages/onboarding'
+import { NotFoundPage } from '@pages/NotFound'
 import { AuthManager } from '@shared/components'
+import { usePageTracking } from '@shared/hooks/usePageTracking'
 import { MainLayout } from '../../layouts/MainLayout'
 
-export const RouterProvider = () => {
+const AppContent = () => {
+  usePageTracking()
+
   return (
-    <BrowserRouter
-      future={{
-        v7_startTransition: true,
-        v7_relativeSplatPath: true
-      }}
-    >
-      <AuthManager>
+    <AuthManager>
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<MainPage />} />
@@ -40,8 +38,22 @@ export const RouterProvider = () => {
           <Route path="/work/2048" element={<Game2048Page />} />
           <Route path="/work/memory" element={<MemoryPage />} />
           <Route path="/brandbook" element={<BrandbookPage />} />
+          {/* 404 страница */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthManager>
+  )
+}
+
+export const RouterProvider = () => {
+  return (
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}
+    >
+      <AppContent />
     </BrowserRouter>
   )
 }
