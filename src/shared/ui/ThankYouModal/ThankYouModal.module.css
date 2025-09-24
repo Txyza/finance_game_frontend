@@ -1,0 +1,127 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-4);
+}
+
+.modal {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  max-width: 400px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-4);
+}
+
+.icon {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--space-2);
+  display: block;
+}
+
+.title {
+  color: var(--color-black);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin: 0;
+}
+
+.content {
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+.message {
+  color: var(--color-black);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  min-width: 120px;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+  .overlay {
+    padding: var(--space-3);
+  }
+
+  .modal {
+    padding: var(--space-4);
+    max-width: none;
+  }
+
+  .title {
+    font-size: var(--font-size-lg);
+  }
+
+  .icon {
+    font-size: var(--font-size-3xl);
+  }
+
+  .message {
+    font-size: var(--font-size-sm);
+  }
+
+  .button {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .overlay {
+    padding: var(--space-2);
+  }
+
+  .modal {
+    padding: var(--space-3);
+  }
+
+  .title {
+    font-size: var(--font-size-base);
+  }
+
+  .icon {
+    font-size: var(--font-size-2xl);
+  }
+}

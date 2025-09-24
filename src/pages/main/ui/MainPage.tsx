@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ParticleBackground, GameHeader } from '@shared/ui'
+import { ParticleBackground, GameHeaderContainer } from '@shared/ui'
 import { CharacterArea } from './CharacterArea'
 import { PlayerStats, GameActions } from '../model/types'
 import styles from './MainPage.module.css'
@@ -57,13 +57,7 @@ export const MainPage: FC = () => {
       />
 
       {/* Шапка со статистикой игрока */}
-      <GameHeader
-        level={playerStats.level}
-        currentExp={playerStats.currentExp}
-        maxExp={playerStats.maxExp}
-        energy={playerStats.energy}
-        maxEnergy={playerStats.maxEnergy}
-        money={playerStats.money}
+      <GameHeaderContainer
         bankRate={playerStats.bankRate}
         inflation={playerStats.inflation}
       />

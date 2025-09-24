@@ -5,7 +5,7 @@ import {
   Task,
   ParticleBackground
 } from '@shared/ui'
-import { GameHeader } from '@shared/ui'
+import { GameHeaderContainer } from '@shared/ui'
 import styles from './TasksPage.module.css'
 
 type TaskCategory = 'tasks' | 'daily' | 'weekly'
@@ -152,13 +152,7 @@ export const TasksPage: React.FC = () => {
     <div className="common-page-background">
       <ParticleBackground />
 
-      <GameHeader
-        level={playerStats.level}
-        currentExp={playerStats.currentExp}
-        maxExp={playerStats.maxExp}
-        energy={playerStats.energy}
-        maxEnergy={playerStats.maxEnergy}
-        money={playerStats.money}
+      <GameHeaderContainer
         bankRate={playerStats.bankRate}
         inflation={playerStats.inflation}
       />

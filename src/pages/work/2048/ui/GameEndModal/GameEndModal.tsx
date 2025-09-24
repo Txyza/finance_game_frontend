@@ -2,14 +2,16 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGameStore } from '../../model/gameStore'
 import { Button } from '../../../../../shared/ui'
+import { formatMoney } from '../../../../../shared/lib/formatMoney'
 import styles from './GameEndModal.module.css'
 
 interface GameEndModalProps {
   isOpen: boolean
   onClose: () => void
+  earnedAmount?: number | null
 }
 
-export const GameEndModal: React.FC<GameEndModalProps> = ({ isOpen, onClose }) => {
+export const GameEndModal: React.FC<GameEndModalProps> = ({ isOpen, onClose, earnedAmount }) => {
   const navigate = useNavigate()
   const { isWon, resetGame, getStatistics } = useGameStore()
 
@@ -38,6 +40,14 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({ isOpen, onClose }) =
         </div>
 
         <div className={styles.content}>
+          {/* Заработанная сумма - самая важная информация */}
+          {earnedAmount !== null && earnedAmount !== undefined && (
+            <div className={styles.rewardSection}>
+              <div className={styles.rewardLabel}>💰 Заработано</div>
+              <div className={styles.rewardValue}>{formatMoney(earnedAmount)}</div>
+            </div>
+          )}
+
           <div className={styles.statsGrid}>
             <div className={styles.statItem}>
               <div className={styles.statLabel}>Очки</div>

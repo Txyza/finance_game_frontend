@@ -6,7 +6,7 @@ import {
   LeaderboardItem,
   ParticleBackground
 } from '@shared/ui'
-import { GameHeader } from '@shared/ui'
+import { GameHeaderContainer } from '@shared/ui'
 import styles from './LeaderboardPage.module.css'
 
 type LeaderboardCategory = 'money' | 'game2048' | 'memory'
@@ -103,13 +103,7 @@ export const LeaderboardPage: React.FC = () => {
     <div className="common-page-background">
       <ParticleBackground />
 
-      <GameHeader
-        level={playerStats.level}
-        currentExp={playerStats.currentExp}
-        maxExp={playerStats.maxExp}
-        energy={playerStats.energy}
-        maxEnergy={playerStats.maxEnergy}
-        money={playerStats.money}
+      <GameHeaderContainer
         bankRate={playerStats.bankRate}
         inflation={playerStats.inflation}
       />

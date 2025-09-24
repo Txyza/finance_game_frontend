@@ -1,65 +1,62 @@
-import { FC, useCallback } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { generateGameUUID } from '../2048/model/gameStore'
-import { generateGameUUID as generateMemoryUUID } from '../memory/model/gameStore'
 import { ParticleBackground } from '@shared/ui'
-import { GameHeader } from '@shared/ui'
+import { GameHeaderContainer } from '@shared/ui'
+import { useWork } from '@shared/hooks'
+import { useUserContext } from '@shared/context'
 import { WorkList } from './WorkList'
 import { WorkGameData } from './WorkCard'
 import styles from './WorkPage.module.css'
 
 export const WorkPage: FC = () => {
   const navigate = useNavigate()
+  const { user } = useUserContext()
+  const { workList, startWork, loading, error } = useWork()
 
-  // Mock данные игрока
-  const playerStats = {
-    level: 5,
-    currentExp: 20,
-    maxExp: 150,
-    energy: 18,
-    maxEnergy: 24,
-    money: 12500
+  // Преобразуем данные из API в формат для UI
+  const availableGames: WorkGameData[] = useMemo(() => {
+    if (!workList?.works) return []
+
+    return workList.works.map(work => ({
+      id: work.name.toLowerCase().replace(' ', '_'),
+      name: work.name,
+      description: work.description,
+      icon: getGameIcon(work.name),
+      multiplier: work.amount_booster,
+      energyCost: work.energy,
+      isAvailable: user ? user.energy >= work.energy : false
+    }))
+  }, [workList, user])
+
+  // Функция для получения иконки игры
+  const getGameIcon = (gameName: string): string => {
+    const name = gameName.toLowerCase()
+    if (name.includes('2048')) return '🎲'
+    if (name.includes('memory') || name.includes('память')) return '🧠'
+    if (name.includes('puzzle') || name.includes('головоломка')) return '🧩'
+    return '🎮'
   }
 
-  // Данные доступных игр
-  const availableGames: WorkGameData[] = [
-    {
-      id: '2048',
-      name: '2048',
-      description: 'Собери плитку 2048 на поле 4x4',
-      icon: '🎲',
-      multiplier: 2.0,
-      energyCost: 5,
-      isAvailable: true
-    },
-    {
-      id: 'memory',
-      name: 'Память',
-      description: 'Находи пары одинаковых карточек',
-      icon: '🧠',
-      multiplier: 1.0,
-      energyCost: 2,
-      isAvailable: true
-    }
-  ]
-
-  // Обработчики действий
-  const handleGameStart = useCallback((gameId: string) => {
+  // Обработчик запуска игры
+  const handleGameStart = useCallback(async (gameId: string) => {
     console.log(`Starting game: ${gameId}`)
 
-    if (gameId === '2048') {
-      // Генерируем новый UUID для сессии игры
-      const gameSessionId = generateGameUUID()
-      navigate(`/work/2048?id=${gameSessionId}`)
-    } else if (gameId === 'memory') {
-      // Генерируем новый UUID для сессии игры Memory
-      const gameSessionId = generateMemoryUUID()
-      navigate(`/work/memory?id=${gameSessionId}`)
+    // Вызываем API для начала работы
+    const transactionId = await startWork()
+    if (!transactionId) {
+      console.error('Failed to start work session')
+      return
+    }
+
+    // Определяем какую игру запускать и переходим на нее с transaction ID
+    if (gameId === '2048' || gameId.includes('2048')) {
+      navigate(`/work/2048?transactionId=${transactionId}`)
+    } else if (gameId === 'memory' || gameId === 'память' || gameId.includes('memory')) {
+      navigate(`/work/memory?transactionId=${transactionId}`)
     } else {
-      // Для других игр пока что показываем уведомление
       console.log(`Game ${gameId} is not implemented yet`)
     }
-  }, [navigate])
+  }, [navigate, startWork])
 
 
 
@@ -73,14 +70,8 @@ export const WorkPage: FC = () => {
       />
 
       {/* Шапка со статистикой */}
-      <GameHeader
+      <GameHeaderContainer
         variant="work"
-        level={playerStats.level}
-        currentExp={playerStats.currentExp}
-        maxExp={playerStats.maxExp}
-        energy={playerStats.energy}
-        maxEnergy={playerStats.maxEnergy}
-        money={playerStats.money}
       />
 
       {/* Основной контент */}
@@ -88,9 +79,34 @@ export const WorkPage: FC = () => {
         {/* Список игр */}
         <WorkList
           games={availableGames}
-          currentEnergy={playerStats.energy}
+          currentEnergy={user?.energy || 0}
           onGameStart={handleGameStart}
         />
+
+        {/* Показываем ошибки если есть */}
+        {error && (
+          <div style={{
+            color: '#ff6b6b',
+            background: 'rgba(255, 107, 107, 0.1)',
+            border: '1px solid rgba(255, 107, 107, 0.3)',
+            borderRadius: '8px',
+            padding: '16px',
+            margin: '16px 0'
+          }}>
+            Ошибка загрузки игр: {error.message}
+          </div>
+        )}
+
+        {/* Индикатор загрузки */}
+        {loading && (
+          <div style={{
+            color: 'white',
+            textAlign: 'center',
+            padding: '32px'
+          }}>
+            Загружаем список игр...
+          </div>
+        )}
       </div>
 
     </div>

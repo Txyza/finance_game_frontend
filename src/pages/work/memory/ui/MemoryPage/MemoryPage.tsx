@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useMemoryGameStore, generateGameUUID } from '../../model/gameStore'
-import { GameHeader } from '@shared/ui'
+import { GameHeaderContainer } from '@shared/ui'
 import { MemoryNavigation } from '../MemoryNavigation/MemoryNavigation'
 import { MemoryBoard } from '../MemoryBoard/MemoryBoard'
 import { MemoryEndModal } from '../MemoryEndModal/MemoryEndModal'
@@ -58,14 +58,8 @@ export const MemoryPage: React.FC = () => {
     <div className="common-page-background">
       <ParticleBackground />
 
-      <GameHeader
+      <GameHeaderContainer
         variant="work"
-        level={playerStats.level}
-        currentExp={playerStats.currentExp}
-        maxExp={playerStats.maxExp}
-        energy={playerStats.energy}
-        maxEnergy={playerStats.maxEnergy}
-        money={playerStats.money}
       />
 
       <MemoryNavigation />

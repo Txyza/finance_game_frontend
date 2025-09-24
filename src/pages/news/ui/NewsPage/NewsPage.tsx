@@ -5,7 +5,7 @@ import {
   NewsItem,
   ParticleBackground
 } from '@shared/ui'
-import { GameHeader } from '@shared/ui'
+import { GameHeaderContainer } from '@shared/ui'
 import styles from './NewsPage.module.css'
 
 export const NewsPage: React.FC = () => {
@@ -100,13 +100,7 @@ export const NewsPage: React.FC = () => {
     <div className="common-page-background">
       <ParticleBackground />
 
-      <GameHeader
-        level={playerStats.level}
-        currentExp={playerStats.currentExp}
-        maxExp={playerStats.maxExp}
-        energy={playerStats.energy}
-        maxEnergy={playerStats.maxEnergy}
-        money={playerStats.money}
+      <GameHeaderContainer
         bankRate={playerStats.bankRate}
         inflation={playerStats.inflation}
       />

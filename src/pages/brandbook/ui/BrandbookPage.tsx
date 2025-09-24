@@ -19,7 +19,7 @@ import { WorkshopCard } from '@widgets/WorkshopCard'
 import { WorkCard, WorkGameData } from '@pages/work/ui/WorkCard'
 import { GameTile } from '@pages/work/2048/ui/GameTile/GameTile'
 import { GameNavigation } from '@pages/work/2048/ui/GameNavigation/GameNavigation'
-import { GameHeader } from '@shared/ui'
+import { GameHeaderContainer } from '@shared/ui'
 import { GameEndModal } from '@pages/work/2048/ui/GameEndModal/GameEndModal'
 import { MemoryCard } from '../../work/memory/ui/MemoryCard/MemoryCard'
 import styles from './BrandbookPage.module.css'
@@ -384,14 +384,8 @@ export const BrandbookPage: FC = () => {
           <div className={styles.subsection}>
             <h3 className={styles.subsectionTitle}>Заголовок игры</h3>
             <div className={styles.gameComponentWrapper}>
-              <GameHeader
+              <GameHeaderContainer
                 variant="work"
-                level={mockPlayerStats.level}
-                currentExp={mockPlayerStats.currentExp}
-                maxExp={mockPlayerStats.maxExp}
-                energy={mockPlayerStats.energy}
-                maxEnergy={mockPlayerStats.maxEnergy}
-                money={mockPlayerStats.money}
               />
             </div>
           </div>
@@ -511,14 +505,8 @@ export const BrandbookPage: FC = () => {
           <div className={styles.subsection}>
             <h3 className={styles.subsectionTitle}>Заголовок игры Memory</h3>
             <div className={styles.gameComponentWrapper}>
-              <GameHeader
+              <GameHeaderContainer
                 variant="work"
-                level={mockPlayerStats.level}
-                currentExp={mockPlayerStats.currentExp}
-                maxExp={mockPlayerStats.maxExp}
-                energy={mockPlayerStats.energy}
-                maxEnergy={mockPlayerStats.maxEnergy}
-                money={mockPlayerStats.money}
               />
             </div>
           </div>

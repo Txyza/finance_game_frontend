@@ -1,5 +1,6 @@
-/* Main variant - как на главной странице */
-.headerMain {
+/* Общие стили для обоих вариантов header */
+.headerMain,
+.headerWork {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -12,24 +13,14 @@
   left: 0;
   right: 0;
   z-index: 10;
-  height: auto;
+  min-height: 88px; /* Фиксированная минимальная высота */
 }
 
-/* Work variant - для страниц /work и игр */
+/* Особенности для work варианта */
 .headerWork {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
-  background: rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(5px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  height: auto;
+  background: rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .topRow {
@@ -48,14 +39,11 @@
 
 /* Адаптивность для мобильных */
 @media (max-width: 480px) {
-  .headerMain {
+  .headerMain,
+  .headerWork {
     padding: var(--space-2) var(--space-4);
     gap: var(--space-1);
-  }
-
-  .headerWork {
-    padding: var(--space-1) var(--space-3);
-    gap: var(--space-1);
+    min-height: 80px;
   }
 
   .bottomRow {
@@ -64,14 +52,11 @@
 }
 
 @media (max-width: 360px) {
-  .headerMain {
+  .headerMain,
+  .headerWork {
     padding: var(--space-1) var(--space-3);
     gap: var(--space-1);
-  }
-
-  .headerWork {
-    padding: var(--space-1) var(--space-2);
-    gap: var(--space-1);
+    min-height: 72px;
   }
 
   .bottomRow {

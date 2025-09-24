@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ParticleBackground, GameHeader } from '@shared/ui'
+import { ParticleBackground, GameHeaderContainer } from '@shared/ui'
 import { CityMap } from '../CityMap'
 import { DistrictId } from '../../model/types'
 import styles from './CityPage.module.css'
@@ -40,14 +40,8 @@ export const CityPage: FC = () => {
       />
 
       {/* Шапка со статистикой игрока */}
-      <GameHeader
+      <GameHeaderContainer
         variant="main"
-        level={playerStats.level}
-        currentExp={playerStats.currentExp}
-        maxExp={playerStats.maxExp}
-        energy={playerStats.energy}
-        maxEnergy={playerStats.maxEnergy}
-        money={playerStats.money}
         bankRate={playerStats.bankRate}
         inflation={playerStats.inflation}
       />

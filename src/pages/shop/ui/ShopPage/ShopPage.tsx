@@ -1,16 +1,18 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import {
   ShopItem,
   PremiumCard,
   Bubble,
-  GameHeader,
-  ParticleBackground
+  GameHeaderContainer,
+  ParticleBackground,
+  ThankYouModal
 } from '@shared/ui'
 import styles from './ShopPage.module.css'
 
 export const ShopPage: FC = () => {
   const [searchParams] = useSearchParams()
+  const [showThankYouModal, setShowThankYouModal] = useState(false)
 
   // Mock данные игрока
   const playerStats = {
@@ -39,7 +41,12 @@ export const ShopPage: FC = () => {
 
   const handlePurchase = (itemName: string, cost: string) => {
     console.log(`Покупка: ${itemName} за ${cost}`)
-    // Здесь будет логика покупки
+    // Показываем модал с благодарностью
+    setShowThankYouModal(true)
+  }
+
+  const handleCloseThankYouModal = () => {
+    setShowThankYouModal(false)
   }
 
   const energyItems = [
@@ -94,13 +101,7 @@ export const ShopPage: FC = () => {
       />
 
       {/* Шапка со статистикой игрока */}
-      <GameHeader
-        level={playerStats.level}
-        currentExp={playerStats.currentExp}
-        maxExp={playerStats.maxExp}
-        energy={playerStats.energy}
-        maxEnergy={playerStats.maxEnergy}
-        money={playerStats.money}
+      <GameHeaderContainer
         bankRate={playerStats.bankRate}
         inflation={playerStats.inflation}
       />
@@ -168,6 +169,12 @@ export const ShopPage: FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Модал с благодарностью */}
+      <ThankYouModal
+        isOpen={showThankYouModal}
+        onClose={handleCloseThankYouModal}
+      />
     </div>
   )
 }

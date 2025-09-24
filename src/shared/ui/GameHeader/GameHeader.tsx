@@ -89,22 +89,34 @@ export const GameHeader: FC<GameHeaderProps> = ({
               onClick: handleMoneyAdd
             }}
           >
-            {formatMoney(money)} ₽
+            {formatMoney(money)}
           </Bubble>
         </div>
       </div>
 
-      {/* Экономические показатели - только для main варианта */}
-      {variant === 'main' && bankRate !== undefined && inflation !== undefined && (
-        <div className={styles.bottomRow}>
-          <Bubble variant="outline" size="small" icon="📈">
-            {bankRate}% Ставка
-          </Bubble>
-          <Bubble variant="outline" size="small" icon="📊">
-            {inflation}% Инфляция
-          </Bubble>
-        </div>
-      )}
+      {/* Экономические показатели или пустое место для одинаковой высоты */}
+      <div className={styles.bottomRow}>
+        {variant === 'main' && bankRate !== undefined && inflation !== undefined ? (
+          <>
+            <Bubble variant="outline" size="small" icon="📈">
+              {bankRate}% Ставка
+            </Bubble>
+            <Bubble variant="outline" size="small" icon="📊">
+              {inflation}% Инфляция
+            </Bubble>
+          </>
+        ) : (
+          /* Пустые Bubble компоненты для идентичной структуры */
+          <>
+            <Bubble variant="outline" size="small" style={{ visibility: 'hidden' }}>
+              placeholder
+            </Bubble>
+            <Bubble variant="outline" size="small" style={{ visibility: 'hidden' }}>
+              placeholder
+            </Bubble>
+          </>
+        )}
+      </div>
     </header>
   )
 }
