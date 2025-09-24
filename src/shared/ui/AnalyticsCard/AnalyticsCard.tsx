@@ -1,5 +1,6 @@
 import React from 'react'
 import { CategoryProgressBar } from '../CategoryProgressBar'
+import { formatMoney } from '@shared/lib/formatMoney'
 import styles from './AnalyticsCard.module.css'
 
 interface CategoryData {
@@ -11,7 +12,7 @@ interface CategoryData {
 
 interface AnalyticsCardProps {
   amount: number
-  type: 'expenses' | 'income'
+  type: 'expenses' | 'income' | 'assets' | 'liabilities'
   categories: CategoryData[]
   onClick?: () => void
   className?: string
@@ -24,11 +25,22 @@ export const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   onClick,
   className
 }) => {
-  const formatAmount = (amount: number) => {
-    return amount.toLocaleString('ru-RU')
+  const getTypeText = (type: string) => {
+    switch (type) {
+      case 'expenses':
+        return 'Траты'
+      case 'income':
+        return 'Доходы'
+      case 'assets':
+        return 'Активы'
+      case 'liabilities':
+        return 'Пассивы'
+      default:
+        return 'Данные'
+    }
   }
 
-  const typeText = type === 'expenses' ? 'Траты' : 'Доходы'
+  const typeText = getTypeText(type)
 
   return (
     <div
@@ -37,7 +49,7 @@ export const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
     >
       <div className={styles.header}>
         <div className={styles.amount}>
-          {formatAmount(amount)} ₽
+          {formatMoney(amount)} ₽
         </div>
         <div className={styles.type}>
           {typeText}

@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Bubble, ProgressBar } from '@shared/ui'
+import { formatMoney } from '@shared/lib/formatMoney'
 import styles from './GameHeader.module.css'
 
 interface GameHeaderProps {
@@ -32,9 +33,6 @@ export const GameHeader: FC<GameHeaderProps> = ({
 }) => {
   const navigate = useNavigate()
 
-  const formatMoney = (amount: number) => {
-    return amount.toLocaleString('ru-RU')
-  }
 
   const handleEnergyAdd = () => {
     if (onEnergyAdd) {

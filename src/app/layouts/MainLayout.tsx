@@ -35,8 +35,8 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   }, [navigate])
 
   const handleCityClick = useCallback(() => {
-    console.log('City clicked')
-  }, [])
+    navigate('/city')
+  }, [navigate])
 
   // Не показываем навигацию на определенных страницах
   const hideNavigation = ['/brandbook', '/work/2048', '/work/memory'].includes(location.pathname)

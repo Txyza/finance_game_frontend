@@ -31,7 +31,7 @@ interface ChartSegment {
 export const AnalyticsPage: React.FC = () => {
   const navigate = useNavigate()
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
-  const [expandedCard, setExpandedCard] = useState<'expenses' | 'income' | null>(null)
+  const [expandedCard, setExpandedCard] = useState<'expenses' | 'income' | 'assets' | 'liabilities' | null>(null)
 
   // Mock данные игрока
   const playerStats = {
@@ -59,6 +59,21 @@ export const AnalyticsPage: React.FC = () => {
   const incomeCategories: CategoryData[] = [
     { name: 'Зарплата', amount: 75000, color: '#4caf50', percentage: 90 },
     { name: 'Фриланс', amount: 8000, color: '#2196f3', percentage: 10 }
+  ]
+
+  // Mock данные для активов
+  const assetsCategories: CategoryData[] = [
+    { name: 'Депозиты', amount: 500000, color: '#4caf50', percentage: 50 },
+    { name: 'Акции', amount: 300000, color: '#2196f3', percentage: 30 },
+    { name: 'Облигации', amount: 150000, color: '#ff9800', percentage: 15 },
+    { name: 'Криптовалюта', amount: 50000, color: '#9c27b0', percentage: 5 }
+  ]
+
+  // Mock данные для пассивов
+  const liabilitiesCategories: CategoryData[] = [
+    { name: 'Ипотека', amount: 2500000, color: '#f44336', percentage: 70 },
+    { name: 'Автокредит', amount: 800000, color: '#ff5722', percentage: 22 },
+    { name: 'Кредитные карты', amount: 280000, color: '#e91e63', percentage: 8 }
   ]
 
   // Mock данные для транзакций
@@ -89,6 +104,22 @@ export const AnalyticsPage: React.FC = () => {
     icon: getIconForCategory(cat.name)
   }))
 
+  const assetsSegments: ChartSegment[] = assetsCategories.map(cat => ({
+    name: cat.name,
+    value: cat.amount,
+    percentage: cat.percentage,
+    color: cat.color,
+    icon: getIconForCategory(cat.name)
+  }))
+
+  const liabilitiesSegments: ChartSegment[] = liabilitiesCategories.map(cat => ({
+    name: cat.name,
+    value: cat.amount,
+    percentage: cat.percentage,
+    color: cat.color,
+    icon: getIconForCategory(cat.name)
+  }))
+
   function getIconForCategory(category: string): string {
     const icons: Record<string, string> = {
       'Переводы': '🔄',
@@ -98,19 +129,28 @@ export const AnalyticsPage: React.FC = () => {
       'Маркетплейсы': '👑',
       'Остальное': '•••',
       'Зарплата': '💰',
-      'Фриланс': '💻'
+      'Фриланс': '💻',
+      'Депозиты': '🏦',
+      'Акции': '📈',
+      'Облигации': '📄',
+      'Криптовалюта': '₿',
+      'Ипотека': '🏠',
+      'Автокредит': '🚗',
+      'Кредитные карты': '💳'
     }
     return icons[category] || '📊'
   }
 
   const totalExpenses = expenseCategories.reduce((sum, cat) => sum + cat.amount, 0)
   const totalIncome = incomeCategories.reduce((sum, cat) => sum + cat.amount, 0)
+  const totalAssets = assetsCategories.reduce((sum, cat) => sum + cat.amount, 0)
+  const totalLiabilities = liabilitiesCategories.reduce((sum, cat) => sum + cat.amount, 0)
 
-  const handleCardClick = (type: 'expenses' | 'income') => {
+  const handleCardClick = (type: 'expenses' | 'income' | 'assets' | 'liabilities') => {
     setExpandedCard(expandedCard === type ? null : type)
   }
 
-  const handleExpandedCardClick = (type: 'expenses' | 'income') => {
+  const handleExpandedCardClick = (type: 'expenses' | 'income' | 'assets' | 'liabilities') => {
     setExpandedCard(null)
   }
 
@@ -146,25 +186,93 @@ export const AnalyticsPage: React.FC = () => {
 
       <div className="common-content">
         <div className={styles.container}>
-          <div className={styles.header}>
-            <h1 className={styles.title}>Операции</h1>
+          {/* Раздел Инструменты */}
+          <div className={styles.toolsSection}>
+            <h1 className={styles.title}>Инструменты</h1>
 
-            <div className={styles.filters}>
-              {selectedMonth && (
-                <MonthSelector
-                  month={selectedMonth}
-                  onClear={handleMonthClear}
-                  onClick={handleMonthSelect}
-                />
-              )}
-            </div>
+            {/* Развернутая карточка для инструментов */}
+            {(expandedCard === 'assets' || expandedCard === 'liabilities') ? (
+              <div className={styles.expandedCardContainer}>
+                {expandedCard === 'assets' && (
+                  <ExpandableAnalyticsCard
+                    amount={totalAssets}
+                    type="assets"
+                    segments={assetsSegments}
+                    onClose={() => setExpandedCard(null)}
+                    onClick={() => handleExpandedCardClick('assets')}
+                  />
+                )}
+                {expandedCard === 'liabilities' && (
+                  <ExpandableAnalyticsCard
+                    amount={totalLiabilities}
+                    type="liabilities"
+                    segments={liabilitiesSegments}
+                    onClose={() => setExpandedCard(null)}
+                    onClick={() => handleExpandedCardClick('liabilities')}
+                  />
+                )}
+              </div>
+            ) : (
+              /* Обычные карточки инструментов - показываем всегда когда не развернуты карточки инструментов */
+              (expandedCard !== 'assets' && expandedCard !== 'liabilities') && (
+                <div className={styles.analyticsGrid}>
+                  <AnalyticsCard
+                    amount={totalAssets}
+                    type="assets"
+                    categories={assetsCategories}
+                    onClick={() => handleCardClick('assets')}
+                  />
+                  <AnalyticsCard
+                    amount={totalLiabilities}
+                    type="liabilities"
+                    categories={liabilitiesCategories}
+                    onClick={() => handleCardClick('liabilities')}
+                  />
+                </div>
+              )
+            )}
           </div>
 
-          {/* Карточки аналитики */}
-          {expandedCard ? (
-            // Показываем только развернутую карточку на всю ширину
+          {/* Раздел Операции */}
+          <div className={styles.operationsSection}>
+            <div className={styles.header}>
+              <h1 className={styles.title}>Операции</h1>
+
+              <div className={styles.filters}>
+                {selectedMonth && (
+                  <MonthSelector
+                    month={selectedMonth}
+                    onClear={handleMonthClear}
+                    onClick={handleMonthSelect}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Карточки аналитики */}
+            {(expandedCard !== 'expenses' && expandedCard !== 'income') && (
+              // Показываем обе обычные карточки в ряд только если не развернута карточка операций
+              <div className={styles.analyticsGrid}>
+                <AnalyticsCard
+                  amount={totalExpenses}
+                  type="expenses"
+                  categories={expenseCategories}
+                  onClick={() => handleCardClick('expenses')}
+                />
+                <AnalyticsCard
+                  amount={totalIncome}
+                  type="income"
+                  categories={incomeCategories}
+                  onClick={() => handleCardClick('income')}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Развернутая карточка операций */}
+          {(expandedCard === 'expenses' || expandedCard === 'income') && (
             <div className={styles.expandedCardContainer}>
-              {expandedCard === 'expenses' ? (
+              {expandedCard === 'expenses' && (
                 <ExpandableAnalyticsCard
                   amount={totalExpenses}
                   type="expenses"
@@ -172,7 +280,8 @@ export const AnalyticsPage: React.FC = () => {
                   onClose={() => setExpandedCard(null)}
                   onClick={() => handleExpandedCardClick('expenses')}
                 />
-              ) : (
+              )}
+              {expandedCard === 'income' && (
                 <ExpandableAnalyticsCard
                   amount={totalIncome}
                   type="income"
@@ -182,25 +291,9 @@ export const AnalyticsPage: React.FC = () => {
                 />
               )}
             </div>
-          ) : (
-            // Показываем обе обычные карточки в ряд
-            <div className={styles.analyticsGrid}>
-              <AnalyticsCard
-                amount={totalExpenses}
-                type="expenses"
-                categories={expenseCategories}
-                onClick={() => handleCardClick('expenses')}
-              />
-              <AnalyticsCard
-                amount={totalIncome}
-                type="income"
-                categories={incomeCategories}
-                onClick={() => handleCardClick('income')}
-              />
-            </div>
           )}
 
-          {/* Список транзакций */}
+          {/* Список транзакций - показываем всегда */}
           <div className={styles.transactionsSection}>
             <h2 className={styles.sectionTitle}>Вчера</h2>
             <div className={styles.transactionsList}>

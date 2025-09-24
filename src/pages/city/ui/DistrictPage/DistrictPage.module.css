@@ -1,0 +1,156 @@
+.content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-4);
+  padding-bottom: 120px; /* Отступ для footer */
+  min-height: calc(100vh - 160px); /* Высота экрана минус header (80px) и footer (80px) */
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.title {
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xxl);
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 0 20px currentColor;
+}
+
+.districtMap {
+  width: 100%;
+  height: 500px;
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.buildings {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.building {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  transform: translateX(-50%) translateY(-50%);
+  min-width: 120px;
+}
+
+.building:hover {
+  transform: translateX(-50%) translateY(-50%) scale(1.1) translateZ(10px);
+  background: rgba(0, 0, 0, 0.8);
+  border-color: var(--color-mint);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 20px var(--color-mint);
+}
+
+.buildingIcon {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+.buildingName {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.levelLock {
+  color: #999;
+  font-size: var(--font-size-xs);
+  text-align: center;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .content {
+    padding: var(--space-3);
+    padding-bottom: 100px;
+    min-height: calc(100vh - 150px); /* Адаптивная высота для планшетов */
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .districtMap {
+    height: 400px;
+  }
+
+  .building {
+    min-width: 100px;
+    padding: var(--space-2);
+  }
+
+  .buildingIcon {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: var(--space-2);
+    padding-bottom: 90px;
+    min-height: calc(100vh - 140px); /* Адаптивная высота для мобильных */
+  }
+
+  .title {
+    font-size: var(--font-size-lg);
+  }
+
+  .districtMap {
+    height: 300px;
+  }
+
+  .building {
+    min-width: 80px;
+    padding: var(--space-1);
+  }
+
+  .buildingIcon {
+    font-size: 1.5rem;
+  }
+
+  .buildingName {
+    font-size: var(--font-size-xs);
+  }
+}

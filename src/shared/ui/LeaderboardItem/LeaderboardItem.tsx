@@ -1,4 +1,5 @@
 import React from 'react'
+import { formatMoney } from '@shared/lib/formatMoney'
 import styles from './LeaderboardItem.module.css'
 
 interface LeaderboardItemProps {
@@ -21,7 +22,7 @@ export const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
   const formatValue = (value: number, category: string) => {
     switch (category) {
       case 'money':
-        return `${value.toLocaleString('ru-RU')} ₽`
+        return `${formatMoney(value)} ₽`
       case 'game2048':
         return `${value.toLocaleString('ru-RU')} очков`
       case 'memory':

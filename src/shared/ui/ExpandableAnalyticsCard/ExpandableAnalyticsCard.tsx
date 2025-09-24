@@ -1,11 +1,12 @@
 import React from 'react'
 import { PieChart, ChartSegment } from '../PieChart'
 import { CategoryTag } from '../CategoryTag'
+import { formatMoney } from '@shared/lib/formatMoney'
 import styles from './ExpandableAnalyticsCard.module.css'
 
 interface ExpandableAnalyticsCardProps {
   amount: number
-  type: 'expenses' | 'income'
+  type: 'expenses' | 'income' | 'assets' | 'liabilities'
   segments: ChartSegment[]
   onClose: () => void
   onClick?: () => void
@@ -20,11 +21,22 @@ export const ExpandableAnalyticsCard: React.FC<ExpandableAnalyticsCardProps> = (
   onClick,
   className
 }) => {
-  const formatAmount = (amount: number) => {
-    return amount.toLocaleString('ru-RU')
+  const getTypeText = (type: string) => {
+    switch (type) {
+      case 'expenses':
+        return 'Траты'
+      case 'income':
+        return 'Доходы'
+      case 'assets':
+        return 'Активы'
+      case 'liabilities':
+        return 'Пассивы'
+      default:
+        return 'Данные'
+    }
   }
 
-  const typeText = type === 'expenses' ? 'Траты' : 'Доходы'
+  const typeText = getTypeText(type)
 
   const handleCardClick = (e: React.MouseEvent) => {
     // Не срабатывает при клике на кнопку закрытия или теги категорий
@@ -42,7 +54,7 @@ export const ExpandableAnalyticsCard: React.FC<ExpandableAnalyticsCardProps> = (
       <div className={styles.header}>
         <div className={styles.titleSection}>
           <div className={styles.amount}>
-            {formatAmount(amount)} ₽
+            {formatMoney(amount)} ₽
           </div>
           <div className={styles.type}>
             {typeText}

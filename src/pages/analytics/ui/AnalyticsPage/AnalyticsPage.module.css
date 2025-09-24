@@ -34,6 +34,16 @@
   margin-bottom: var(--space-8);
 }
 
+.toolsSection {
+  width: 100%;
+  margin-bottom: var(--space-8);
+}
+
+.operationsSection {
+  width: 100%;
+  margin-bottom: var(--space-8);
+}
+
 .expandedCardContainer {
   width: 100%;
   margin-bottom: var(--space-8);

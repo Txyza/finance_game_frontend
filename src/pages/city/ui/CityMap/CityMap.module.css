@@ -1,0 +1,170 @@
+.map {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: none;
+  transition: all 0.3s ease-out;
+}
+
+.map:hover {
+  transform: scale(1.02);
+}
+
+.mapBackground {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(25, 25, 239, 0.1) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(221, 65, 219, 0.1) 100%
+  );
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 100px rgba(0, 0, 0, 0.5),
+    0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.districts {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Изображения районов на заднем плане */
+}
+
+.streets {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2; /* Сетка поверх изображений */
+}
+
+.buildingsPreview {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.districtBackground {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2; /* Поверх улиц, но под районами */
+}
+
+.safeDistrictBg {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  width: 290px;
+  height: 390px;
+  background-repeat: no-repeat;
+  background-size: 290px 390px;
+  background-position: 0 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  overflow: hidden;
+}
+
+.creditDistrictBg {
+  position: absolute;
+  left: 305px;
+  top: 5px;
+  width: 290px;
+  height: 390px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  background-color: #f87171; /* Временный цвет до добавления изображения */
+  opacity: 0.3;
+}
+
+.shoppingDistrictBg {
+  position: absolute;
+  left: 5px;
+  top: 405px;
+  width: 290px;
+  height: 390px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  background-color: #a78bfa; /* Временный цвет до добавления изображения */
+  opacity: 0.3;
+}
+
+.stockDistrictBg {
+  position: absolute;
+  left: 305px;
+  top: 405px;
+  width: 290px;
+  height: 390px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  background-color: #fbbf24; /* Временный цвет до добавления изображения */
+  opacity: 0.3;
+}
+
+.districtBuildings {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.buildingIcon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-out;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.buildingEmoji {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+  user-select: none;
+}
+
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .buildingIcon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .buildingEmoji {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .buildingIcon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .buildingEmoji {
+    font-size: 1rem;
+  }
+}

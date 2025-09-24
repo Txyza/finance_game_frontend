@@ -1,0 +1,58 @@
+.district {
+  transition: all var(--duration-normal) var(--ease-out);
+  cursor: pointer;
+}
+
+.district:hover {
+  stroke-width: 3;
+  filter: drop-shadow(0 0 20px currentColor);
+}
+
+.districtName {
+  font-family: var(--font-accent);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  user-select: none;
+}
+
+.levelRequirement {
+  font-family: var(--font-primary);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  user-select: none;
+}
+
+/* Адаптивность для районов */
+@media (max-width: 768px) {
+  .district:hover {
+    stroke-width: 4;
+    filter: drop-shadow(0 0 15px currentColor);
+  }
+
+  .districtName {
+    font-size: 12px !important;
+  }
+
+  .levelRequirement {
+    font-size: 9px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .district {
+    /* Увеличиваем область касания на мобильных */
+    stroke-width: 3;
+  }
+
+  .district:hover {
+    stroke-width: 5;
+    filter: drop-shadow(0 0 12px currentColor);
+  }
+
+  .districtName {
+    font-size: 10px !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+  }
+
+  .levelRequirement {
+    font-size: 8px !important;
+  }
+}

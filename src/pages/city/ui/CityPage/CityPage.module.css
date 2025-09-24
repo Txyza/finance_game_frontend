@@ -1,0 +1,123 @@
+.mapFullscreen {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 80px - 80px); /* Высота экрана минус header и footer */
+  margin-top: 80px; /* Отступ равный высоте header */
+  overflow: hidden;
+}
+
+.mapOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  pointer-events: none; /* Позволяет кликать сквозь overlay на карту */
+}
+
+.title {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xxl);
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.3));
+  }
+  to {
+    filter: drop-shadow(0 0 30px rgba(251, 191, 36, 0.5));
+  }
+}
+
+.districtInfo {
+  padding: var(--space-3) var(--space-6);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: var(--radius-xl);
+  animation: slideDown 0.3s ease-out;
+  pointer-events: auto; /* Восстанавливаем клики для этого элемента */
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.districtName {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .mapFullscreen {
+    height: calc(100vh - 70px - 80px); /* Меньший header на планшетах */
+    margin-top: 70px;
+  }
+
+  .mapOverlay {
+    padding: var(--space-3);
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .districtInfo {
+    padding: var(--space-2) var(--space-4);
+    max-width: 90%;
+  }
+
+  .districtName {
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 480px) {
+  .mapFullscreen {
+    height: calc(100vh - 60px - 80px); /* Еще меньший header на мобильных */
+    margin-top: 60px;
+  }
+
+  .mapOverlay {
+    padding: var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .title {
+    font-size: var(--font-size-lg);
+  }
+
+  .districtInfo {
+    padding: var(--space-2) var(--space-3);
+    max-width: 95%;
+  }
+
+  .districtName {
+    font-size: var(--font-size-sm);
+  }
+}

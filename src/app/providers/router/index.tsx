@@ -9,6 +9,7 @@ import { LeaderboardPage } from '@pages/leaderboard/ui/LeaderboardPage'
 import { TasksPage } from '@pages/tasks/ui/TasksPage'
 import { NewsPage } from '@pages/news/ui/NewsPage'
 import { ShopPage } from '@pages/shop/ui/ShopPage'
+import { CityPage, DistrictPage } from '@pages/city'
 import { MainLayout } from '../../layouts/MainLayout'
 
 export const RouterProvider = () => {
@@ -27,6 +28,8 @@ export const RouterProvider = () => {
           <Route path="/tasks" element={<TasksPage />} />
           <Route path="/news" element={<NewsPage />} />
           <Route path="/shop" element={<ShopPage />} />
+          <Route path="/city" element={<CityPage />} />
+          <Route path="/city/district/:districtId" element={<DistrictPage />} />
           <Route path="/work" element={<WorkPage />} />
         </Route>
         {/* Страницы без навигации */}
