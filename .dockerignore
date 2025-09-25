@@ -17,4 +17,3 @@ coverage
 tasks/*
 .prettierrc
 .eslintrc.cjs
-tsconfig.node.json
