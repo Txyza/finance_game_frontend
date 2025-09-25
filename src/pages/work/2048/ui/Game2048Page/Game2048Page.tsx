@@ -40,23 +40,12 @@ export const Game2048Page: React.FC = () => {
     let gameId = searchParams.get('id')
     if (!gameId) {
       gameId = generateGameUUID()
-      setSearchParams(prev => ({ ...Object.fromEntries(prev), id: gameId }), { replace: true })
+      setSearchParams(prev => ({ ...Object.fromEntries(prev), id: gameId! }), { replace: true })
     }
 
     // Initialize game with the ID
     initGame(gameId)
   }, [searchParams, setSearchParams, initGame, navigate])
-
-  useEffect(() => {
-    // End game session when player wins or loses
-    if ((isGameOver || isWon) && !gameEnded) {
-      const timer = setTimeout(() => {
-        endGameSession()
-      }, 1000) // Delay to show final board state
-
-      return () => clearTimeout(timer)
-    }
-  }, [isGameOver, isWon, gameEnded, endGameSession])
 
   // Функция завершения игры
   const endGameSession = useCallback(async () => {
@@ -81,6 +70,17 @@ export const Game2048Page: React.FC = () => {
 
     setShowEndModal(true)
   }, [gameEnded, transactionId, score, stopWork, refetchUser])
+
+  useEffect(() => {
+    // End game session when player wins or loses
+    if ((isGameOver || isWon) && !gameEnded) {
+      const timer = setTimeout(() => {
+        endGameSession()
+      }, 1000) // Delay to show final board state
+
+      return () => clearTimeout(timer)
+    }
+  }, [isGameOver, isWon, gameEnded, endGameSession])
 
   // Обработчик окончания времени
   const handleTimeUp = useCallback(() => {
