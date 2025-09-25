@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './PeriodSelector.module.css'
 
-type Period = 'week' | 'month' | 'year'
+export type Period = 'week' | 'month' | 'year'
 
 interface PeriodSelectorProps {
   selectedPeriod: Period

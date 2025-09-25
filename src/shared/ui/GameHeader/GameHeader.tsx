@@ -108,10 +108,10 @@ export const GameHeader: FC<GameHeaderProps> = ({
         ) : (
           /* Пустые Bubble компоненты для идентичной структуры */
           <>
-            <Bubble variant="outline" size="small" style={{ visibility: 'hidden' }}>
+            <Bubble variant="outline" size="small" className={styles.hiddenBubble}>
               placeholder
             </Bubble>
-            <Bubble variant="outline" size="small" style={{ visibility: 'hidden' }}>
+            <Bubble variant="outline" size="small" className={styles.hiddenBubble}>
               placeholder
             </Bubble>
           </>

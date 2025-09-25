@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './CategoryProgressBar.module.css'
 
-interface CategoryData {
+export interface CategoryData {
   name: string
   amount: number
   color: string

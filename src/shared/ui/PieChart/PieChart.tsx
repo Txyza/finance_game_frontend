@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './PieChart.module.css'
 
-interface ChartSegment {
+export interface ChartSegment {
   name: string
   value: number
   percentage: number

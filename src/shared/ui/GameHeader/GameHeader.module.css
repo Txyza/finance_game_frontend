@@ -63,3 +63,7 @@
     gap: var(--space-1);
   }
 }
+
+.hiddenBubble {
+  visibility: hidden;
+}

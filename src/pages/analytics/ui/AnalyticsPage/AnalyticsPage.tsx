@@ -208,7 +208,7 @@ export const AnalyticsPage: React.FC = () => {
               </div>
             ) : (
               /* Обычные карточки инструментов - показываем всегда когда не развернуты карточки инструментов */
-              (expandedCard !== 'assets' && expandedCard !== 'liabilities') && (
+              (!['assets', 'liabilities'].includes(expandedCard as string)) && (
                 <div className={styles.analyticsGrid}>
                   <AnalyticsCard
                     amount={totalAssets}

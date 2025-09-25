@@ -115,7 +115,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
           <Button
             onClick={handleClaimClick}
             variant="primary"
-            size="sm"
+            size="small"
             className={styles.claimButton}
           >
             Забрать награду

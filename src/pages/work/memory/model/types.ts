@@ -25,7 +25,7 @@ export interface MemoryGameState {
 export interface MemoryGameEvent {
   id: string
   sessionId: string
-  type: 'game_start' | 'card_flip' | 'pair_match' | 'pair_mismatch' | 'round_complete' | 'game_end'
+  type: 'game_start' | 'card_flip' | 'pair_match' | 'pair_mismatch' | 'round_complete' | 'game_end' | 'game_pause' | 'game_resume'
   timestamp: number
   data: Record<string, unknown>
 }

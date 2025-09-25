@@ -715,8 +715,6 @@ export const BrandbookPage: FC = () => {
                 amount={77959}
                 type="expenses"
                 segments={mockPieSegments}
-                selectedPeriod={selectedPeriod}
-                onPeriodChange={setSelectedPeriod}
                 onClose={() => handleBrandbookAction('Close expanded card')}
               />
             </div>

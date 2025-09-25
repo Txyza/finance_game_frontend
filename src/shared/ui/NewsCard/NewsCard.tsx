@@ -132,7 +132,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({
           <Button
             onClick={handleReadClick}
             variant="gradient-mint"
-            size="sm"
+            size="small"
             className={styles.readButton}
           >
             Прочитано
