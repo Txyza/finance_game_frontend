@@ -10,7 +10,7 @@ services:
     environment:
       - NODE_ENV=production
     networks:
-      - finance-network
+      - cash-lvl-network-prod
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
@@ -31,7 +31,7 @@ services:
       frontend:
         condition: service_healthy
     networks:
-      - finance-network
+      - cash-lvl-network-prod
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
@@ -40,5 +40,5 @@ services:
       retries: 3
 
 networks:
-  finance-network:
+  cash-lvl-network-prod:
     driver: bridge
