@@ -47,6 +47,7 @@ services:
       - REDIS_PORT=6379
       - SECRET_KEY=${SECRET_KEY:-dev-secret-key-for-development-only}
       - ENVIRONMENT=development
+      - API_V1_STR=${API_V1_STR:-/api/v1}
       - DEBUG=True
     depends_on:
       - postgres
