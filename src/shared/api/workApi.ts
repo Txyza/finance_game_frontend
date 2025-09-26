@@ -8,14 +8,14 @@ import {
 
 export const workApi = {
   getWorkList: (): Promise<WorkListResponse> => {
-    return apiClient.get<WorkListResponse>('/api/v1/work/list')
+    return apiClient.get<WorkListResponse>('/api/work/list')
   },
 
   startWork: (): Promise<WorkStartResponse> => {
-    return apiClient.post<WorkStartResponse>('/api/v1/work/start')
+    return apiClient.post<WorkStartResponse>('/api/work/start')
   },
 
   stopWork: (data: WorkStopRequest): Promise<WorkStopResponse> => {
-    return apiClient.post<WorkStopResponse>('/api/v1/work/stop', data)
+    return apiClient.post<WorkStopResponse>('/api/work/stop', data)
   },
 }
