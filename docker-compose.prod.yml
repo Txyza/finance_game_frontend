@@ -1,5 +1,79 @@
 
 services:
+  # Backend database
+  postgres:
+    image: postgres:15
+    container_name: cash-lvl-postgres-prod
+    environment:
+      POSTGRES_DB: finance_game
+      POSTGRES_USER: finance_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-finance_password_prod}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cash-lvl-network
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Backend cache
+  redis:
+    image: redis:7-alpine
+    container_name: cash-lvl-redis-prod
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - cash-lvl-network
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Backend API
+  api:
+    build:
+      context: ../finance_game_backend
+      dockerfile: Dockerfile
+    container_name: cash-lvl-api-prod
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=finance_user
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-finance_password_prod}
+      - POSTGRES_DB=finance_game
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SECRET_KEY=${SECRET_KEY:-your-super-secret-key-change-in-production}
+      - ENVIRONMENT=production
+      - DEBUG=False
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - cash-lvl-network
+    restart: unless-stopped
+    command: >
+      sh -c "
+        alembic upgrade head &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   # Frontend сервис
   frontend:
     build:
@@ -37,6 +111,8 @@ services:
     depends_on:
       frontend:
         condition: service_healthy
+      api:
+        condition: service_healthy
     networks:
       - cash-lvl-network
     restart: unless-stopped
@@ -63,6 +139,10 @@ networks:
     name: cash-lvl-prod
 
 volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
   ssl_data:
     driver: local
   nginx_logs:

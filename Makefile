@@ -4,8 +4,10 @@ PROFILE ?= prod
 # Docker compose files
 ifeq ($(PROFILE),dev)
 	COMPOSE_FILE = docker-compose.yml
+	ENV_FILE = .env
 else
 	COMPOSE_FILE = docker-compose.prod.yml
+	ENV_FILE = .env.prod
 endif
 
 .DEFAULT_GOAL := help
@@ -21,21 +23,22 @@ help: ## Показать справку по командам
 
 .PHONY: run
 run: ## Запустить контейнеры
-	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE) up -d
 	@echo "Running with profile: $(PROFILE)"
 	@if [ "$(PROFILE)" = "dev" ]; then \
 		echo "Development server: http://localhost:5173"; \
 	else \
 		echo "Production server: https://cash-lvl.ru"; \
+		echo "API endpoint: https://cash-lvl.ru/api"; \
 	fi
 
 .PHONY: build
 build: ## Собрать образы
-	docker-compose -f $(COMPOSE_FILE) build
+	docker-compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE) build
 
 .PHONY: stop
 stop: ## Остановить контейнеры
-	docker-compose -f $(COMPOSE_FILE) down
+	docker-compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE) down
 
 .PHONY: logs
 logs: ## Показать логи
