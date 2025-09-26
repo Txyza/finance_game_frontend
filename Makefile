@@ -29,7 +29,7 @@ run: ## Запустить контейнеры
 		echo "Development server: http://localhost:5173"; \
 	else \
 		echo "Production server: https://cash-lvl.ru"; \
-		echo "API endpoint: https://cash-lvl.ru/api"; \
+		echo "API endpoint: https://cash-lvl.ru/"; \
 	fi
 
 .PHONY: build
