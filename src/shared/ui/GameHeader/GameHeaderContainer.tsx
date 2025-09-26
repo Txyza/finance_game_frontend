@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { GameHeader } from './GameHeader'
 import { useUserContext } from '@shared/context'
+import { calculateLevelProgress } from '@shared/utils/levelCalculator'
 
 interface GameHeaderContainerProps {
   variant?: 'main' | 'work'
@@ -12,8 +13,8 @@ interface GameHeaderContainerProps {
 
 export const GameHeaderContainer: FC<GameHeaderContainerProps> = ({
   variant = 'main',
-  bankRate = 8.5,
-  inflation = 4.2,
+  bankRate,
+  inflation,
   onEnergyAdd,
   onMoneyAdd
 }) => {
@@ -55,11 +56,12 @@ export const GameHeaderContainer: FC<GameHeaderContainerProps> = ({
     )
   }
 
-  const level = Math.floor(user.experience / 100) + 1
-  const currentExp = user.experience % 100
-  const maxExp = 100
+  // Используем новую систему расчета уровней
+  const { level, currentExp, maxExp } = calculateLevelProgress(user.experience)
 
-  const maxEnergy = 24
+  // Используем данные из API
+  const userBankRate = user.key_rate ? parseFloat(user.key_rate) : bankRate
+  const userInflation = user.inflation ? parseFloat(user.inflation) : inflation
 
   return (
     <GameHeader
@@ -67,10 +69,10 @@ export const GameHeaderContainer: FC<GameHeaderContainerProps> = ({
       currentExp={currentExp}
       maxExp={maxExp}
       energy={user.energy}
-      maxEnergy={maxEnergy}
-      money={user.debet_money}
-      bankRate={bankRate}
-      inflation={inflation}
+      maxEnergy={user.max_energy}
+      money={user.capital}
+      bankRate={userBankRate}
+      inflation={userInflation}
       variant={variant}
       onEnergyAdd={onEnergyAdd}
       onMoneyAdd={onMoneyAdd}

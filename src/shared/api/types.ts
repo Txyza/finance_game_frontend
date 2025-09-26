@@ -3,7 +3,10 @@ export interface UserProfileResponse {
   debet_money: number
   capital: number
   energy: number
+  max_energy: number
   experience: number
+  key_rate: string
+  inflation: string
 }
 
 export interface UserCreateRequest {
