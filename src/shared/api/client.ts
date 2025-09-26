@@ -1,6 +1,6 @@
 import { ApiError } from './types'
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/'
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost'
 
 export class ApiClient {
   private baseURL: string

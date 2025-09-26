@@ -3,6 +3,16 @@
 # Стадия 1: Сборка приложения
 FROM node:20-alpine AS builder
 
+# Принимаем аргументы сборки для переменных окружения
+ARG VITE_API_URL
+ARG VITE_APP_NAME
+ARG VITE_APP_VERSION
+
+# Устанавливаем переменные окружения для Vite
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_APP_NAME=$VITE_APP_NAME
+ENV VITE_APP_VERSION=$VITE_APP_VERSION
+
 WORKDIR /app
 
 # Копируем файлы зависимостей
@@ -14,7 +24,7 @@ RUN npm ci
 # Копируем исходный код
 COPY . .
 
-# Собираем приложение
+# Собираем приложение (Vite использует переменные окружения)
 RUN npm run build
 
 # Стадия 2: Production сервер
