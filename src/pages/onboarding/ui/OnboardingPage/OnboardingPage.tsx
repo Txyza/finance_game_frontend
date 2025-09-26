@@ -30,7 +30,7 @@ const cards: CardData[] = [
     className: styles.cardSmart
   },
   {
-    id: 'mir_supreme',
+    id: 'supreme_mir',
     name: 'Премиальная карта Mir Supreme',
     service_fee: '2990 ₽',
     benefits: [
