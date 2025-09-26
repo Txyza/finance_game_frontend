@@ -6,9 +6,9 @@ services:
     image: postgres:15
     container_name: cash-lvl-postgres-dev
     environment:
-      POSTGRES_DB: finance_game_dev
-      POSTGRES_USER: finance_user_dev
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-finance_password_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-finance_game}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
       - "5432:5432"
     volumes:
@@ -40,9 +40,9 @@ services:
       - "8000:8000"
     environment:
       - POSTGRES_SERVER=postgres
-      - POSTGRES_USER=finance_user_dev
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-finance_password_dev}
-      - POSTGRES_DB=finance_game_dev
+      - POSTGRES_DB=${POSTGRES_DB:-finance_game}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - SECRET_KEY=${SECRET_KEY:-dev-secret-key-for-development-only}
@@ -70,15 +70,15 @@ services:
       context: .
       dockerfile: docker/frontend/Dockerfile.dev
       args:
-        - VITE_API_URL=${VITE_API_URL:-http://localhost/api}
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8080/api}
         - VITE_APP_NAME=${VITE_APP_NAME:-Cash Level}
         - VITE_APP_VERSION=${VITE_APP_VERSION:-1.0.0}
     container_name: cash-lvl-frontend-dev
     ports:
-      - "5173:5173"
+      - "5173:3000"
     environment:
       - NODE_ENV=development
-      - VITE_API_URL=${VITE_API_URL:-http://localhost/api}
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8080/api}
       - VITE_APP_NAME=${VITE_APP_NAME:-Cash Level}
       - VITE_APP_VERSION=${VITE_APP_VERSION:-1.0.0}
     volumes:
@@ -98,7 +98,7 @@ services:
       dockerfile: docker/nginx/Dockerfile.dev
     container_name: cash-lvl-nginx-dev
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - api
       - frontend-dev

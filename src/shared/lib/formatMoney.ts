@@ -3,7 +3,11 @@
  * @param amount - сумма для форматирования
  * @returns отформатированная строка
  */
-export const formatMoney = (amount: number): string => {
+export const formatMoney = (amount: number | undefined | null): string => {
+  if (amount == null || amount === undefined) {
+    return '0'
+  }
+
   if (amount >= 1_000_000_000) {
     // Миллиарды
     const billions = amount / 1_000_000_000
@@ -27,6 +31,9 @@ export const formatMoney = (amount: number): string => {
  * @param amount - сумма для форматирования
  * @returns отформатированная строка с разделителями
  */
-export const formatMoneyDetailed = (amount: number): string => {
+export const formatMoneyDetailed = (amount: number | undefined | null): string => {
+  if (amount == null || amount === undefined) {
+    return '0'
+  }
   return amount.toLocaleString('ru-RU')
 }

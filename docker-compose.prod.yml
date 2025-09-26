@@ -5,9 +5,9 @@ services:
     image: postgres:15
     container_name: cash-lvl-postgres-prod
     environment:
-      POSTGRES_DB: finance_game
-      POSTGRES_USER: finance_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-finance_password_prod}
+      POSTGRES_DB: ${POSTGRES_PASSWORD:-finance_game}
+      POSTGRES_USER: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
