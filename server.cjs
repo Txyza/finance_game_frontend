@@ -20,7 +20,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "mc.yandex.ru"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://api.cash-lvl.ru", "https://cash-lvl.ru", "mc.yandex.ru"],
+      connectSrc: ["'self'", "https://cash-lvl.ru", "https://api.cash-lvl.ru", "mc.yandex.ru", "ws:", "wss:"],
       fontSrc: ["'self'", "data:"],
     },
   },
