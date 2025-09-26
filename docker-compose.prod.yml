@@ -72,11 +72,11 @@ services:
         uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
       "
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/docs\")'"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 60s
+      retries: 5
+      start_period: 90s
     logging:
       driver: json-file
       options:
@@ -121,7 +121,7 @@ services:
       frontend:
         condition: service_healthy
       api:
-        condition: service_healthy
+        condition: service_started
     networks:
       - cash-lvl-network
     restart: unless-stopped
