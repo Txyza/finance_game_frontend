@@ -249,6 +249,63 @@
   background: rgba(221, 65, 219, 0.1);
 }
 
+/* Стили для Joyride */
+:global(.react-joyride__tooltip) {
+  font-family: var(--font-primary) !important;
+}
+
+:global(.react-joyride__tooltip h4) {
+  margin: 0 0 var(--space-2) 0 !important;
+  color: var(--color-mint) !important;
+  font-family: var(--font-accent) !important;
+  font-size: var(--font-size-base) !important;
+  font-weight: 600 !important;
+}
+
+:global(.react-joyride__tooltip p) {
+  margin: var(--space-1) 0 !important;
+  font-size: var(--font-size-sm) !important;
+  line-height: 1.4 !important;
+}
+
+:global(.react-joyride__tooltip ul) {
+  margin: var(--space-2) 0 !important;
+  padding-left: var(--space-4) !important;
+}
+
+:global(.react-joyride__tooltip li) {
+  margin-bottom: var(--space-1) !important;
+  line-height: 1.4 !important;
+  font-size: var(--font-size-sm) !important;
+}
+
+:global(.react-joyride__tooltip strong) {
+  color: var(--color-melissa) !important;
+}
+
+/* Скрываем прогресс и ненужные элементы */
+:global(.react-joyride__tooltip .react-joyride__tooltip__footer) {
+  margin-top: var(--space-3) !important;
+  padding: 0 !important;
+}
+
+:global(.react-joyride__tooltip .react-joyride__tooltip__footer button) {
+  font-family: var(--font-primary) !important;
+}
+
+/* Скрываем все элементы с текстом Step */
+:global(.react-joyride__tooltip .react-joyride__tooltip__header) {
+  display: none !important;
+}
+
+:global(.react-joyride__tooltip [class*="step"]) {
+  display: none !important;
+}
+
+:global(.react-joyride__tooltip [class*="progress"]) {
+  display: none !important;
+}
+
 .cardsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;

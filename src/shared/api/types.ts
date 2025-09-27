@@ -11,6 +11,7 @@ export interface UserProfileResponse {
 
 export interface UserCreateRequest {
   starter_card: string
+  name: string
 }
 
 export interface WorkListItem {

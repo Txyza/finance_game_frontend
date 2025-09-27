@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Joyride, { CallBackProps, STATUS, Step } from 'react-joyride'
 import { Button, ParticleBackground } from '@shared/ui'
 import { userApi } from '@shared/api'
 import { useUserContext } from '@shared/context'
@@ -52,6 +53,43 @@ export const OnboardingPage: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [runTour, setRunTour] = useState(false)
+
+  const tourSteps: Step[] = [
+    {
+      target: '[data-card="smart_mir"]',
+      content: (
+        <div>
+          <h4>🏦 Бесплатная дебетовая карта</h4>
+          <p>Дебетовая карта необходима для повседневных трат, зачисления зарплаты и выплат для инвестиционных инструментов:</p>
+          <ul>
+            <li>💰 <strong>Бесплатная карта</strong></li>
+            <li>🛒 <strong>100% кэшбэк</strong> в супермаркетах</li>
+          </ul>
+          <p><strong>Идеальна для начинающих!</strong></p>
+        </div>
+      ),
+      placement: 'bottom',
+      disableBeacon: true,
+    },
+    {
+      target: '[data-card="supreme_mir"]',
+      content: (
+        <div>
+          <h4>💎 Премиальная карта</h4>
+          <p>Для активных пользователей:</p>
+          <ul>
+            <li>💳 <strong>2990 ₽ за обслуживание</strong></li>
+            <li>💰 <strong>До 16,5%</strong> на остаток</li>
+            <li>🎯 <strong>15% кэшбэк</strong> со всех трат</li>
+          </ul>
+          <p><strong>Для больших трат!</strong></p>
+        </div>
+      ),
+      placement: 'bottom',
+      disableBeacon: true,
+    }
+  ]
 
   const handleWelcomeClick = () => {
     setStep('name')
@@ -65,6 +103,18 @@ export const OnboardingPage: React.FC = () => {
   const handleNameNext = () => {
     if (isNameValid(name)) {
       setStep('card')
+      // Запускаем тур после небольшой задержки, чтобы компоненты успели отрендериться
+      setTimeout(() => {
+        setRunTour(true)
+      }, 500)
+    }
+  }
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { status } = data
+
+    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
+      setRunTour(false)
     }
   }
 
@@ -79,7 +129,7 @@ export const OnboardingPage: React.FC = () => {
     setError(null)
 
     try {
-      await userApi.createUser({ starter_card: selectedCard })
+      await userApi.createUser({ starter_card: selectedCard, name: name.trim() })
       await refetchUser()
       navigate('/')
     } catch (err: any) {
@@ -104,6 +154,71 @@ export const OnboardingPage: React.FC = () => {
   return (
     <div className="common-page-background">
       <ParticleBackground />
+
+      <Joyride
+        steps={tourSteps}
+        run={runTour}
+        callback={handleJoyrideCallback}
+        continuous
+        showSkipButton
+        showProgress={false}
+        hideCloseButton
+        disableOverlayClose
+        styles={{
+          options: {
+            primaryColor: '#58ffff',
+            backgroundColor: '#060698',
+            textColor: '#ffffff',
+            arrowColor: '#58ffff',
+            overlayColor: 'rgba(0, 0, 0, 0.7)',
+          },
+          tooltip: {
+            backgroundColor: '#060698',
+            color: '#ffffff',
+            fontSize: '14px',
+            borderRadius: '12px',
+            padding: '16px',
+            border: '2px solid #58ffff',
+            boxShadow: '0 8px 25px rgba(88, 255, 255, 0.3)',
+            maxWidth: '320px',
+          },
+          tooltipContent: {
+            color: '#ffffff',
+            padding: '0',
+          },
+          buttonNext: {
+            backgroundColor: '#58ffff',
+            color: '#060698',
+            borderRadius: '8px',
+            padding: '8px 16px',
+            fontWeight: '600',
+            border: 'none',
+            fontSize: '14px',
+          },
+          buttonBack: {
+            color: '#58ffff',
+            marginRight: '8px',
+            border: '2px solid #58ffff',
+            borderRadius: '8px',
+            padding: '8px 16px',
+            backgroundColor: 'transparent',
+            fontWeight: '600',
+            fontSize: '14px',
+          },
+          buttonSkip: {
+            color: '#8d98a4',
+            fontSize: '12px',
+          },
+        }}
+        locale={{
+          back: 'Назад',
+          close: 'Закрыть',
+          last: 'Готово',
+          next: 'Далее',
+          skip: 'Пропустить',
+          open: 'Открыть'
+        }}
+      />
 
       <div className={styles.container}>
         <div className={styles.content}>
@@ -162,6 +277,7 @@ export const OnboardingPage: React.FC = () => {
                 {cards.map((card) => (
                   <div
                     key={card.id}
+                    data-card={card.id}
                     className={`${styles.cardWrapper} ${
                       selectedCard === card.id ? styles.selected : ''
                     }`}
