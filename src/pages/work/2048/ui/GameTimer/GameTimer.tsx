@@ -11,7 +11,7 @@ interface GameTimerProps {
 export const GameTimer: React.FC<GameTimerProps> = ({ duration, onTimeUp, isActive, resetKey }) => {
   const [timeLeft, setTimeLeft] = useState(duration)
   const startTimeRef = useRef<number | null>(null)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const hasCalledOnTimeUp = useRef(false)
 
   useEffect(() => {
