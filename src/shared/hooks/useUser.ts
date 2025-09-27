@@ -1,10 +1,29 @@
 import { useState, useEffect, useCallback } from 'react'
 import { userApi, UserProfileResponse, ApiError } from '@shared/api'
 
+// Функция для глубокого сравнения объектов пользователей
+const isUserDataEqual = (user1: UserProfileResponse | null, user2: UserProfileResponse | null): boolean => {
+  if (user1 === user2) return true
+  if (!user1 || !user2) return false
+
+  // Сравниваем основные поля, которые влияют на UI
+  // Используем строгое сравнение для числовых значений
+  return (
+    user1.id === user2.id &&
+    Number(user1.experience) === Number(user2.experience) &&
+    Number(user1.energy) === Number(user2.energy) &&
+    Number(user1.max_energy) === Number(user2.max_energy) &&
+    Number(user1.capital) === Number(user2.capital) &&
+    String(user1.key_rate || '') === String(user2.key_rate || '') &&
+    String(user1.inflation || '') === String(user2.inflation || '')
+  )
+}
+
 interface UseUserState {
   user: UserProfileResponse | null
   loading: boolean
   error: ApiError | null
+  isInitialLoad: boolean
 }
 
 interface UseUserActions {
@@ -19,35 +38,63 @@ export const useUser = (): UseUserReturn => {
     user: null,
     loading: false,
     error: null,
+    isInitialLoad: true,
   })
 
-  const fetchUser = useCallback(async () => {
-    console.log('useUser: Starting fetch')
-    setState(prev => ({ ...prev, loading: true, error: null }))
+  const fetchUser = useCallback(async (isInitial = false) => {
+    console.log('useUser: Starting fetch, isInitial:', isInitial)
+
+    // Показываем loading только для первоначальной загрузки
+    setState(prev => ({
+      ...prev,
+      loading: isInitial ? true : prev.loading,
+      error: null
+    }))
 
     try {
-      const user = await userApi.getCurrentUser()
+      const newUser = await userApi.getCurrentUser()
       console.log('useUser: Success, user data received')
-      setState(prev => ({ ...prev, user, loading: false }))
+
+      setState(prev => {
+        // Сравниваем новые данные с текущими
+        if (isUserDataEqual(prev.user, newUser)) {
+          console.log('useUser: Data unchanged, skipping state update')
+          // Данные не изменились, отмечаем что загрузка завершена но пользователя не меняем
+          return {
+            ...prev,
+            loading: false,
+            isInitialLoad: false
+          }
+        }
+
+        console.log('useUser: Data changed, updating state')
+        return {
+          ...prev,
+          user: newUser,
+          loading: false,
+          isInitialLoad: false
+        }
+      })
     } catch (error) {
       const apiError = error as ApiError
       console.log('useUser: Error received:', apiError)
       setState(prev => ({
         ...prev,
         error: apiError,
-        loading: false
+        loading: false,
+        isInitialLoad: false
       }))
     }
   }, [])
 
   // Автоматическое обновление данных пользователя каждые 10 секунд
   useEffect(() => {
-    // Загружаем данные при монтировании
-    fetchUser()
+    // Загружаем данные при монтировании - это первоначальная загрузка
+    fetchUser(true)
 
-    // Устанавливаем интервал для обновления каждые 10 секунд
+    // Устанавливаем интервал для обновления каждые 10 секунд - это НЕ первоначальная загрузка
     const interval = setInterval(() => {
-      fetchUser()
+      fetchUser(false)
     }, 10000)
 
     // Очищаем интервал при размонтировании
@@ -55,7 +102,7 @@ export const useUser = (): UseUserReturn => {
   }, [fetchUser])
 
   const refetchUser = useCallback(async () => {
-    await fetchUser()
+    await fetchUser(false)
   }, [fetchUser])
 
   const clearError = useCallback(() => {
@@ -66,6 +113,7 @@ export const useUser = (): UseUserReturn => {
     user: state.user,
     loading: state.loading,
     error: state.error,
+    isInitialLoad: state.isInitialLoad,
     refetchUser,
     clearError,
   }

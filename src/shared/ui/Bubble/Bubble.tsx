@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, memo, useMemo, useCallback } from 'react'
 import styles from './Bubble.module.css'
 
 interface BubbleProps {
@@ -13,7 +13,7 @@ interface BubbleProps {
   }
 }
 
-export const Bubble: FC<BubbleProps> = ({
+export const Bubble: FC<BubbleProps> = memo(({
   variant = 'primary',
   size = 'medium',
   children,
@@ -22,24 +22,26 @@ export const Bubble: FC<BubbleProps> = ({
   className = '',
   addButton
 }) => {
-  const classNames = [
+  // Мемоизируем classNames чтобы избежать ненужных перерендеров
+  const classNames = useMemo(() => [
     styles.bubble,
     styles[variant],
     styles[size],
     (onClick || addButton) && styles.clickable,
     addButton && styles.withAddButton,
     className
-  ].filter(Boolean).join(' ')
+  ].filter(Boolean).join(' '), [variant, size, onClick, addButton, className])
 
   const Component = (onClick || addButton) ? 'button' : 'div'
 
-  const handleClick = () => {
+  // Мемоизируем обработчик клика
+  const handleClick = useCallback(() => {
     if (addButton) {
       addButton.onClick()
     } else if (onClick) {
       onClick()
     }
-  }
+  }, [addButton, onClick])
 
   return (
     <Component className={classNames} onClick={handleClick}>
@@ -52,4 +54,6 @@ export const Bubble: FC<BubbleProps> = ({
       )}
     </Component>
   )
-}
+})
+
+Bubble.displayName = 'Bubble'

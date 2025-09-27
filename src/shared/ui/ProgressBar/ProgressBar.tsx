@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo, useMemo } from 'react'
 import styles from './ProgressBar.module.css'
 
 interface ProgressBarProps {
@@ -10,7 +10,7 @@ interface ProgressBarProps {
   className?: string
 }
 
-export const ProgressBar: FC<ProgressBarProps> = ({
+export const ProgressBar: FC<ProgressBarProps> = memo(({
   current,
   max,
   variant = 'mint',
@@ -18,26 +18,36 @@ export const ProgressBar: FC<ProgressBarProps> = ({
   showText = false,
   className = ''
 }) => {
-  const percentage = Math.min(Math.max((current / max) * 100, 0), 100)
+  // Мемоизируем вычисления для предотвращения ненужных перерендеров
+  const percentage = useMemo(() =>
+    Math.min(Math.max((current / max) * 100, 0), 100),
+    [current, max]
+  )
 
-  const classNames = [
+  const classNames = useMemo(() => [
     styles.progressBar,
     styles[variant],
     styles[size],
     className
-  ].filter(Boolean).join(' ')
+  ].filter(Boolean).join(' '), [variant, size, className])
+
+  const progressText = useMemo(() => `${current}/${max}`, [current, max])
+
+  const fillStyle = useMemo(() => ({ width: `${percentage}%` }), [percentage])
 
   return (
     <div className={classNames}>
       <div
         className={styles.fill}
-        style={{ width: `${percentage}%` }}
+        style={fillStyle}
       />
       {showText && (
         <span className={styles.text}>
-          {current}/{max}
+          {progressText}
         </span>
       )}
     </div>
   )
-}
+})
+
+ProgressBar.displayName = 'ProgressBar'

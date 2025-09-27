@@ -41,7 +41,7 @@ export const WorkCard: FC<WorkCardProps> = ({ game, onStart }) => {
           x{game.multiplier}
         </Bubble>
         <Bubble variant="raspberry" size="medium" icon="⚡">
-          -{game.energyCost}
+          {game.energyCost}
         </Bubble>
       </div>
 

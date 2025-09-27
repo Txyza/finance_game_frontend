@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode } from 'react'
+import React, { createContext, useContext, ReactNode, useMemo } from 'react'
 import { useUser } from '@shared/hooks/useUser'
 import { UserProfileResponse, ApiError } from '@shared/api'
 
@@ -19,8 +19,23 @@ interface UserProviderProps {
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const userState = useUser()
 
+  // Мемоизируем значение контекста для предотвращения ненужных перерендеров
+  const contextValue = useMemo(() => ({
+    user: userState.user,
+    loading: userState.loading,
+    error: userState.error,
+    refetchUser: userState.refetchUser,
+    clearError: userState.clearError
+  }), [
+    userState.user,
+    userState.loading,
+    userState.error,
+    userState.refetchUser,
+    userState.clearError
+  ])
+
   return (
-    <UserContext.Provider value={userState}>
+    <UserContext.Provider value={contextValue}>
       {children}
     </UserContext.Provider>
   )
