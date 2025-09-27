@@ -23,7 +23,7 @@ export const WorkList: FC<WorkListProps> = ({ games, currentEnergy, onGameStart 
   }, [games, currentEnergy, onGameStart])
 
   return (
-    <div className={styles.workList}>
+    <div className={`${styles.workList} work-games-list`}>
       <div className={styles.container}>
         <h2 className={styles.title}>Выберите работу</h2>
         <div className={styles.gameGrid}>
@@ -34,6 +34,8 @@ export const WorkList: FC<WorkListProps> = ({ games, currentEnergy, onGameStart 
               style={{
                 animationDelay: `${index * 100}ms`
               }}
+              data-tour={index === 0 ? "work-card" : undefined}
+              data-tour-step3={index === 0 ? "work-card-final" : undefined}
             >
               <WorkCard
                 game={game}

@@ -1,6 +1,7 @@
 import { apiClient } from './client'
 import {
   WorkListResponse,
+  WorkStartRequest,
   WorkStartResponse,
   WorkStopRequest,
   WorkStopResponse,
@@ -11,8 +12,8 @@ export const workApi = {
     return apiClient.get<WorkListResponse>('/api/v1/work/list')
   },
 
-  startWork: (): Promise<WorkStartResponse> => {
-    return apiClient.post<WorkStartResponse>('/api/v1/work/start')
+  startWork: (data: WorkStartRequest): Promise<WorkStartResponse> => {
+    return apiClient.post<WorkStartResponse>('/api/v1/work/start', data)
   },
 
   stopWork: (data: WorkStopRequest): Promise<WorkStopResponse> => {

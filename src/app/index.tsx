@@ -1,12 +1,14 @@
 import { RouterProvider } from '@app/providers/router'
 import { StoreProvider } from '@app/providers/store'
-import { UserProvider } from '@shared/context'
+import { UserProvider, TourProvider } from '@shared/context'
 
 export const App = () => {
   return (
     <StoreProvider>
       <UserProvider>
-        <RouterProvider />
+        <TourProvider>
+          <RouterProvider />
+        </TourProvider>
       </UserProvider>
     </StoreProvider>
   )

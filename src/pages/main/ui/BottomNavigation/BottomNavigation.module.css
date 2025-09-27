@@ -263,6 +263,63 @@
     0 0 20px rgba(221, 65, 219, 0.1);
 }
 
+/* Заблокированная кнопка */
+.lockedButton {
+  opacity: 0.5;
+  background: rgba(128, 128, 128, 0.2) !important;
+  border-color: rgba(128, 128, 128, 0.3) !important;
+  cursor: pointer !important;
+  position: relative;
+}
+
+.lockedButton .navIcon {
+  filter: grayscale(100%) brightness(0.5);
+}
+
+.lockedButton .navLabel {
+  color: rgba(128, 128, 128, 0.7) !important;
+}
+
+.lockedButton:hover {
+  transform: none !important;
+  background: rgba(128, 128, 128, 0.2) !important;
+  border-color: rgba(128, 128, 128, 0.3) !important;
+  box-shadow: none !important;
+}
+
+/* Иконка замка */
+.lockIcon {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 12px;
+  background: rgba(255, 0, 0, 0.8);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: lockPulse 2s ease-in-out infinite;
+}
+
+@keyframes lockPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* Override для заблокированного города */
+.lockedButton.cityButton::after {
+  display: none;
+}
+
 /* Safe area для новых iPhone */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .bottomNav {

@@ -8,7 +8,7 @@
   backdrop-filter: blur(5px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: fixed;
-  top: 70px;
+  top: 88px;
   left: 0;
   right: 0;
   z-index: 9;
@@ -81,7 +81,7 @@
   .navigation {
     padding: var(--space-3) var(--space-3);
     gap: var(--space-2);
-    top: 65px;
+    top: 80px;
     height: 75px;
   }
 
@@ -106,7 +106,7 @@
 @media (max-width: 360px) {
   .navigation {
     padding: var(--space-2) var(--space-2);
-    top: 60px;
+    top: 72px;
     height: 70px;
   }
 

@@ -3,11 +3,15 @@ import { useMemoryGameStore } from '../../model/gameStore'
 import { MemoryCard } from '../MemoryCard/MemoryCard'
 import styles from './MemoryBoard.module.css'
 
-export const MemoryBoard: React.FC = () => {
+interface MemoryBoardProps {
+  gameEnded?: boolean
+}
+
+export const MemoryBoard: React.FC<MemoryBoardProps> = ({ gameEnded = false }) => {
   const { board, flipCard, selectedCards, isGameActive } = useMemoryGameStore()
 
   const handleCardClick = (cardId: string) => {
-    if (selectedCards.length >= 2) return
+    if (selectedCards.length >= 2 || gameEnded) return
     flipCard(cardId)
   }
 
@@ -19,7 +23,7 @@ export const MemoryBoard: React.FC = () => {
             key={card.id}
             card={card}
             onClick={handleCardClick}
-            disabled={!isGameActive || selectedCards.length >= 2}
+            disabled={!isGameActive || selectedCards.length >= 2 || gameEnded}
           />
         ))}
       </div>

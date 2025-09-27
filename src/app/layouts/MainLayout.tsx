@@ -1,5 +1,7 @@
 import { FC, ReactNode, useState, useCallback, useEffect } from 'react'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
+import { useUserContext } from '@shared/context'
+import { calculateLevel } from '@shared/utils/levelCalculator'
 import { BottomNavigation, TabType } from '@pages/main/ui/BottomNavigation'
 
 interface MainLayoutProps {
@@ -9,7 +11,10 @@ interface MainLayoutProps {
 export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { user } = useUserContext()
   const [activeTab, setActiveTab] = useState<TabType>('character')
+
+  const currentLevel = user ? calculateLevel(user.experience) : 1
 
   // Определяем активную вкладку по текущему пути
   useEffect(() => {
@@ -49,6 +54,7 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
           activeTab={activeTab}
           onTabChange={handleTabChange}
           onCityClick={handleCityClick}
+          currentLevel={currentLevel}
         />
       )}
     </>

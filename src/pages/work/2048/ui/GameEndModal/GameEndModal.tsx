@@ -9,9 +9,10 @@ interface GameEndModalProps {
   isOpen: boolean
   onClose: () => void
   earnedAmount?: number | null
+  onNewGame?: () => void
 }
 
-export const GameEndModal: React.FC<GameEndModalProps> = ({ isOpen, onClose, earnedAmount }) => {
+export const GameEndModal: React.FC<GameEndModalProps> = ({ isOpen, onClose, earnedAmount, onNewGame }) => {
   const navigate = useNavigate()
   const { isWon, resetGame, getStatistics } = useGameStore()
 
@@ -22,8 +23,12 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({ isOpen, onClose, ear
   const gameTimeSeconds = Math.floor((stats.gameTime % 60000) / 1000)
 
   const handleNewGame = () => {
-    resetGame()
-    onClose()
+    if (onNewGame) {
+      onNewGame()
+    } else {
+      // Фоллбэк - возвращаемся к работам
+      navigate('/work')
+    }
   }
 
   const handleBackToWork = () => {
@@ -35,7 +40,7 @@ export const GameEndModal: React.FC<GameEndModalProps> = ({ isOpen, onClose, ear
       <div className={styles.modal}>
         <div className={styles.header}>
           <h2 className={styles.title}>
-            {isWon ? '🎉 Победа!' : '😢 Игра окончена'}
+            🎉 Победа!
           </h2>
         </div>
 

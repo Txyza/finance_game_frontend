@@ -15,14 +15,16 @@ export const Game2048Page: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const { initGame, isGameOver, isWon, score } = useGameStore()
-  const { stopWork } = useWork()
-  const { refetchUser } = useUserContext()
+  const { stopWorkWithTransactionId, startWork, workList } = useWork()
+  const { user, refetchUser } = useUserContext()
   const [showEndModal, setShowEndModal] = useState(false)
   const [transactionId, setTransactionId] = useState<string | null>(null)
   const [gameEnded, setGameEnded] = useState(false)
   const [earnedAmount, setEarnedAmount] = useState<number | null>(null)
+  const [workName, setWorkName] = useState<string | null>(null)
+  const [timerResetKey, setTimerResetKey] = useState<number>(0)
 
-  const GAME_DURATION = 5 * 60 // 5 minutes in seconds
+  const GAME_DURATION = 1 * 5 // 5 minutes in seconds
 
   useEffect(() => {
     // Get transaction ID from URL params
@@ -47,6 +49,19 @@ export const Game2048Page: React.FC = () => {
     initGame(gameId)
   }, [searchParams, setSearchParams, initGame, navigate])
 
+  // Определяем имя работы для игры 2048
+  useEffect(() => {
+    if (workList?.works) {
+      const work2048 = workList.works.find(work =>
+        work.name.toLowerCase().includes('2048') ||
+        work.name.toLowerCase().includes('плитки')
+      )
+      if (work2048) {
+        setWorkName(work2048.name)
+      }
+    }
+  }, [workList])
+
   // Функция завершения игры
   const endGameSession = useCallback(async () => {
     if (gameEnded || !transactionId) return
@@ -56,7 +71,7 @@ export const Game2048Page: React.FC = () => {
     console.log('Ending game with score:', score)
 
     try {
-      const reward = await stopWork(score)
+      const reward = await stopWorkWithTransactionId(transactionId, score)
       if (reward) {
         console.log('Game completed, reward received:', reward.amount)
         setEarnedAmount(reward.amount)
@@ -69,7 +84,7 @@ export const Game2048Page: React.FC = () => {
     }
 
     setShowEndModal(true)
-  }, [gameEnded, transactionId, score, stopWork, refetchUser])
+  }, [gameEnded, transactionId, score, stopWorkWithTransactionId, refetchUser])
 
   useEffect(() => {
     // End game session when player wins or loses
@@ -93,15 +108,65 @@ export const Game2048Page: React.FC = () => {
     navigate('/work')
   }
 
+  const handleNewGame = useCallback(async () => {
+    if (!workName) {
+      console.error('Work name not available for new game')
+      navigate('/work')
+      return
+    }
+
+    console.log('Starting new game session for work:', workName)
+
+    try {
+      // Запускаем новую работу
+      const newTransactionId = await startWork(workName)
+
+      if (!newTransactionId) {
+        console.error('Failed to start new work session')
+        navigate('/work')
+        return
+      }
+
+      console.log('New work session started with transaction ID:', newTransactionId)
+
+      // Закрываем модальное окно
+      setShowEndModal(false)
+
+      // Сбрасываем состояние игры
+      setGameEnded(false)
+      setEarnedAmount(null)
+      setTransactionId(newTransactionId)
+
+      // Генерируем новый ID игры и перезапускаем игру
+      const newGameId = generateGameUUID()
+      setSearchParams(prev => ({
+        ...Object.fromEntries(prev),
+        id: newGameId,
+        transactionId: newTransactionId
+      }), { replace: true })
+
+      // Инициализируем новую игру
+      initGame(newGameId)
+
+      // Сбрасываем таймер
+      setTimerResetKey(prev => prev + 1)
+
+    } catch (error) {
+      console.error('Error starting new game:', error)
+      navigate('/work')
+    }
+  }, [workName, startWork, navigate, setSearchParams, initGame])
+
   return (
     <div className="common-page-background">
       <ParticleBackground />
 
       <GameHeaderContainer
-        variant="work"
+        bankRate={user?.key_rate ? parseFloat(user.key_rate) : undefined}
+        inflation={user?.inflation ? parseFloat(user.inflation) : undefined}
       />
 
-      <GameNavigation />
+      <GameNavigation onNewGame={handleNewGame} />
 
       <div className="common-game-content">
         {/* Таймер игры */}
@@ -109,10 +174,11 @@ export const Game2048Page: React.FC = () => {
           duration={GAME_DURATION}
           onTimeUp={handleTimeUp}
           isActive={!gameEnded && !isGameOver && !isWon}
+          resetKey={timerResetKey}
         />
 
         <div className={styles.gameContainer}>
-          <GameBoard />
+          <GameBoard gameEnded={gameEnded} />
         </div>
 
         <div className={styles.instructions}>
@@ -129,6 +195,7 @@ export const Game2048Page: React.FC = () => {
         isOpen={showEndModal}
         onClose={handleCloseEndModal}
         earnedAmount={earnedAmount}
+        onNewGame={handleNewGame}
       />
     </div>
   )

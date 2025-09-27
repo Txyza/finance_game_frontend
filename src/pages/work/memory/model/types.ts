@@ -20,6 +20,7 @@ export interface MemoryGameState {
   currentRound: number
   sessionId: string
   events: MemoryGameEvent[]
+  multiplier: number
 }
 
 export interface MemoryGameEvent {
@@ -47,4 +48,5 @@ export type MemoryGameStore = MemoryGameState & {
   resumeGame: () => void
   getStatistics: () => MemoryGameStatistics
   logEvent: (type: MemoryGameEvent['type'], data: Record<string, unknown>) => void
+  setMultiplier: (multiplier: number) => void
 }

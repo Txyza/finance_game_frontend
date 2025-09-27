@@ -37,7 +37,7 @@ export const CharacterArea: FC<CharacterAreaProps> = ({
         </div>
 
         {/* Центральный персонаж */}
-        <div className={styles.character}>
+        <div className={styles.character} data-tour="character">
           <img
             src={maskotImage}
             alt="Маскот игры"
@@ -63,6 +63,7 @@ export const CharacterArea: FC<CharacterAreaProps> = ({
           size="large"
           fullWidth
           onClick={onWorkClick}
+          data-tour="work-button"
         >
           Работать
         </Button>

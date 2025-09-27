@@ -116,3 +116,31 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Стили для Joyride туров */
+:global(.react-joyride__tooltip) {
+  font-family: var(--font-primary) !important;
+}
+
+:global(.react-joyride__tooltip h4) {
+  margin: 0 0 var(--space-2) 0 !important;
+  color: var(--color-mint) !important;
+  font-family: var(--font-accent) !important;
+  font-size: var(--font-size-base) !important;
+  font-weight: 600 !important;
+}
+
+:global(.react-joyride__tooltip p) {
+  margin: var(--space-1) 0 !important;
+  font-size: var(--font-size-sm) !important;
+  line-height: 1.4 !important;
+}
+
+:global(.react-joyride__tooltip strong) {
+  color: var(--color-melissa) !important;
+}
+
+/* Скрытие footer для последнего шага */
+:global(.react-joyride__tooltip--step-3 .react-joyride__tooltip__footer) {
+  display: none !important;
+}

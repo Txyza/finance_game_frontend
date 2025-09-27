@@ -4,7 +4,11 @@ import { useGameStore } from '../../model/gameStore'
 import { Button } from '../../../../../shared/ui'
 import styles from './GameNavigation.module.css'
 
-export const GameNavigation: React.FC = () => {
+interface GameNavigationProps {
+  onNewGame?: () => void
+}
+
+export const GameNavigation: React.FC<GameNavigationProps> = ({ onNewGame }) => {
   const navigate = useNavigate()
   const { score, resetGame } = useGameStore()
 
@@ -13,7 +17,12 @@ export const GameNavigation: React.FC = () => {
   }
 
   const handleNewGame = () => {
-    resetGame()
+    if (onNewGame) {
+      onNewGame()
+    } else {
+      // Фоллбэк - только сбрасываем локальное состояние игры
+      resetGame()
+    }
   }
 
   return (

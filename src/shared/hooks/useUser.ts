@@ -40,6 +40,20 @@ export const useUser = (): UseUserReturn => {
     }
   }, [])
 
+  // Автоматическое обновление данных пользователя каждые 10 секунд
+  useEffect(() => {
+    // Загружаем данные при монтировании
+    fetchUser()
+
+    // Устанавливаем интервал для обновления каждые 10 секунд
+    const interval = setInterval(() => {
+      fetchUser()
+    }, 10000)
+
+    // Очищаем интервал при размонтировании
+    return () => clearInterval(interval)
+  }, [fetchUser])
+
   const refetchUser = useCallback(async () => {
     await fetchUser()
   }, [fetchUser])

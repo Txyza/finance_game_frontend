@@ -2,18 +2,28 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMemoryGameStore } from '../../model/gameStore'
 import { Button } from '../../../../../shared/ui'
+import { formatMoney } from '@shared/lib/formatMoney'
 import styles from './MemoryNavigation.module.css'
 
-export const MemoryNavigation: React.FC = () => {
+interface MemoryNavigationProps {
+  onNewGame?: () => void
+}
+
+export const MemoryNavigation: React.FC<MemoryNavigationProps> = ({ onNewGame }) => {
   const navigate = useNavigate()
-  const { score, timeLeft, currentRound, resetGame } = useMemoryGameStore()
+  const { score, timeLeft, currentRound, resetGame, multiplier } = useMemoryGameStore()
 
   const handleBackClick = () => {
     navigate('/work')
   }
 
   const handleNewGame = () => {
-    resetGame()
+    if (onNewGame) {
+      onNewGame()
+    } else {
+      // Фоллбэк - только сбрасываем локальное состояние игры
+      resetGame()
+    }
   }
 
   const formatTime = (timeMs: number) => {
@@ -22,6 +32,9 @@ export const MemoryNavigation: React.FC = () => {
     const seconds = totalSeconds % 60
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
+
+  // Вычисляем заработанные деньги
+  const earnedMoney = score * multiplier
 
   return (
     <div className={styles.navigation}>
@@ -42,6 +55,10 @@ export const MemoryNavigation: React.FC = () => {
           <div className={styles.statBlock}>
             <div className={styles.statLabel}>Очки</div>
             <div className={styles.statValue}>{score.toLocaleString()}</div>
+          </div>
+          <div className={styles.statBlock}>
+            <div className={styles.statLabel}>Деньги</div>
+            <div className={styles.statValue}>{formatMoney(earnedMoney)}</div>
           </div>
           <div className={styles.statBlock}>
             <div className={styles.statLabel}>Время</div>

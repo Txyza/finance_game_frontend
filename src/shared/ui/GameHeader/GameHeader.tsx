@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Bubble, ProgressBar } from '@shared/ui'
 import { formatMoney } from '@shared/lib/formatMoney'
@@ -18,7 +18,7 @@ interface GameHeaderProps {
   onMoneyAdd?: () => void
 }
 
-export const GameHeader: FC<GameHeaderProps> = ({
+export const GameHeader: FC<GameHeaderProps> = memo(({
   level,
   currentExp,
   maxExp,
@@ -54,7 +54,7 @@ export const GameHeader: FC<GameHeaderProps> = ({
 
   return (
     <header className={headerClass}>
-      <div className={styles.topRow}>
+      <div className={styles.topRow} data-tour="game-header">
         {/* Уровень с прогресс-баром */}
         <div className="common-header-level-block">
           <span className="common-header-level-text">Lv {level}</span>
@@ -95,7 +95,7 @@ export const GameHeader: FC<GameHeaderProps> = ({
       </div>
 
       {/* Экономические показатели или пустое место для одинаковой высоты */}
-      <div className={styles.bottomRow}>
+      <div className={styles.bottomRow} data-tour="market-indicators">
         {variant === 'main' && bankRate !== undefined && inflation !== undefined ? (
           <>
             <Bubble variant="outline" size="small" icon="📈">
@@ -119,4 +119,6 @@ export const GameHeader: FC<GameHeaderProps> = ({
       </div>
     </header>
   )
-}
+})
+
+GameHeader.displayName = 'GameHeader'

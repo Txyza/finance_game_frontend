@@ -31,6 +31,7 @@ export const useMemoryGameStore = create<MemoryGameStore>((set, get) => ({
   currentRound: 0,
   sessionId: '',
   events: [],
+  multiplier: 1,
 
   initGame: (sessionId?: string) => {
     const gameSessionId = sessionId || generateGameUUID()
@@ -239,5 +240,9 @@ export const useMemoryGameStore = create<MemoryGameStore>((set, get) => ({
 
     // В будущем здесь можно добавить отправку события через WebSocket
     console.log('Memory Game Event:', event)
+  },
+
+  setMultiplier: (multiplier: number) => {
+    set({ multiplier })
   }
 }))

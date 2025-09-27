@@ -25,6 +25,10 @@ export interface WorkListResponse {
   works: WorkListItem[]
 }
 
+export interface WorkStartRequest {
+  work_name: string
+}
+
 export interface WorkStartResponse {
   transaction_id: string
 }

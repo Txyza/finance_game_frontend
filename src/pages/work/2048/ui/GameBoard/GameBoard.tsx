@@ -4,14 +4,18 @@ import { GameTile } from '../GameTile/GameTile'
 import { Direction } from '../../model/types'
 import styles from './GameBoard.module.css'
 
-export const GameBoard: React.FC = () => {
+interface GameBoardProps {
+  gameEnded?: boolean
+}
+
+export const GameBoard: React.FC<GameBoardProps> = ({ gameEnded = false }) => {
   const { board, makeMove, isGameOver, isWon } = useGameStore()
   const boardRef = useRef<HTMLDivElement>(null)
   const touchStartRef = useRef<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isGameOver || isWon) return
+      if (isGameOver || isWon || gameEnded) return
 
       let direction: Direction | null = null
 
@@ -38,7 +42,7 @@ export const GameBoard: React.FC = () => {
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [makeMove, isGameOver, isWon])
+  }, [makeMove, isGameOver, isWon, gameEnded])
 
   const handleTouchStart = (event: React.TouchEvent) => {
     const touch = event.touches[0]
@@ -74,7 +78,7 @@ export const GameBoard: React.FC = () => {
       direction = deltaY > 0 ? 'down' : 'up'
     }
 
-    if (direction && !isGameOver && !isWon) {
+    if (direction && !isGameOver && !isWon && !gameEnded) {
       makeMove(direction)
     }
 
@@ -122,7 +126,7 @@ export const GameBoard: React.FC = () => {
       {(isGameOver || isWon) && (
         <div className={styles.gameOverlay}>
           <div className={styles.gameOverText}>
-            {isWon ? 'Победа!' : 'Игра окончена'}
+            🎉 Победа!
           </div>
         </div>
       )}

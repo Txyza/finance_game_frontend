@@ -1,30 +1,63 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styles from './GameTimer.module.css'
 
 interface GameTimerProps {
   duration: number // Duration in seconds
   onTimeUp: () => void
   isActive: boolean
+  resetKey?: string | number // Ключ для принудительного сброса таймера
 }
 
-export const GameTimer: React.FC<GameTimerProps> = ({ duration, onTimeUp, isActive }) => {
+export const GameTimer: React.FC<GameTimerProps> = ({ duration, onTimeUp, isActive, resetKey }) => {
   const [timeLeft, setTimeLeft] = useState(duration)
+  const startTimeRef = useRef<number | null>(null)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const hasCalledOnTimeUp = useRef(false)
 
   useEffect(() => {
-    if (!isActive) return
+    if (!isActive) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
+      return
+    }
 
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          onTimeUp()
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
+    // Инициализируем время начала только один раз
+    if (startTimeRef.current === null) {
+      startTimeRef.current = Date.now()
+      hasCalledOnTimeUp.current = false
+    }
 
-    return () => clearInterval(timer)
-  }, [isActive, onTimeUp])
+    // Создаем асинхронный таймер на основе реального времени
+    intervalRef.current = setInterval(() => {
+      if (startTimeRef.current === null) return
+
+      const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000)
+      const remaining = Math.max(0, duration - elapsed)
+
+      setTimeLeft(remaining)
+
+      if (remaining <= 0 && !hasCalledOnTimeUp.current) {
+        hasCalledOnTimeUp.current = true
+        onTimeUp()
+      }
+    }, 100) // Обновляем каждые 100ms для плавности
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
+    }
+  }, [isActive, duration, onTimeUp])
+
+  // Сброс таймера при изменении duration или resetKey
+  useEffect(() => {
+    startTimeRef.current = null
+    hasCalledOnTimeUp.current = false
+    setTimeLeft(duration)
+  }, [duration, resetKey])
 
   // Format time as MM:SS
   const formatTime = (seconds: number): string => {

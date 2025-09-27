@@ -7,9 +7,11 @@ import styles from './MemoryEndModal.module.css'
 interface MemoryEndModalProps {
   isOpen: boolean
   onClose: () => void
+  earnedAmount?: number | null
+  onNewGame?: () => void
 }
 
-export const MemoryEndModal: React.FC<MemoryEndModalProps> = ({ isOpen, onClose }) => {
+export const MemoryEndModal: React.FC<MemoryEndModalProps> = ({ isOpen, onClose, earnedAmount, onNewGame }) => {
   const navigate = useNavigate()
   const { resetGame, getStatistics } = useMemoryGameStore()
 
@@ -20,8 +22,12 @@ export const MemoryEndModal: React.FC<MemoryEndModalProps> = ({ isOpen, onClose 
   const gameTimeSeconds = Math.floor((stats.totalTime % 60000) / 1000)
 
   const handleNewGame = () => {
-    resetGame()
-    onClose()
+    if (onNewGame) {
+      onNewGame()
+    } else {
+      // Фоллбэк - возвращаемся к работам
+      navigate('/work')
+    }
   }
 
   const handleBackToWork = () => {
@@ -67,6 +73,14 @@ export const MemoryEndModal: React.FC<MemoryEndModalProps> = ({ isOpen, onClose 
                   ? `Отличная память! Вы завершили ${stats.roundsCompleted} раундов!`
                   : 'Продолжайте тренировать память!'
                 }
+              </div>
+            </div>
+          )}
+
+          {earnedAmount !== null && earnedAmount !== undefined && (
+            <div className={styles.reward}>
+              <div className={styles.rewardText}>
+                💰 Заработано: {earnedAmount.toLocaleString()} ₽
               </div>
             </div>
           )}
