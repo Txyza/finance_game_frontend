@@ -5,9 +5,9 @@ services:
     image: postgres:15
     container_name: cash-lvl-postgres-prod
     environment:
-      POSTGRES_DB: ${POSTGRES_PASSWORD:-finance_game}
-      POSTGRES_USER: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-finance_game}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-finance_password_dev}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -49,9 +49,9 @@ services:
     container_name: cash-lvl-api-prod
     environment:
       - POSTGRES_SERVER=postgres
-      - POSTGRES_USER=finance_user
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-finance_password_prod}
-      - POSTGRES_DB=finance_game
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-finance_password_dev}
+      - POSTGRES_DB=${POSTGRES_DB:-finance_game}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - SECRET_KEY=${SECRET_KEY:-your-super-secret-key-change-in-production}
