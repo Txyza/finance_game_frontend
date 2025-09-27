@@ -1,3 +1,32 @@
+/* Welcome Screen */
+.welcome {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #2f13af 0%, #2f13af 50%, #3c1ac2 50%, #3c1ac2 100%);
+}
+
+.welcomeImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  user-select: none;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.welcome:hover .welcomeImage {
+  transform: scale(1.02);
+}
+
+/* Main Container */
 .container {
   width: 100%;
   height: 100vh;
@@ -21,7 +50,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-6);
+  gap: var(--space-8);
+  animation: fadeInUp var(--duration-slow) var(--ease-out);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .title {

@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { Button, ParticleBackground } from '@shared/ui'
 import { userApi } from '@shared/api'
 import { useUserContext } from '@shared/context'
+import onboardingImage from '@shared/assets/images/onboarding.png'
 import styles from './OnboardingPage.module.css'
 
-type OnboardingStep = 'name' | 'card'
+type OnboardingStep = 'welcome' | 'name' | 'card'
 
 interface CardData {
   id: string
@@ -46,11 +47,15 @@ const cards: CardData[] = [
 export const OnboardingPage: React.FC = () => {
   const navigate = useNavigate()
   const { refetchUser } = useUserContext()
-  const [step, setStep] = useState<OnboardingStep>('name')
+  const [step, setStep] = useState<OnboardingStep>('welcome')
   const [name, setName] = useState('')
   const [selectedCard, setSelectedCard] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const handleWelcomeClick = () => {
+    setStep('name')
+  }
 
   const handleNameNext = () => {
     if (name.trim()) {
@@ -77,6 +82,18 @@ export const OnboardingPage: React.FC = () => {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (step === 'welcome') {
+    return (
+      <div className={styles.welcome} onClick={handleWelcomeClick}>
+        <img
+          src={onboardingImage}
+          alt="Добро пожаловать в Cash Level"
+          className={styles.welcomeImage}
+        />
+      </div>
+    )
   }
 
   return (
