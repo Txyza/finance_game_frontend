@@ -1,336 +1,297 @@
-# Финансовая игра - Frontend
+# 💰 Cash Level - Финансовая игра
 
-React приложение с FSD архитектурой для хакатона ЛЦТ. Задача геймификации в мобильном приложении банка для повышения финансовой грамотности.
+Образовательная игра для повышения финансовой грамотности. Frontend приложение на React с TypeScript и FSD архитектурой.
+
+## 🎮 О проекте
+
+Cash Level - это мобильная игра, которая помогает пользователям изучать основы финансовой грамотности через игровые механики. Проект разработан для хакатона ЛЦТ 2024.
+
+### Основные возможности
+- 📊 Система уровней и прогресса
+- 💼 Различные виды работ и заданий
+- 🏪 Магазин улучшений и бонусов
+- 📈 Отслеживание финансовых показателей
+- 🏆 Система достижений
+- 📱 Адаптивный дизайн для мобильных устройств
 
 ## 🚀 Быстрый старт
 
+### Предварительные требования
+- Node.js 18+
+- npm или yarn
+- Docker и Docker Compose (для контейнерного запуска)
+
 ### Локальная разработка
+
 ```bash
+# Клонировать репозиторий
+git clone <repository-url>
+cd finance_game_frontend
+
 # Установить зависимости
 npm install
 
 # Запустить development сервер
 npm run dev
 
-# Или через Make
-make install
-make dev
+# Приложение будет доступно на http://localhost:3000
 ```
 
-### Запуск через Docker
+### Docker окружение
+
+#### Development режим (с hot-reload)
+```bash
+# Запустить все сервисы (frontend, backend, БД)
+make run PROFILE=dev
+
+# Доступ:
+# - Frontend через Nginx: http://localhost:8080
+# - Backend API: http://localhost:8000
+# - Frontend Dev Server: http://localhost:5173
+```
 
 #### Production режим
 ```bash
-# Собрать и запустить контейнеры
-make docker-build
-make docker-up
+# Запустить production окружение
+make run
 
-# Приложение будет доступно по адресу http://localhost
+# Приложение будет доступно на https://cash-lvl.ru
 ```
 
-#### Development режим
-```bash
-# Собрать и запустить dev контейнеры
-make docker-dev-build
-make docker-dev-up
+## 🏗️ Архитектура
 
-# Приложение будет доступно по адресу http://localhost:3000
-# Vite dev server доступен напрямую на http://localhost:5173
-# Поддержка Hot Module Replacement (HMR)
-```
+### Технологический стек
 
-## 📁 Структура проекта (FSD)
+#### Frontend
+- **React 18** - UI библиотека
+- **TypeScript** - статическая типизация
+- **Vite** - сборщик и dev-сервер
+- **React Router** - клиентский роутинг
+- **CSS Modules** - изоляция стилей
+- **Zustand** - управление состоянием
+
+#### Backend интеграция
+- **FastAPI** - REST API
+- **PostgreSQL** - основная БД
+- **Redis** - кеширование
+- **Docker** - контейнеризация
+
+#### Инфраструктура
+- **Nginx** - reverse proxy
+- **Docker Compose** - оркестрация
+- **GitHub Actions** - CI/CD
+- **Yandex Metrika** - аналитика
+
+### Feature-Sliced Design (FSD)
 
 ```
 src/
 ├── app/                    # Инициализация приложения
 │   ├── providers/         # Провайдеры (router, store)
+│   ├── layouts/          # Основные лейауты
 │   └── styles/           # Глобальные стили
+│
 ├── pages/                 # Страницы приложения
-│   ├── home/             # Главная страница
-│   ├── brandbook/        # Дизайн-система и компоненты
-│   ├── game/             # Игровая страница (планируется)
-│   ├── profile/          # Профиль пользователя (планируется)
-│   └── leaderboard/      # Рейтинг игроков (планируется)
+│   ├── main/             # Главная страница игры
+│   ├── work/             # Мини-игры (2048, etc)
+│   ├── shop/             # Магазин
+│   ├── analytics/        # Аналитика прогресса
+│   ├── character/        # Персонаж и инвентарь
+│   └── brandbook/        # UI Kit демо
+│
 ├── widgets/               # Композитные блоки UI
-│   ├── header/           # Шапка сайта
-│   ├── footer/           # Подвал
-│   ├── EventCard/        # Карточка мероприятия
-│   └── WorkshopCard/     # Карточка воркшопа
-├── features/              # Функциональные возможности
-│   └── auth/             # Авторизация (планируется)
+│   ├── GameHeader/       # Игровая шапка с ресурсами
+│   ├── BottomNavigation/ # Навигация
+│   └── LeaderboardList/  # Список лидеров
+│
+├── features/              # Функциональность
+│   ├── auth/             # Авторизация
+│   ├── game-session/     # Игровая сессия
+│   └── achievements/     # Достижения
+│
 ├── entities/              # Бизнес-сущности
-│   └── user/             # Пользователь (планируется)
+│   ├── user/             # Пользователь
+│   ├── work/             # Работа
+│   ├── task/             # Задания
+│   └── store/            # Товары магазина
+│
 └── shared/                # Переиспользуемый код
-    ├── ui/               # UI компоненты (Button, Bubble, Card)
-    ├── styles/           # Дизайн-токены и стили
-    ├── config/           # Константы
-    └── lib/              # Утилиты
+    ├── api/              # API клиент и типы
+    ├── ui/               # UI компоненты
+    ├── lib/              # Утилиты
+    ├── utils/            # Хелперы
+    └── context/          # React контексты
 ```
 
-## 🛠 Доступные команды
+## 📦 Основные компоненты
 
-### Development
+### UI Kit
+- **Button** - 7 вариантов с градиентами
+- **Bubble** - компактные элементы для ресурсов
+- **Card** - универсальные карточки
+- **ProgressBar** - прогресс-бары
+- **GameHeader** - игровая информация
+- **AnalyticsCard** - карточки статистики
+
+### Игровые механики
+- **Система уровней** - прогрессия игрока (1-15+ уровни)
+- **Энергия** - ограниченный ресурс для действий
+- **Валюта** - деньги для покупок
+- **Опыт** - прогресс к следующему уровню
+
+### API интеграция
+
+```typescript
+// Основные эндпоинты
+GET  /api/v1/user/me      # Профиль игрока
+GET  /api/v1/work/list     # Список работ
+POST /api/v1/work/start    # Начать работу
+POST /api/v1/work/stop     # Завершить работу
+GET  /api/v1/store/list    # Товары магазина
+POST /api/v1/store/buy     # Покупка товара
+GET  /api/v1/task/list     # Список заданий
+POST /api/v1/task/reward   # Получить награду
+```
+
+## 🛠️ Разработка
+
+### Команды
+
 ```bash
-npm run dev         # Запуск dev сервера
-npm run build       # Сборка для production
-npm run lint        # Проверка линтерами
-npm run type-check  # Проверка TypeScript
-npm run test        # Запуск тестов
+# Development
+npm run dev           # Dev сервер с hot-reload
+npm run build         # Production сборка
+npm run preview       # Предпросмотр production сборки
+npm run lint          # ESLint проверка
+npm run type-check    # TypeScript проверка
+
+# Docker через Make
+make run PROFILE=dev  # Запуск dev окружения
+make run              # Запуск production
+make build            # Пересборка образов
+make stop             # Остановка контейнеров
+make logs             # Просмотр логов
+make clean            # Полная очистка
 ```
 
-### Make команды
+### Переменные окружения
+
 ```bash
-make help          # Показать все команды
-make install       # Установить зависимости
-make dev           # Запустить dev сервер
-make build         # Собрать проект
-make lint          # Проверить код
-make clean         # Очистить проект
+# .env для development
+VITE_API_URL=http://localhost:8080/api
+VITE_APP_NAME="Cash Level"
+VITE_APP_VERSION=0.1.0
+
+# Database
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=finance_game
+
+# Backend
+SECRET_KEY=dev-secret-key
+API_V1_STR=/api/v1
 ```
-
-### Docker команды (Production)
-```bash
-make docker-build      # Собрать Docker образы
-make docker-up         # Запустить контейнеры
-make docker-down       # Остановить контейнеры
-make docker-restart    # Перезапустить контейнеры
-make docker-logs       # Показать логи
-make docker-clean      # Очистить Docker ресурсы
-make status           # Статус контейнеров
-```
-
-### Docker команды (Development)
-```bash
-make docker-dev-build    # Собрать образы для разработки
-make docker-dev-up       # Запустить dev контейнеры
-make docker-dev-down     # Остановить dev контейнеры
-make docker-dev-restart  # Перезапустить dev контейнеры
-make docker-dev-logs     # Показать логи dev контейнеров
-```
-
-## 🏗 Технологии
-
-- **React 18** - UI библиотека
-- **TypeScript** - типизация
-- **Vite** - сборщик
-- **React Router** - роутинг
-- **Zustand** - state management (планируется)
-- **CSS Modules** - стилизация
-- **ESLint + Prettier** - качество кода
-- **Docker** - контейнеризация
-- **Nginx** - веб-сервер
-
-### Дизайн-система
-- **Gazprombank Sans** - корпоративный шрифт
-- **Halvar Breitschrift** - акцентный шрифт
-- **CSS Custom Properties** - дизайн-токены
-- **Адаптивная верстка** - Mobile First
-
-## 🎯 Функциональность
-
-### Готово ✅
-- **FSD архитектура** - Feature-Sliced Design
-- **Дизайн-система** - полная реализация брендбука Газпромбанк ТЕХ
-- **UI компоненты** - Button, Bubble, Card с множественными вариантами
-- **Составные компоненты** - EventCard, WorkshopCard с анимациями
-- **Страница /brandbook** - демонстрация всех компонентов
-- **Docker среда** - Development и Production режимы
-- **Роутинг** - React Router настроен
-- **TypeScript** - полная типизация
-- **Responsive дизайн** - адаптивная верстка
-- **Линтеры и форматтеры** - ESLint + Prettier
-
-### В разработке 🚧
-- **Игровая логика** - основной функционал приложения
-- **API интеграция** - подключение к бэкенду
-- **Авторизация** - система входа пользователей
-- **Достижения** - система наград и прогресса
-- **Статистика** - аналитика и метрики
-- **Яндекс Метрика** - веб-аналитика
-
-## 🔧 Разработка
 
 ### Создание нового компонента
-```bash
-# Создать компонент в shared слое
-mkdir -p src/shared/ui/NewComponent
-touch src/shared/ui/NewComponent/{NewComponent.tsx,NewComponent.module.css,index.ts}
-```
 
-### Добавление новой фичи
 ```bash
-# Создать фичу
+# UI компонент
+mkdir -p src/shared/ui/NewComponent
+touch src/shared/ui/NewComponent/{index.ts,NewComponent.tsx,NewComponent.module.css}
+
+# Страница
+mkdir -p src/pages/new-page/ui
+touch src/pages/new-page/ui/{index.ts,NewPage.tsx,NewPage.module.css}
+
+# Feature
 mkdir -p src/features/new-feature/{ui,model,api}
 ```
 
-### Добавление новой страницы
-```bash
-# Создать страницу
-mkdir -p src/pages/new-page/{ui,model}
-```
-
-## 🎨 Дизайн-система и стилизация
+## 🎨 Дизайн-система
 
 ### Цветовая палитра
-- **Основные цвета**: Черный (#000000), Фиалка (#1919ef), Мята (#58ffff), Малина (#dd41db)
-- **Дополнительные**: Мелисса (#3cfeb9), Сакура (#ff82be)
-- **8 градиентов** согласно брендбуку
-- **Правило 80/20**: 80% основных цветов, 20% акцентных
+- **Основные**: Черный (#000000), Фиалка (#1919ef), Мята (#58ffff)
+- **Акцентные**: Малина (#dd41db), Мелисса (#3cfeb9), Сакура (#ff82be)
+- **8 градиентов** для различных элементов
 
-### Компоненты
-- **Button** - 7 вариантов, 3 размера, состояния loading/disabled
-- **Bubble** - компактные элементы с иконками
-- **Card** - универсальные карточки с градиентами
-- **EventCard** - карточки мероприятий
-- **WorkshopCard** - воркшопы с 3D-анимацией
+### Типографика
+- **Основной**: Inter, system fonts
+- **Моноширинный**: monospace для чисел
 
-### CSS Modules
-```tsx
-import styles from './Component.module.css'
+### Адаптивность
+- Mobile First подход
+- Breakpoints: 768px (tablet), 1200px (desktop)
+- Оптимизация для touch устройств
 
-export const Component = () => (
-  <div className={styles.container}>
-    <h1 className={styles.title}>Заголовок</h1>
-  </div>
-)
-```
+## 📊 Мониторинг и аналитика
 
-### CSS Custom Properties
-```css
-:root {
-  --color-violet: #1919ef;
-  --color-mint: #58ffff;
-  --gradient-mint-melissa: linear-gradient(135deg, #58ffff 0%, #3cfeb9 100%);
-}
-```
+### Yandex Metrika
+- Отслеживание переходов между страницами
+- События игровых действий
+- Конверсии и достижения
 
-## 📖 Демонстрация компонентов
+### Логирование
+- Ошибки API в консоль
+- Docker логи для всех сервисов
+- Nginx access и error логи
 
-Перейдите на `/brandbook` для просмотра всех компонентов дизайн-системы:
-- **Цветовая палитра** с HEX-кодами
-- **Все варианты кнопок** и баблов
-- **Карточки** с градиентами
-- **Составные компоненты** в действии
-- **Типографика** и шрифты
+## 🚢 Deployment
 
-## 📱 Адаптивность
-
-Приложение адаптивно для всех устройств:
-- Desktop (1200px+)
-- Tablet (768px - 1199px)
-- Mobile (до 767px)
-
-## 🚀 Деплой
-
-### Локальная сборка
+### Production окружение
 ```bash
-# Production сборка
-npm run build
+# Настройка SSL сертификатов
+cp /path/to/cert/* ./cert/
 
-# Или через Make
-make build
+# Создать .env.prod
+cp .env.example .env.prod
+# Отредактировать production значения
+
+# Запустить production
+make run PROFILE=prod
 ```
 
-### Docker деплой
-```bash
-# Собрать образы
-make docker-build
+### Требования сервера
+- Docker 20.10+
+- Docker Compose 2.0+
+- 2 CPU cores минимум
+- 4GB RAM минимум
+- 10GB свободного места
 
-# Запустить в production режиме
-make docker-up
+## 📈 Roadmap
 
-# Приложение будет доступно по адресу http://localhost
-# Nginx автоматически проксирует запросы к React приложению
-```
+### ✅ Завершено
+- FSD архитектура
+- Базовый UI Kit
+- Docker инфраструктура
+- Интеграция с backend API
+- Система уровней
+- Мини-игра 2048
+- Yandex Metrika
 
-### Архитектура Docker
-- **Frontend контейнер**: React приложение, собранный с Vite, запускается на порту 3000
-- **Nginx контейнер**: Веб-сервер на порту 80, проксирует запросы к frontend
-- **Development режим**: Hot Module Replacement, volume mounting для live reload
-- **Production режим**: Оптимизированная сборка с Nginx
-- **Healthchecks**: Автоматическая проверка работоспособности сервисов
-- **Gzip сжатие**: Оптимизация статических файлов
-- **SPA fallback**: Поддержка React Router
+### 🚧 В разработке
+- Дополнительные мини-игры
+- Push уведомления
+- Система достижений
+- Социальные функции
 
-## 📋 Roadmap
+### 📋 Планируется
+- PWA функционал
+- Offline режим
+- Интеграция с банковским API
+- A/B тестирование
+- Unit и E2E тесты
 
-### Этап 1: Основа ✅
-- [x] FSD архитектура
-- [x] Дизайн-система брендбука
-- [x] Docker инфраструктура
-- [x] Базовые компоненты
+## 🤝 Команда
 
-### Этап 2: Игровая логика 🚧
-- [ ] Система уровней и прогресса
-- [ ] Игровые механики
-- [ ] Достижения и награды
-- [ ] Сохранение прогресса
-
-### Этап 3: Интеграция 📋
-- [ ] API подключение
-- [ ] Авторизация пользователей
-- [ ] Аналитика (Яндекс Метрика)
-- [ ] PWA функциональность
-
-### Этап 4: Полировка 📋
-- [ ] Тестирование (Unit, E2E)
-- [ ] Оптимизация производительности
-- [ ] Accessibility (WCAG)
-- [ ] SEO оптимизация
-
-## 📝 Соглашения
-
-### Именование файлов
-- Компоненты: `PascalCase.tsx`
-- Хуки: `useCamelCase.ts`
-- Утилиты: `camelCase.ts`
-- Типы: `types.ts`
-
-### Импорты
-```tsx
-// 1. React импорты
-import { FC } from 'react'
-
-// 2. Внешние библиотеки
-import { Link } from 'react-router-dom'
-
-// 3. Внутренние импорты (по слоям FSD)
-import { Button } from '@shared/ui'
-import { useAuthStore } from '@features/auth'
-
-// 4. Относительные импорты
-import styles from './Component.module.css'
-```
-
-### Структура компонента
-```tsx
-import { FC } from 'react'
-import styles from './Component.module.css'
-
-interface ComponentProps {
-  title: string
-  onClick?: () => void
-}
-
-export const Component: FC<ComponentProps> = ({ title, onClick }) => {
-  return (
-    <div className={styles.component}>
-      <h1>{title}</h1>
-      <button onClick={onClick}>Кнопка</button>
-    </div>
-  )
-}
-```
-
-## 🤝 Участие в разработке
-
-1. Форк репозитория
-2. Создание ветки: `git checkout -b feature/new-feature`
-3. Коммит изменений: `git commit -m 'Add new feature'`
-4. Пуш ветки: `git push origin feature/new-feature`
-5. Создание Pull Request
+Проект разработан для хакатона ЛЦТ 2024
 
 ## 📄 Лицензия
 
-MIT License
+MIT License - см. файл LICENSE для подробностей
+
+---
+
+**Полезные ссылки:**
+- [API документация](http://localhost:8000/docs) - Swagger UI
+- [Brandbook демо](http://localhost:8080/brandbook) - UI компоненты
+- [Yandex Metrika](https://metrika.yandex.ru) - Аналитика
