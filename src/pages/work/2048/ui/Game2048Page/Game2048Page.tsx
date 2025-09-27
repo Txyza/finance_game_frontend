@@ -24,7 +24,7 @@ export const Game2048Page: React.FC = () => {
   const [workName, setWorkName] = useState<string | null>(null)
   const [timerResetKey, setTimerResetKey] = useState<number>(0)
 
-  const GAME_DURATION = 1 * 5 // 5 minutes in seconds
+  const GAME_DURATION = 5 * 60 // 5 minutes in seconds
 
   useEffect(() => {
     // Get transaction ID from URL params
