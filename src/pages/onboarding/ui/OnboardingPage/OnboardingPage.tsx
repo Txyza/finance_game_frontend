@@ -57,8 +57,13 @@ export const OnboardingPage: React.FC = () => {
     setStep('name')
   }
 
+  const isNameValid = (name: string) => {
+    const trimmedName = name.trim()
+    return trimmedName.length >= 2 && trimmedName.length <= 50 && /^[a-zA-Zа-яА-ЯёЁ\s]+$/.test(trimmedName)
+  }
+
   const handleNameNext = () => {
-    if (name.trim()) {
+    if (isNameValid(name)) {
       setStep('card')
     }
   }
@@ -108,21 +113,41 @@ export const OnboardingPage: React.FC = () => {
               <p className={styles.subtitle}>Выберите имя персонажа</p>
 
               <div className={styles.inputContainer}>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Введите имя персонажа"
-                  className={styles.nameInput}
-                  maxLength={50}
-                />
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Введите имя персонажа"
+                    className={styles.nameInput}
+                    maxLength={50}
+                  />
+                  <div
+                    className={`${styles.inputValidation} ${
+                      isNameValid(name) ? styles.valid : styles.invalid
+                    }`}
+                  />
+                </div>
+                <div
+                  className={`${styles.characterCounter} ${
+                    name.length > 40 ? styles.warning : name.length >= 50 ? styles.error : ''
+                  }`}
+                >
+                  {name.length}/50
+                </div>
+
+                {name.length > 0 && !isNameValid(name) && (
+                  <div className={`${styles.validationHint} ${styles.error}`}>
+                    Имя должно содержать только буквы и пробелы (от 2 до 50 символов)
+                  </div>
+                )}
               </div>
 
               <Button
                 onClick={handleNameNext}
-                disabled={!name.trim()}
+                disabled={!isNameValid(name)}
                 size="large"
-                variant="primary"
+                variant="gradient-mint"
                 className={styles.continueButton}
               >
                 Продолжить
