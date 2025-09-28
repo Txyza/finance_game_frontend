@@ -80,7 +80,7 @@ services:
   # worker
   celery_worker:
     build:
-      context: .
+      context: ../finance_game_backend
       dockerfile: Dockerfile.dev
     environment:
       - POSTGRES_SERVER=postgres
@@ -90,15 +90,15 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - SECRET_KEY=${SECRET_KEY}
-      - ENVIRONMENT=production
-      - DEBUG=False
+      - ENVIRONMENT=development
+      - DEBUG=True
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
     networks:
-      - finance-game-network
+      - cash-lvl-network-dev
     restart: unless-stopped
     command: >
       sh -c "
