@@ -57,10 +57,52 @@
   border-color: rgba(88, 255, 255, 0.4);
 }
 
+.categoryButton.highlighted {
+  background: rgba(255, 107, 107, 0.15);
+  border-color: rgba(255, 107, 107, 0.3);
+}
+
+.categoryButton.highlighted:hover {
+  background: rgba(255, 107, 107, 0.2);
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.categoryButton.highlighted.active {
+  background: rgba(255, 107, 107, 0.2);
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.categoryIconContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .categoryIcon {
   font-size: var(--font-size-xl);
   line-height: 1;
 }
+
+.categoryBadge {
+  position: absolute;
+  top: -4px;
+  right: -12px;
+  background: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
+}
+
 
 .categoryLabel {
   color: var(--color-white);
@@ -104,6 +146,14 @@
     font-size: var(--font-size-lg);
   }
 
+  .categoryBadge {
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    top: -4px;
+    right: -10px;
+  }
+
   .categoryLabel {
     font-size: var(--font-size-xs);
   }
@@ -129,6 +179,14 @@
 
   .categoryIcon {
     font-size: var(--font-size-base);
+  }
+
+  .categoryBadge {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    top: -2px;
+    right: -8px;
   }
 
   .categoryLabel {

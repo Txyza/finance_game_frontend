@@ -64,6 +64,15 @@ export const TasksPage: React.FC = () => {
     }
   }, [apiTasks])
 
+  // Подсчитываем количество готовых к получению награды задач в каждой категории
+  const completedTasksCounts = useMemo(() => {
+    return {
+      daily: tasksByCategory.daily.filter(task => task.status === 'completed').length,
+      weekly: tasksByCategory.weekly.filter(task => task.status === 'completed').length,
+      tasks: tasksByCategory.tasks.filter(task => task.status === 'completed').length
+    }
+  }, [tasksByCategory])
+
   const categories = [
     { key: 'daily' as const, label: 'Ежедневные', icon: '📅' },
     { key: 'weekly' as const, label: 'Еженедельные', icon: '📊' },
@@ -116,18 +125,30 @@ export const TasksPage: React.FC = () => {
 
           {/* Категории */}
           <div className={styles.categories}>
-            {categories.map((category) => (
-              <button
-                key={category.key}
-                className={`${styles.categoryButton} ${
-                  activeCategory === category.key ? styles.active : ''
-                }`}
-                onClick={() => handleCategoryChange(category.key)}
-              >
-                <span className={styles.categoryIcon}>{category.icon}</span>
-                <span className={styles.categoryLabel}>{category.label}</span>
-              </button>
-            ))}
+            {categories.map((category) => {
+              const completedCount = completedTasksCounts[category.key]
+              const hasCompletedTasks = completedCount > 0
+
+              return (
+                <button
+                  key={category.key}
+                  className={`${styles.categoryButton} ${
+                    activeCategory === category.key ? styles.active : ''
+                  } ${hasCompletedTasks ? styles.highlighted : ''}`}
+                  onClick={() => handleCategoryChange(category.key)}
+                >
+                  <div className={styles.categoryIconContainer}>
+                    <span className={styles.categoryIcon}>{category.icon}</span>
+                    {hasCompletedTasks && (
+                      <div className={styles.categoryBadge}>
+                        {completedCount}
+                      </div>
+                    )}
+                  </div>
+                  <span className={styles.categoryLabel}>{category.label}</span>
+                </button>
+              )
+            })}
           </div>
 
           {/* Список заданий */}
