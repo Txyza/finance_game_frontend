@@ -16,6 +16,12 @@ services:
     networks:
       - cash-lvl-network-dev
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   # Backend cache (dev)
   redis:
@@ -29,6 +35,12 @@ services:
     networks:
       - cash-lvl-network-dev
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
 
   # Backend API (dev)
   api:
@@ -50,8 +62,10 @@ services:
       - API_V1_STR=${API_V1_STR:-/api/v1}
       - DEBUG=True
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - ../finance_game_backend/app:/app/app
       - ../finance_game_backend/alembic:/app/alembic
@@ -62,6 +76,34 @@ services:
       sh -c "
         alembic upgrade head &&
         uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+  # worker
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SECRET_KEY=${SECRET_KEY}
+      - ENVIRONMENT=production
+      - DEBUG=False
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - finance-game-network
+    restart: unless-stopped
+    command: >
+      sh -c "
+        alembic upgrade head &&
+        celery -A app.celery worker --loglevel=info --beat
       "
 
   # Frontend сервис (dev with hot reload)
