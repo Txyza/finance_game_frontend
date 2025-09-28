@@ -7,6 +7,8 @@ export interface UserProfileResponse {
   experience: number
   key_rate: string
   inflation: string
+  name: string
+  ready_to_reward_tasks_counts: Record<string, number>
 }
 
 export interface UserCreateRequest {
@@ -58,26 +60,16 @@ export interface StoreBuyRequest {
   name: string
 }
 
-export interface TaskRead {
+export interface TaskListItem {
+  user_task_id: string
+  name: string
   description: string
   type: 'daely' | 'weakly' | 'quest'
-  reward: number
   reward_type: 'money' | 'exp'
+  reward: number
   progress_max_points: number
-  name: string
-}
-
-export interface UserTaskRead {
   progress: number
   rewarded: boolean
-  id: string
-  user_id: string
-  task_name: string
-}
-
-export interface TaskListItem {
-  user_task: UserTaskRead
-  task: TaskRead
 }
 
 export interface TaskListResponse {

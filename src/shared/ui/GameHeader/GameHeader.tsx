@@ -14,6 +14,7 @@ interface GameHeaderProps {
   bankRate?: number
   inflation?: number
   variant?: 'main' | 'work'
+  characterName?: string
   onEnergyAdd?: () => void
   onMoneyAdd?: () => void
 }
@@ -28,6 +29,7 @@ export const GameHeader: FC<GameHeaderProps> = memo(({
   bankRate,
   inflation,
   variant = 'main',
+  characterName,
   onEnergyAdd,
   onMoneyAdd
 }) => {
@@ -40,6 +42,12 @@ export const GameHeader: FC<GameHeaderProps> = memo(({
   const levelText = useMemo(() => `Lv ${level}`, [level])
   const bankRateText = useMemo(() => `${bankRate}% Ставка`, [bankRate])
   const inflationText = useMemo(() => `${inflation}% Инфляция`, [inflation])
+
+  // Сокращаем имя персонажа до 15 символов
+  const truncatedCharacterName = useMemo(() => {
+    if (!characterName) return ''
+    return characterName.length > 15 ? characterName.substring(0, 15) + '...' : characterName
+  }, [characterName])
 
   const handleEnergyAdd = useCallback(() => {
     if (onEnergyAdd) {
@@ -108,26 +116,34 @@ export const GameHeader: FC<GameHeaderProps> = memo(({
 
       {/* Экономические показатели или пустое место для одинаковой высоты */}
       <div className={styles.bottomRow} data-tour="market-indicators">
-        {variant === 'main' && bankRate !== undefined && inflation !== undefined ? (
-          <>
-            <Bubble variant="outline" size="small" icon="📈">
-              {bankRateText}
-            </Bubble>
-            <Bubble variant="outline" size="small" icon="📊">
-              {inflationText}
-            </Bubble>
-          </>
-        ) : (
-          /* Пустые Bubble компоненты для идентичной структуры */
-          <>
-            <Bubble variant="outline" size="small" className={styles.hiddenBubble}>
-              placeholder
-            </Bubble>
-            <Bubble variant="outline" size="small" className={styles.hiddenBubble}>
-              placeholder
-            </Bubble>
-          </>
+        {/* Имя персонажа слева */}
+        {truncatedCharacterName && (
+          <span className={styles.characterName}>{truncatedCharacterName}</span>
         )}
+
+        {/* Центрированные показатели */}
+        <div className={styles.centerIndicators}>
+          {variant === 'main' && bankRate !== undefined && inflation !== undefined ? (
+            <>
+              <Bubble variant="outline" size="small" icon="📈">
+                {bankRateText}
+              </Bubble>
+              <Bubble variant="outline" size="small" icon="📊">
+                {inflationText}
+              </Bubble>
+            </>
+          ) : (
+            /* Пустые Bubble компоненты для идентичной структуры */
+            <>
+              <Bubble variant="outline" size="small" className={styles.hiddenBubble}>
+                placeholder
+              </Bubble>
+              <Bubble variant="outline" size="small" className={styles.hiddenBubble}>
+                placeholder
+              </Bubble>
+            </>
+          )}
+        </div>
       </div>
     </header>
   )

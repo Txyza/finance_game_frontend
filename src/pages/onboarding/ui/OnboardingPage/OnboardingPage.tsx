@@ -235,7 +235,7 @@ export const OnboardingPage: React.FC = () => {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Введите имя персонажа"
                     className={styles.nameInput}
-                    maxLength={50}
+                    maxLength={15}
                   />
                   <div
                     className={`${styles.inputValidation} ${
@@ -245,15 +245,15 @@ export const OnboardingPage: React.FC = () => {
                 </div>
                 <div
                   className={`${styles.characterCounter} ${
-                    name.length > 40 ? styles.warning : name.length >= 50 ? styles.error : ''
+                    name.length > 10 ? styles.warning : name.length >= 15 ? styles.error : ''
                   }`}
                 >
-                  {name.length}/50
+                  {name.length}/15
                 </div>
 
                 {name.length > 0 && !isNameValid(name) && (
                   <div className={`${styles.validationHint} ${styles.error}`}>
-                    Имя должно содержать только буквы и пробелы (от 2 до 50 символов)
+                    Имя должно содержать только буквы и пробелы (от 2 до 15 символов)
                   </div>
                 )}
               </div>

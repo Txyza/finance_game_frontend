@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   TaskList,
@@ -6,103 +6,63 @@ import {
   ParticleBackground
 } from '@shared/ui'
 import { GameHeaderContainer } from '@shared/ui'
+import { useTasks } from '@shared/hooks'
+import { TaskListItem } from '@shared/api'
 import styles from './TasksPage.module.css'
 
-type TaskCategory = 'tasks' | 'daily' | 'weekly'
+type TaskCategory = 'daely' | 'weakly' | 'quest'
+
+// Функция для преобразования API данных в формат UI компонента
+const adaptTaskToUIFormat = (apiTask: TaskListItem): Task => {
+  const getTaskIcon = (type: string, name: string) => {
+    if (name.toLowerCase().includes('работать')) return '💼'
+    if (name.toLowerCase().includes('игра') || name.toLowerCase().includes('поиграть')) return '🎮'
+    if (name.toLowerCase().includes('аналитика')) return '📊'
+    if (name.toLowerCase().includes('память')) return '🧠'
+    if (name.toLowerCase().includes('2048')) return '🎯'
+    if (name.toLowerCase().includes('миллион')) return '💎'
+
+    // По типу
+    if (type === 'daely') return '📅'
+    if (type === 'weakly') return '📊'
+    if (type === 'quest') return '🎯'
+
+    return '⭐'
+  }
+
+  return {
+    id: apiTask.user_task_id,
+    title: apiTask.name,
+    description: apiTask.description,
+    type: apiTask.type === 'daely' ? 'daily' : apiTask.type === 'weakly' ? 'weekly' : 'tasks',
+    progress: {
+      current: apiTask.progress,
+      target: apiTask.progress_max_points
+    },
+    reward: {
+      type: apiTask.reward_type === 'money' ? 'money' : 'exp',
+      amount: apiTask.reward
+    },
+    status: apiTask.rewarded ? 'claimed' : (apiTask.progress >= apiTask.progress_max_points ? 'completed' : 'active'),
+    icon: getTaskIcon(apiTask.type, apiTask.name)
+  }
+}
 
 export const TasksPage: React.FC = () => {
   const navigate = useNavigate()
-  const [activeCategory, setActiveCategory] = useState<TaskCategory>('daily')
-  const [tasks, setTasks] = useState<Record<TaskCategory, Task[]>>({
-    tasks: [
-      {
-        id: 'task-1',
-        title: 'Миллионер',
-        description: 'Заработать 1,000,000 рублей',
-        type: 'tasks',
-        progress: { current: 750000, target: 1000000 },
-        reward: { type: 'exp', amount: 500 },
-        status: 'active',
-        icon: '💎'
-      },
-      {
-        id: 'task-2',
-        title: 'Игровой гуру',
-        description: 'Набрать 50,000 очков в 2048',
-        type: 'tasks',
-        progress: { current: 50000, target: 50000 },
-        reward: { type: 'money', amount: 5000 },
-        status: 'completed',
-        icon: '🎮'
-      }
-    ],
-    daily: [
-      {
-        id: 'daily-1',
-        title: 'Трудолюбие',
-        description: 'Поработать в 2048 - 3 раза',
-        type: 'daily',
-        progress: { current: 2, target: 3 },
-        reward: { type: 'money', amount: 1000 },
-        status: 'active',
-        icon: '🎯'
-      },
-      {
-        id: 'daily-2',
-        title: 'Умственная активность',
-        description: 'Поиграть в память - 2 раза',
-        type: 'daily',
-        progress: { current: 2, target: 2 },
-        reward: { type: 'exp', amount: 50 },
-        status: 'completed',
-        icon: '🧠'
-      },
-      {
-        id: 'daily-3',
-        title: 'Аналитик',
-        description: 'Проверить аналитику трат',
-        type: 'daily',
-        progress: { current: 0, target: 1 },
-        reward: { type: 'energy', amount: 2 },
-        status: 'active',
-        icon: '📊'
-      }
-    ],
-    weekly: [
-      {
-        id: 'weekly-1',
-        title: 'Постоянство',
-        description: 'Поработать 4 дня за неделю',
-        type: 'weekly',
-        progress: { current: 3, target: 4 },
-        reward: { type: 'money', amount: 5000 },
-        status: 'active',
-        icon: '📅'
-      },
-      {
-        id: 'weekly-2',
-        title: 'Игровой марафон',
-        description: 'Набрать 100,000 очков в играх за неделю',
-        type: 'weekly',
-        progress: { current: 85000, target: 100000 },
-        reward: { type: 'exp', amount: 200 },
-        status: 'active',
-        icon: '🏆'
-      }
-    ]
-  })
+  const { tasks: apiTasks, loading, error, claimReward, refreshTasks } = useTasks()
+  const [activeCategory, setActiveCategory] = useState<'daily' | 'weekly' | 'tasks'>('daily')
 
-  // Mock данные игрока
-  const playerStats = {
-    level: 5,
-    currentExp: 20,
-    maxExp: 150,
-    energy: 18,
-    maxEnergy: 24,
-    money: 12500,
-    bankRate: 8.5,
-    inflation: 4.2
-  }
+  // Преобразуем API задачи в формат UI и группируем по категориям
+  const tasksByCategory = useMemo(() => {
+    const adaptedTasks = apiTasks.map(adaptTaskToUIFormat)
+
+    return {
+      daily: adaptedTasks.filter(task => task.type === 'daily'),
+      weekly: adaptedTasks.filter(task => task.type === 'weekly'),
+      tasks: adaptedTasks.filter(task => task.type === 'tasks')
+    }
+  }, [apiTasks])
 
   const categories = [
     { key: 'daily' as const, label: 'Ежедневные', icon: '📅' },
@@ -110,32 +70,26 @@ export const TasksPage: React.FC = () => {
     { key: 'tasks' as const, label: 'Задания', icon: '🎯' }
   ]
 
-  const handleCategoryChange = (category: TaskCategory) => {
+  const handleCategoryChange = (category: 'daily' | 'weekly' | 'tasks') => {
     setActiveCategory(category)
   }
 
-  const handleTaskClaim = useCallback((taskId: string) => {
+  const handleTaskClaim = useCallback(async (taskId: string) => {
     console.log('Task claimed:', taskId)
 
-    // Обновляем статус задания на 'claimed' и удаляем из списка
-    setTasks(prevTasks => {
-      const newTasks = { ...prevTasks }
-
-      // Находим и обновляем задание во всех категориях
-      Object.keys(newTasks).forEach(category => {
-        const categoryKey = category as TaskCategory
-        newTasks[categoryKey] = newTasks[categoryKey].map(task =>
-          task.id === taskId ? { ...task, status: 'claimed' as const } : task
-        )
-      })
-
-      return newTasks
-    })
-  }, [])
+    const success = await claimReward(taskId)
+    if (success) {
+      // Обновляем данные после успешного получения награды
+      await refreshTasks()
+    }
+  }, [claimReward, refreshTasks])
 
 
 
-  const getEmptyStateText = (category: TaskCategory) => {
+  const getEmptyStateText = (category: 'daily' | 'weekly' | 'tasks') => {
+    if (loading) return 'Загрузка заданий...'
+    if (error) return 'Ошибка загрузки заданий'
+
     switch (category) {
       case 'daily':
         return 'Все ежедневные задания выполнены!'
@@ -152,10 +106,7 @@ export const TasksPage: React.FC = () => {
     <div className="common-page-background">
       <ParticleBackground />
 
-      <GameHeaderContainer
-        bankRate={playerStats.bankRate}
-        inflation={playerStats.inflation}
-      />
+      <GameHeaderContainer />
 
       <div className="common-content">
         <div className={styles.container}>
@@ -182,11 +133,41 @@ export const TasksPage: React.FC = () => {
           {/* Список заданий */}
           <div className={styles.tasksContainer}>
             <TaskList
-              tasks={tasks[activeCategory]}
+              tasks={tasksByCategory[activeCategory]}
               onTaskClaim={handleTaskClaim}
               emptyStateText={getEmptyStateText(activeCategory)}
             />
           </div>
+
+          {/* Показываем ошибки если есть */}
+          {error && (
+            <div style={{
+              color: '#ff6b6b',
+              background: 'rgba(255, 107, 107, 0.1)',
+              border: '1px solid rgba(255, 107, 107, 0.3)',
+              borderRadius: '8px',
+              padding: '16px',
+              margin: '16px 0',
+              textAlign: 'center'
+            }}>
+              Ошибка загрузки заданий: {error.message}
+              <br />
+              <button
+                onClick={refreshTasks}
+                style={{
+                  marginTop: '8px',
+                  padding: '8px 16px',
+                  background: '#ff6b6b',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Попробовать еще раз
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

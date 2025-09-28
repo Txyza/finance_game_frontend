@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom'
 import Joyride, { CallBackProps, STATUS, Step, EVENTS, ACTIONS } from 'react-joyride'
 import { ParticleBackground, GameHeaderContainer } from '@shared/ui'
 import { SEO } from '@shared/components'
-import { useTourContext } from '@shared/context'
+import { useTourContext, useUserContext } from '@shared/context'
+import { calculateTotalTaskCount } from '@shared/utils/taskUtils'
 import { CharacterArea } from './CharacterArea'
 import { PlayerStats, GameActions } from '../model/types'
 import styles from './MainPage.module.css'
 
 export const MainPage: FC = () => {
   const navigate = useNavigate()
+  const { user } = useUserContext()
   const { shouldShowMainTour, setMainPageVisited, setMainTourCompletedAndWorkPageVisited, isStateLoaded } = useTourContext()
   const [runTour, setRunTour] = useState(false)
 
@@ -196,6 +198,11 @@ export const MainPage: FC = () => {
     inflation: 2
   }), [])
 
+  // Подсчитываем количество задач для badge
+  const taskNotificationCount = useMemo(() => {
+    return calculateTotalTaskCount(user?.ready_to_reward_tasks_counts)
+  }, [user?.ready_to_reward_tasks_counts])
+
   // Обработчики игровых действий - мемоизируем весь объект
   const gameActions: GameActions = useMemo(() => ({
     onDailyClick: () => navigate('/tasks'),
@@ -299,6 +306,7 @@ export const MainPage: FC = () => {
       <div className={styles.content}>
         {/* Центральная область с персонажем */}
         <CharacterArea
+          taskNotificationCount={taskNotificationCount}
           onDailyClick={gameActions.onDailyClick}
           onNotificationsClick={gameActions.onNotificationsClick}
           onLeaderboardClick={gameActions.onLeaderboardClick}

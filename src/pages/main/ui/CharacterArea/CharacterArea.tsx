@@ -1,10 +1,11 @@
 import { FC } from 'react'
-import { Button, Bubble } from '@shared/ui'
+import { Badge, Button, Bubble } from '@shared/ui'
 import maskotImage from '@shared/assets/images/maskot.png'
 import styles from './CharacterArea.module.css'
 
 interface CharacterAreaProps {
   characterName?: string
+  taskNotificationCount?: number
   onDailyClick: () => void
   onNotificationsClick: () => void
   onLeaderboardClick: () => void
@@ -15,6 +16,7 @@ interface CharacterAreaProps {
 
 export const CharacterArea: FC<CharacterAreaProps> = ({
   characterName = "Ваш персонаж",
+  taskNotificationCount = 0,
   onDailyClick,
   onNotificationsClick,
   onLeaderboardClick,
@@ -28,9 +30,11 @@ export const CharacterArea: FC<CharacterAreaProps> = ({
       <div className={styles.characterRow}>
         {/* Боковые иконки - слева */}
         <div className={styles.sideLeft}>
-          <button className={styles.iconButton} onClick={onDailyClick}>
-            🎁
-          </button>
+          <Badge count={taskNotificationCount} variant="red" size="small">
+            <button className={styles.iconButton} onClick={onDailyClick}>
+              🎁
+            </button>
+          </Badge>
           <button className={styles.iconButton} onClick={onNotificationsClick}>
             📰
           </button>

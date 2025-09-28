@@ -8,15 +8,31 @@ const isUserDataEqual = (user1: UserProfileResponse | null, user2: UserProfileRe
 
   // Сравниваем основные поля, которые влияют на UI
   // Используем строгое сравнение для числовых значений
-  return (
+  const isBasicDataEqual = (
     user1.id === user2.id &&
     Number(user1.experience) === Number(user2.experience) &&
     Number(user1.energy) === Number(user2.energy) &&
     Number(user1.max_energy) === Number(user2.max_energy) &&
     Number(user1.capital) === Number(user2.capital) &&
     String(user1.key_rate || '') === String(user2.key_rate || '') &&
-    String(user1.inflation || '') === String(user2.inflation || '')
+    String(user1.inflation || '') === String(user2.inflation || '') &&
+    String(user1.name || '') === String(user2.name || '')
   )
+
+  // Сравниваем ready_to_reward_tasks_counts
+  const isTaskCountsEqual = (() => {
+    const tasks1 = user1.ready_to_reward_tasks_counts || {}
+    const tasks2 = user2.ready_to_reward_tasks_counts || {}
+
+    const keys1 = Object.keys(tasks1)
+    const keys2 = Object.keys(tasks2)
+
+    if (keys1.length !== keys2.length) return false
+
+    return keys1.every(key => tasks1[key] === tasks2[key])
+  })()
+
+  return isBasicDataEqual && isTaskCountsEqual
 }
 
 interface UseUserState {

@@ -69,6 +69,7 @@ export const GameHeaderContainer: FC<GameHeaderContainerProps> = memo(({
   const energy = useMemo(() => user?.energy ?? 0, [user?.energy])
   const maxEnergy = useMemo(() => user?.max_energy ?? 24, [user?.max_energy])
   const money = useMemo(() => user?.capital ?? 0, [user?.capital])
+  const characterName = useMemo(() => user?.name ?? '', [user?.name])
 
   const userBankRate = useMemo(() =>
     user?.key_rate ? parseFloat(user.key_rate) : bankRate,
@@ -99,6 +100,7 @@ export const GameHeaderContainer: FC<GameHeaderContainerProps> = memo(({
       bankRate={userBankRate}
       inflation={userInflation}
       variant={variant}
+      characterName={characterName}
       onEnergyAdd={onEnergyAdd}
       onMoneyAdd={onMoneyAdd}
     />
