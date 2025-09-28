@@ -9,6 +9,15 @@ import { WorkList } from './WorkList'
 import { WorkGameData } from './WorkCard'
 import styles from './WorkPage.module.css'
 
+// Функция для получения иконки игры - вынесена за пределы компонента
+const getGameIcon = (gameName: string): string => {
+  const name = gameName.toLowerCase()
+  if (name.includes('2048')) return '🎲'
+  if (name.includes('memory') || name.includes('память')) return '🧠'
+  if (name.includes('puzzle') || name.includes('головоломка')) return '🧩'
+  return '🎮'
+}
+
 export const WorkPage: FC = () => {
   const navigate = useNavigate()
   const { user } = useUserContext()
@@ -61,15 +70,6 @@ export const WorkPage: FC = () => {
       spotlightClicks: true,
     }
   ]
-
-  // Функция для получения иконки игры
-  const getGameIcon = (gameName: string): string => {
-    const name = gameName.toLowerCase()
-    if (name.includes('2048')) return '🎲'
-    if (name.includes('memory') || name.includes('память')) return '🧠'
-    if (name.includes('puzzle') || name.includes('головоломка')) return '🧩'
-    return '🎮'
-  }
 
   // Преобразуем данные из API в формат для UI
   const availableGames: WorkGameData[] = useMemo(() => {

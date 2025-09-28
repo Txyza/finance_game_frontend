@@ -57,10 +57,6 @@ export const MemoryNavigation: React.FC<MemoryNavigationProps> = ({ onNewGame })
             <div className={styles.statValue}>{score.toLocaleString()}</div>
           </div>
           <div className={styles.statBlock}>
-            <div className={styles.statLabel}>Деньги</div>
-            <div className={styles.statValue}>{formatMoney(earnedMoney)}</div>
-          </div>
-          <div className={styles.statBlock}>
             <div className={styles.statLabel}>Время</div>
             <div className={styles.statValue}>{formatTime(timeLeft)}</div>
           </div>

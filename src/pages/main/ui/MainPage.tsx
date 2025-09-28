@@ -71,7 +71,8 @@ export const MainPage: FC = () => {
       disableBeacon: true,
       hideFooter: true,
       spotlightClicks: true,
-      disableOverlay: false,
+      disableScrollParentFix: true,
+      spotlightPadding: 20
     }
   ]
 
@@ -99,6 +100,14 @@ export const MainPage: FC = () => {
           const rect = element.getBoundingClientRect()
           return rect.width > 0 && rect.height > 0
         }
+
+        console.log('Tour elements check:', {
+          characterElement: !!characterElement,
+          gameHeaderElement: !!gameHeaderElement,
+          marketIndicatorsElement: !!marketIndicatorsElement,
+          workButtonElement: !!workButtonElement,
+          workButtonVisible: workButtonElement ? isElementVisible(workButtonElement) : false
+        })
 
         if (characterElement && gameHeaderElement && marketIndicatorsElement && workButtonElement &&
             isElementVisible(characterElement) && isElementVisible(gameHeaderElement) &&
@@ -139,6 +148,13 @@ export const MainPage: FC = () => {
 
     // Логируем для отладки
     console.log('Tour callback:', { status, action, index, type })
+
+    // Специальная отладка для последнего шага
+    if (index === 3) {
+      const workButton = document.querySelector('[data-tour="work-button"]')
+      console.log('Last step - work button element:', workButton)
+      console.log('Last step - work button visible:', workButton ? workButton.getBoundingClientRect() : 'not found')
+    }
 
     if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status as any)) {
       setRunTour(false)
@@ -207,6 +223,8 @@ export const MainPage: FC = () => {
         showProgress={false}
         hideCloseButton
         disableOverlayClose
+        disableCloseOnEsc
+        spotlightClicks
         styles={{
           options: {
             primaryColor: '#58ffff',
@@ -214,6 +232,12 @@ export const MainPage: FC = () => {
             textColor: '#ffffff',
             arrowColor: '#58ffff',
             overlayColor: 'rgba(0, 0, 0, 0.8)',
+            spotlightShadow: '0 0 25px rgba(88, 255, 255, 1)',
+          },
+          spotlight: {
+            borderRadius: '12px',
+            border: '3px solid #58ffff',
+            boxShadow: '0 0 25px rgba(88, 255, 255, 0.8), inset 0 0 25px rgba(88, 255, 255, 0.2)',
           },
           tooltip: {
             backgroundColor: '#060698',
