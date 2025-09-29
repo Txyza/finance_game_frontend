@@ -10,6 +10,8 @@ import { TasksPage } from '@pages/tasks/ui/TasksPage'
 import { NewsPage } from '@pages/news/ui/NewsPage'
 import { ShopPage } from '@pages/shop/ui/ShopPage'
 import { CityPage, DistrictPage } from '@pages/city'
+import { SavingsPage, SavingsSelectPage, SavingsCreatePage, SavingsSuccessPage, SavingsAccountPage, SavingsDepositPage, SavingsWithdrawPage } from '@pages/savings'
+import { DepositsPage, DepositsSelectPage, DepositsCalculatorPage, DepositsCreatePage, DepositsSuccessPage, DepositDetailsPage } from '@pages/deposits'
 import { OnboardingPage } from '@pages/onboarding'
 import { NotFoundPage } from '@pages/NotFound'
 import { AuthManager } from '@shared/components'
@@ -31,6 +33,19 @@ const AppContent = () => {
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/city" element={<CityPage />} />
             <Route path="/city/district/:districtId" element={<DistrictPage />} />
+            <Route path="/savings" element={<SavingsPage />} />
+            <Route path="/savings/select" element={<SavingsSelectPage />} />
+            <Route path="/savings/create" element={<SavingsCreatePage />} />
+            <Route path="/savings/success" element={<SavingsSuccessPage />} />
+            <Route path="/savings/account/:accountId" element={<SavingsAccountPage />} />
+            <Route path="/savings/deposit/:accountId" element={<SavingsDepositPage />} />
+            <Route path="/savings/withdraw/:accountId" element={<SavingsWithdrawPage />} />
+            <Route path="/deposits" element={<DepositsPage />} />
+            <Route path="/deposits/select" element={<DepositsSelectPage />} />
+            <Route path="/deposits/calculator" element={<DepositsCalculatorPage />} />
+            <Route path="/deposits/create" element={<DepositsCreatePage />} />
+            <Route path="/deposits/success" element={<DepositsSuccessPage />} />
+            <Route path="/deposits/deposit/:depositId" element={<DepositDetailsPage />} />
             <Route path="/work" element={<WorkPage />} />
           </Route>
           {/* Страницы без навигации */}

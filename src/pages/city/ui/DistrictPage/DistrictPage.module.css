@@ -1,17 +1,25 @@
 .content {
+  position: fixed;
+  top: 80px; /* Начало сразу после header */
+  bottom: 80px; /* Конец перед footer */
+  left: 0;
+  right: 0;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-4);
-  padding-bottom: 120px; /* Отступ для footer */
-  min-height: calc(100vh - 160px); /* Высота экрана минус header (80px) и footer (80px) */
+  padding-top: var(--space-10); /* Дополнительный отступ сверху */
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Прокрутка при необходимости */
 }
 
 .container {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-4);
 }
 
 .header {
@@ -31,22 +39,46 @@
 
 .districtMap {
   width: 100%;
-  height: 500px;
+  flex: 1; /* Занимает все доступное пространство */
+  min-height: 300px; /* Минимальная высота */
   position: relative;
   background: linear-gradient(
     135deg,
-    rgba(0, 0, 0, 0.3) 0%,
-    rgba(0, 0, 0, 0.5) 100%
+    rgba(25, 25, 239, 0.1) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(221, 65, 219, 0.1) 100%
   );
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-xl);
   overflow: hidden;
+  box-shadow:
+    inset 0 0 100px rgba(0, 0, 0, 0.5),
+    0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.mapOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(25, 25, 239, 0.1) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(221, 65, 219, 0.1) 100%
+  );
+  z-index: 1;
 }
 
 .buildings {
   position: relative;
   width: 100%;
   height: 100%;
+  z-index: 2; /* Поверх оверлея */
 }
 
 .building {
@@ -98,9 +130,14 @@
 /* Адаптивность */
 @media (max-width: 768px) {
   .content {
+    top: 70px; /* Меньший header на планшетах */
+    bottom: 80px;
     padding: var(--space-3);
-    padding-bottom: 100px;
-    min-height: calc(100vh - 150px); /* Адаптивная высота для планшетов */
+    padding-top: var(--space-8); /* Дополнительный отступ сверху */
+  }
+
+  .container {
+    gap: var(--space-3);
   }
 
   .header {
@@ -113,7 +150,7 @@
   }
 
   .districtMap {
-    height: 400px;
+    min-height: 250px;
   }
 
   .building {
@@ -128,9 +165,14 @@
 
 @media (max-width: 480px) {
   .content {
+    top: 60px; /* Еще меньший header на мобильных */
+    bottom: 80px;
     padding: var(--space-2);
-    padding-bottom: 90px;
-    min-height: calc(100vh - 140px); /* Адаптивная высота для мобильных */
+    padding-top: var(--space-6); /* Дополнительный отступ сверху */
+  }
+
+  .container {
+    gap: var(--space-2);
   }
 
   .title {
@@ -138,7 +180,7 @@
   }
 
   .districtMap {
-    height: 300px;
+    min-height: 200px;
   }
 
   .building {

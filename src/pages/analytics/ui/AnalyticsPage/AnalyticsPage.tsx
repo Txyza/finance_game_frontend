@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   MonthSelector,
@@ -9,6 +9,9 @@ import {
   ParticleBackground
 } from '@shared/ui'
 import { GameHeaderContainer } from '@shared/ui'
+import { useTransactions, useAnalyticsSummary } from '@shared/hooks'
+import { Transaction, AnalyticsSummaryCategory } from '@shared/api'
+import { groupTransactionsByDate } from '@shared/lib/utils/dateUtils'
 import styles from './AnalyticsPage.module.css'
 
 type Period = 'week' | 'month' | 'year'
@@ -32,60 +35,82 @@ export const AnalyticsPage: React.FC = () => {
   const navigate = useNavigate()
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
   const [expandedCard, setExpandedCard] = useState<'expenses' | 'income' | 'assets' | 'liabilities' | null>(null)
+  const { transactions, loading, error, hasMore, loadMoreTransactions, refreshTransactions } = useTransactions()
+  const { summary, loading: summaryLoading, error: summaryError } = useAnalyticsSummary()
 
-  // Mock данные игрока
-  const playerStats = {
-    level: 5,
-    currentExp: 20,
-    maxExp: 150,
-    energy: 18,
-    maxEnergy: 24,
-    money: 12500,
-    bankRate: 8.5,
-    inflation: 4.2
+  // Получаем категории из API или используем заглушки
+  const expenseCategories: CategoryData[] = useMemo(() => {
+    if (summary?.expenses?.categories) {
+      return summary.expenses.categories.map(cat => ({
+        name: cat.name,
+        amount: cat.amount,
+        color: cat.color || '#58ffff',
+        percentage: cat.percentage || Math.round((cat.amount / (summary.expenses?.total || 1)) * 100)
+      }))
+    }
+    return []
+  }, [summary])
+
+  const incomeCategories: CategoryData[] = useMemo(() => {
+    if (summary?.income?.categories) {
+      return summary.income.categories.map(cat => ({
+        name: cat.name,
+        amount: cat.amount,
+        color: cat.color || '#4caf50',
+        percentage: cat.percentage || Math.round((cat.amount / (summary.income?.total || 1)) * 100)
+      }))
+    }
+    return []
+  }, [summary])
+
+  const assetsCategories: CategoryData[] = useMemo(() => {
+    if (summary?.assets?.categories) {
+      return summary.assets.categories.map(cat => ({
+        name: cat.name,
+        amount: cat.amount,
+        color: cat.color || '#2196f3',
+        percentage: cat.percentage || Math.round((cat.amount / (summary.assets?.total || 1)) * 100)
+      }))
+    }
+    return []
+  }, [summary])
+
+  const liabilitiesCategories: CategoryData[] = useMemo(() => {
+    if (summary?.liabilities?.categories) {
+      return summary.liabilities.categories.map(cat => ({
+        name: cat.name,
+        amount: cat.amount,
+        color: cat.color || '#f44336',
+        percentage: cat.percentage || Math.round((cat.amount / (summary.liabilities?.total || 1)) * 100)
+      }))
+    }
+    return []
+  }, [summary])
+
+  // Функция для получения иконки транзакции
+  const getTransactionIcon = (transaction: Transaction): string => {
+    const { type, name } = transaction
+
+    // По типу транзакции
+    if (type === 'bank') return '🏦'
+    if (type === 'transfer') return '🔄'
+    if (type === 'income') return '💰'
+
+    // По названию
+    if (name.toLowerCase().includes('зарплата')) return '💰'
+    if (name.toLowerCase().includes('перевод')) return '🔄'
+    if (name.toLowerCase().includes('магазин') || name.toLowerCase().includes('супермаркет')) return '🛒'
+    if (name.toLowerCase().includes('ресторан') || name.toLowerCase().includes('кафе')) return '🍽️'
+    if (name.toLowerCase().includes('бензин') || name.toLowerCase().includes('заправка')) return '⛽'
+    if (name.toLowerCase().includes('аптека')) return '💊'
+
+    return '📊'
   }
 
-  // Mock данные для категорий трат
-  const expenseCategories: CategoryData[] = [
-    { name: 'Переводы', amount: 19183, color: '#58ffff', percentage: 25 },
-    { name: 'НКО', amount: 12000, color: '#ffeb3b', percentage: 15 },
-    { name: 'Супермаркеты', amount: 9278, color: '#ff5722', percentage: 12 },
-    { name: 'Фастфуд', amount: 9013, color: '#ff9800', percentage: 12 },
-    { name: 'Маркетплейсы', amount: 6483, color: '#e91e63', percentage: 8 },
-    { name: 'Остальное', amount: 22000, color: '#9e9e9e', percentage: 28 }
-  ]
-
-  // Mock данные для категорий доходов
-  const incomeCategories: CategoryData[] = [
-    { name: 'Зарплата', amount: 75000, color: '#4caf50', percentage: 90 },
-    { name: 'Фриланс', amount: 8000, color: '#2196f3', percentage: 10 }
-  ]
-
-  // Mock данные для активов
-  const assetsCategories: CategoryData[] = [
-    { name: 'Депозиты', amount: 500000, color: '#4caf50', percentage: 50 },
-    { name: 'Акции', amount: 300000, color: '#2196f3', percentage: 30 },
-    { name: 'Облигации', amount: 150000, color: '#ff9800', percentage: 15 },
-    { name: 'Криптовалюта', amount: 50000, color: '#9c27b0', percentage: 5 }
-  ]
-
-  // Mock данные для пассивов
-  const liabilitiesCategories: CategoryData[] = [
-    { name: 'Ипотека', amount: 2500000, color: '#f44336', percentage: 70 },
-    { name: 'Автокредит', amount: 800000, color: '#ff5722', percentage: 22 },
-    { name: 'Кредитные карты', amount: 280000, color: '#e91e63', percentage: 8 }
-  ]
-
-  // Mock данные для транзакций
-  const transactions = [
-    { icon: '🔄', name: 'Перевод округлений', category: 'Переводы', amount: -21.20, isPositive: false },
-    { icon: '🛒', name: 'Мария РА', category: 'Супермаркеты', amount: -128.80, isPositive: false },
-    { icon: '💳', name: 'Дружище А.', category: 'Переводы', amount: -2000, isPositive: false },
-    { icon: '🏪', name: 'ООО "Инвест Ресторация"', category: 'Супермаркеты', amount: -479.96, isPositive: false },
-    { icon: '💰', name: 'Зарплата ООО "ТЕХ"', category: 'Доходы', amount: 75000, isPositive: true },
-    { icon: '🍔', name: 'McDonald\'s', category: 'Фастфуд', amount: -245.50, isPositive: false },
-    { icon: '🛍️', name: 'Wildberries', category: 'Маркетплейсы', amount: -1250, isPositive: false }
-  ]
+  // Группируем транзакции по датам
+  const groupedTransactions = useMemo(() => {
+    return groupTransactionsByDate(transactions)
+  }, [transactions])
 
   // Подготовка данных для диаграммы
   const expenseSegments: ChartSegment[] = expenseCategories.map(cat => ({
@@ -121,30 +146,57 @@ export const AnalyticsPage: React.FC = () => {
   }))
 
   function getIconForCategory(category: string): string {
-    const icons: Record<string, string> = {
-      'Переводы': '🔄',
-      'НКО': '?',
-      'Супермаркеты': '🛒',
-      'Фастфуд': '🍔',
-      'Маркетплейсы': '👑',
-      'Остальное': '•••',
-      'Зарплата': '💰',
-      'Фриланс': '💻',
-      'Депозиты': '🏦',
-      'Акции': '📈',
-      'Облигации': '📄',
-      'Криптовалюта': '₿',
-      'Ипотека': '🏠',
-      'Автокредит': '🚗',
-      'Кредитные карты': '💳'
-    }
-    return icons[category] || '📊'
+    const lowerCategory = category.toLowerCase()
+
+    // По типам транзакций
+    if (lowerCategory.includes('перевод')) return '🔄'
+    if (lowerCategory.includes('супермаркет') || lowerCategory.includes('магазин')) return '🛒'
+    if (lowerCategory.includes('фастфуд') || lowerCategory.includes('ресторан') || lowerCategory.includes('кафе')) return '🍔'
+    if (lowerCategory.includes('маркетплейс') || lowerCategory.includes('wildberries') || lowerCategory.includes('ozon')) return '🛍️'
+    if (lowerCategory.includes('зарплата')) return '💰'
+    if (lowerCategory.includes('фриланс')) return '💻'
+
+    // Инвестиции и финансы
+    if (lowerCategory.includes('депозит')) return '🏦'
+    if (lowerCategory.includes('акци')) return '📈'
+    if (lowerCategory.includes('облигаци')) return '📄'
+    if (lowerCategory.includes('крипто')) return '₿'
+
+    // Кредиты и долги
+    if (lowerCategory.includes('ипотека')) return '🏠'
+    if (lowerCategory.includes('автокредит') || lowerCategory.includes('авто')) return '🚗'
+    if (lowerCategory.includes('кредит')) return '💳'
+
+    // Транспорт
+    if (lowerCategory.includes('такси')) return '🚖'
+    if (lowerCategory.includes('каршеринг')) return '🚙'
+    if (lowerCategory.includes('бензин') || lowerCategory.includes('заправка')) return '⛽'
+
+    // Услуги
+    if (lowerCategory.includes('связь') || lowerCategory.includes('телефон')) return '📱'
+    if (lowerCategory.includes('интернет')) return '🌐'
+    if (lowerCategory.includes('подписк')) return '📺'
+
+    // Здоровье
+    if (lowerCategory.includes('аптека')) return '💊'
+    if (lowerCategory.includes('медицин') || lowerCategory.includes('клиник')) return '🏥'
+
+    // Развлечения
+    if (lowerCategory.includes('кино')) return '🎬'
+    if (lowerCategory.includes('игр')) return '🎮'
+    if (lowerCategory.includes('спорт')) return '⚽'
+
+    // Остальное
+    if (lowerCategory.includes('остальное') || lowerCategory.includes('прочее')) return '•••'
+    if (lowerCategory.includes('нко')) return '🏛️'
+
+    return '📊'
   }
 
-  const totalExpenses = expenseCategories.reduce((sum, cat) => sum + cat.amount, 0)
-  const totalIncome = incomeCategories.reduce((sum, cat) => sum + cat.amount, 0)
-  const totalAssets = assetsCategories.reduce((sum, cat) => sum + cat.amount, 0)
-  const totalLiabilities = liabilitiesCategories.reduce((sum, cat) => sum + cat.amount, 0)
+  const totalExpenses = summary?.expenses?.total || 0
+  const totalIncome = summary?.income?.total || 0
+  const totalAssets = summary?.assets?.total || 0
+  const totalLiabilities = summary?.liabilities?.total || 0
 
   const handleCardClick = (type: 'expenses' | 'income' | 'assets' | 'liabilities') => {
     setExpandedCard(expandedCard === type ? null : type)
@@ -163,9 +215,15 @@ export const AnalyticsPage: React.FC = () => {
     console.log('Open month selector')
   }
 
-  const handleTransactionClick = (transaction: any) => {
+  const handleTransactionClick = (transaction: Transaction) => {
     console.log('Transaction clicked:', transaction.name)
   }
+
+  const handleLoadMore = useCallback(() => {
+    if (hasMore && !loading) {
+      loadMoreTransactions()
+    }
+  }, [hasMore, loading, loadMoreTransactions])
 
 
 
@@ -173,10 +231,7 @@ export const AnalyticsPage: React.FC = () => {
     <div className="common-page-background">
       <ParticleBackground />
 
-      <GameHeaderContainer
-        bankRate={playerStats.bankRate}
-        inflation={playerStats.inflation}
-      />
+      <GameHeaderContainer />
 
       <div className="common-content">
         <div className={styles.container}>
@@ -289,20 +344,50 @@ export const AnalyticsPage: React.FC = () => {
 
           {/* Список транзакций - показываем всегда */}
           <div className={styles.transactionsSection}>
-            <h2 className={styles.sectionTitle}>Вчера</h2>
-            <div className={styles.transactionsList}>
-              {transactions.map((transaction, index) => (
-                <TransactionItem
-                  key={index}
-                  icon={transaction.icon}
-                  name={transaction.name}
-                  category={transaction.category}
-                  amount={transaction.amount}
-                  isPositive={transaction.isPositive}
-                  onClick={() => handleTransactionClick(transaction)}
-                />
-              ))}
-            </div>
+            {loading && transactions.length === 0 ? (
+              <div className={styles.loadingState}>Загрузка транзакций...</div>
+            ) : error ? (
+              <div className={styles.errorState}>
+                <div>Ошибка загрузки транзакций: {error.message}</div>
+                <button onClick={refreshTransactions} className={styles.retryButton}>
+                  Попробовать еще раз
+                </button>
+              </div>
+            ) : groupedTransactions.length === 0 ? (
+              <div className={styles.emptyState}>Транзакции не найдены</div>
+            ) : (
+              groupedTransactions.map((group) => (
+                <div key={group.date} className={styles.transactionGroup}>
+                  <h2 className={styles.sectionTitle}>{group.date}</h2>
+                  <div className={styles.transactionsList}>
+                    {group.transactions.map((transaction) => (
+                      <TransactionItem
+                        key={transaction.id}
+                        icon={getTransactionIcon(transaction)}
+                        name={transaction.name}
+                        category={transaction.type}
+                        amount={transaction.amount}
+                        isPositive={transaction.amount > 0}
+                        onClick={() => handleTransactionClick(transaction)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
+
+            {/* Кнопка загрузки еще */}
+            {hasMore && (
+              <div className={styles.loadMoreContainer}>
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loading}
+                  className={styles.loadMoreButton}
+                >
+                  {loading ? 'Загрузка...' : 'Загрузить еще'}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

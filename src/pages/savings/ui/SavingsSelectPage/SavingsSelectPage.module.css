@@ -1,0 +1,251 @@
+.content {
+  position: fixed;
+  top: 80px;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-4);
+  padding-top: calc(var(--space-6) + var(--space-4));
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+}
+
+.optionsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.optionCard {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.optionCard:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.optionCard.expanded {
+  border-color: rgba(74, 222, 128, 0.3);
+  background: rgba(74, 222, 128, 0.05);
+}
+
+.optionCard.premium {
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.2), 0 0 0 1px rgba(251, 191, 36, 0.1);
+}
+
+.optionCard.premium:hover {
+  border-color: rgba(251, 191, 36, 0.5);
+  box-shadow: 0 6px 25px rgba(251, 191, 36, 0.25), 0 0 0 1px rgba(251, 191, 36, 0.15);
+}
+
+.optionCard.premium.expanded {
+  border-color: rgba(251, 191, 36, 0.6);
+  background: rgba(251, 191, 36, 0.05);
+  box-shadow: 0 8px 30px rgba(251, 191, 36, 0.3), 0 0 0 1px rgba(251, 191, 36, 0.2);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.optionName {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin: 0;
+}
+
+.optionCard.premium .optionName {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+
+.optionDescription {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: var(--font-size-base);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.optionDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detailLabel {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--font-size-sm);
+}
+
+.detailValue {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+}
+
+.expandedContent {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.featuresList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.featureIcon {
+  color: #4ade80;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.featureText {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.baseRate {
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.baseRateLabel {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: var(--font-size-sm);
+}
+
+.baseRateValue {
+  color: #4ade80;
+  font-family: var(--font-accent);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+}
+
+.cardActions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.cardActions .button {
+  flex: 1;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .content {
+    top: 70px;
+    padding: var(--space-3);
+    padding-top: calc(var(--space-4) + var(--space-3));
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .optionCard {
+    padding: var(--space-5);
+  }
+
+  .optionName {
+    font-size: var(--font-size-lg);
+  }
+
+  .cardActions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    top: 60px;
+    padding: var(--space-2);
+    padding-top: calc(var(--space-3) + var(--space-2));
+  }
+
+  .title {
+    font-size: var(--font-size-lg);
+  }
+
+  .optionCard {
+    padding: var(--space-4);
+    gap: var(--space-3);
+  }
+
+  .optionName {
+    font-size: var(--font-size-base);
+  }
+
+}

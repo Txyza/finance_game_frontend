@@ -1,0 +1,6 @@
+export { DepositsPage } from './ui/DepositsPage'
+export { DepositsSelectPage } from './ui/DepositsSelectPage'
+export { DepositsCalculatorPage } from './ui/DepositsCalculatorPage'
+export { DepositsCreatePage } from './ui/DepositsCreatePage'
+export { DepositsSuccessPage } from './ui/DepositsSuccessPage'
+export { DepositDetailsPage } from './ui/DepositDetailsPage'

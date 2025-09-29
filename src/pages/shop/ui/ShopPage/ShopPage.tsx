@@ -8,11 +8,13 @@ import {
   ParticleBackground,
   ThankYouModal
 } from '@shared/ui'
+import { useStore } from '@shared/hooks'
 import styles from './ShopPage.module.css'
 
 export const ShopPage: FC = () => {
   const [searchParams] = useSearchParams()
   const [showThankYouModal, setShowThankYouModal] = useState(false)
+  const { items: storeItems, loading: storeLoading, error: storeError, buyItem } = useStore()
 
   // Mock данные игрока
   const playerStats = {
@@ -39,10 +41,43 @@ export const ShopPage: FC = () => {
     }
   }, [searchParams])
 
-  const handlePurchase = (itemName: string, cost: string) => {
+  const handlePurchase = async (itemName: string, cost: string) => {
     console.log(`Покупка: ${itemName} за ${cost}`)
     // Показываем модал с благодарностью
     setShowThankYouModal(true)
+  }
+
+  const handleStorePurchase = async (itemName: string) => {
+    const success = await buyItem(itemName)
+    if (success) {
+      setShowThankYouModal(true)
+    }
+  }
+
+  // Функция для получения иконки из image ID
+  const getItemIcon = (imageId: string | null): string => {
+    if (!imageId) return '🛍️'
+
+    // Маппинг ID иконок на эмодзи
+    const iconMap: Record<string, string> = {
+      'coffee': '☕',
+      'energy_drink': '🥤',
+      'sleep': '😴',
+      'wallet': '👛',
+      'bucket': '🪣',
+      'cart': '🛒',
+      'food': '🍔',
+      'pizza': '🍕',
+      'cake': '🎂',
+      'drink': '🥤',
+      'gift': '🎁',
+      'star': '⭐',
+      'diamond': '💎',
+      'coin': '🪙',
+      'bag': '🎒'
+    }
+
+    return iconMap[imageId] || '🛍️'
   }
 
   const handleCloseThankYouModal = () => {
@@ -122,6 +157,39 @@ export const ShopPage: FC = () => {
                 />
               </div>
             </section>
+
+            {/* Супермаркет секция */}
+            {storeItems.length > 0 && (
+              <section id="section-supermarket" className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <Bubble variant="gradient-mint" size="large" className={styles.sectionBubble}>
+                    🛒 Супермаркет
+                  </Bubble>
+                </div>
+                {storeLoading ? (
+                  <div className={styles.loadingState}>Загрузка товаров...</div>
+                ) : storeError ? (
+                  <div className={styles.errorState}>
+                    Ошибка загрузки товаров: {storeError.message}
+                  </div>
+                ) : (
+                  <div className={styles.itemsGrid}>
+                    {storeItems.map((item, index) => (
+                      <ShopItem
+                        key={index}
+                        title={item.name}
+                        icon={getItemIcon(item.image)}
+                        reward={item.description}
+                        price={item.price.toString()}
+                        currency="game"
+                        disabled={!item.exists}
+                        onPurchase={() => handleStorePurchase(item.name)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+            )}
 
             {/* Энергия секция */}
             <section id="section-energy" className={styles.section}>

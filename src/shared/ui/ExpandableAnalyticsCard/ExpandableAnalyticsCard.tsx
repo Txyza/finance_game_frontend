@@ -24,9 +24,9 @@ export const ExpandableAnalyticsCard: React.FC<ExpandableAnalyticsCardProps> = (
   const getTypeText = (type: string) => {
     switch (type) {
       case 'expenses':
-        return 'Траты'
+        return 'Расходы'
       case 'income':
-        return 'Доходы'
+        return 'Приходы'
       case 'assets':
         return 'Активы'
       case 'liabilities':

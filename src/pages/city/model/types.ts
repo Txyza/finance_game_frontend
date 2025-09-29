@@ -47,12 +47,12 @@ export const DISTRICTS_DATA: District[] = [
       },
       {
         id: 'savings',
-        name: 'Накопительные инструменты',
+        name: 'Накопительные счета',
         icon: '💰',
         districtId: 'safe',
         position: { x: 70, y: 60 },
         isUnlocked: true,
-        requiredLevel: 2
+        requiredLevel: 3
       }
     ],
     isUnlocked: true,
@@ -86,8 +86,8 @@ export const DISTRICTS_DATA: District[] = [
         requiredLevel: 5
       }
     ],
-    isUnlocked: true,
-    requiredLevel: 3
+    isUnlocked: false,
+    requiredLevel: 5
   },
   {
     id: 'shopping',
@@ -105,7 +105,7 @@ export const DISTRICTS_DATA: District[] = [
         districtId: 'shopping',
         position: { x: 25, y: 30 },
         isUnlocked: false,
-        requiredLevel: 4
+        requiredLevel: 5
       },
       {
         id: 'realestate',
@@ -127,7 +127,7 @@ export const DISTRICTS_DATA: District[] = [
       }
     ],
     isUnlocked: false,
-    requiredLevel: 4
+    requiredLevel: 5
   },
   {
     id: 'stock',

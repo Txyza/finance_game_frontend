@@ -55,6 +55,22 @@
   width: 100%;
 }
 
+.loadingState,
+.errorState {
+  text-align: center;
+  padding: var(--space-6);
+  color: var(--color-white);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(10px);
+  margin: var(--space-4) 0;
+}
+
+.errorState {
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
 .itemsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

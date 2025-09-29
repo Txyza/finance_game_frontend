@@ -80,6 +80,52 @@ export interface TaskRewardRequest {
   user_task_id: string
 }
 
+// Analytics API types
+export interface Transaction {
+  instrument_id: string
+  amount: number
+  datetime_start: string
+  datetime_end: string
+  type: string
+  name: string
+  id: string
+  user_id: string
+}
+
+export interface TransactionsResponse {
+  transactions: Transaction[]
+  next_cursor: string | null
+}
+
+export interface TransactionsRequest {
+  limit?: number
+  cursor?: string
+}
+
+// Analytics Summary types
+export interface AnalyticsSummaryCategory {
+  name: string
+  amount: number
+  percentage?: number
+  color?: string
+}
+
+export interface AnalyticsSummaryGroup {
+  [key: string]: number
+}
+
+export interface AnalyticsSummaryData {
+  work: AnalyticsSummaryGroup
+  bank: AnalyticsSummaryGroup
+  task: AnalyticsSummaryGroup
+  other: AnalyticsSummaryGroup
+}
+
+export interface AnalyticsSummaryResponse {
+  income: AnalyticsSummaryData
+  expense: AnalyticsSummaryData
+}
+
 export interface HTTPValidationError {
   detail?: Array<{
     loc: (string | number)[]

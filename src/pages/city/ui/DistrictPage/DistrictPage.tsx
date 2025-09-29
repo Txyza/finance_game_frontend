@@ -1,7 +1,9 @@
 import { FC } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ParticleBackground, GameHeader, Button } from '@shared/ui'
+import { ParticleBackground, GameHeaderContainer, Button } from '@shared/ui'
 import { DISTRICTS_DATA, DistrictId } from '../../model/types'
+import safeCityImage from '@shared/assets/images/safe_city.png'
+import shoppingCityImage from '@shared/assets/images/shopping_city.png'
 import styles from './DistrictPage.module.css'
 
 export const DistrictPage: FC = () => {
@@ -37,7 +39,34 @@ export const DistrictPage: FC = () => {
 
   const handleBuildingClick = (buildingId: string) => {
     console.log(`Clicked building: ${buildingId}`)
-    // Здесь будет логика перехода к зданию
+
+    // Логика перехода к конкретным зданиям
+    switch (buildingId) {
+      case 'savings':
+        navigate('/savings')
+        break
+      case 'deposits':
+        navigate('/deposits')
+        break
+      default:
+        console.log(`Здание ${buildingId} пока не реализовано`)
+    }
+  }
+
+  // Функция для получения фонового изображения района
+  const getDistrictBackgroundImage = (districtId: DistrictId): string | null => {
+    switch (districtId) {
+      case 'safe':
+        return safeCityImage
+      case 'shopping':
+        return shoppingCityImage
+      case 'credit':
+        return null // Пока нет изображения
+      case 'stock':
+        return null // Пока нет изображения
+      default:
+        return null
+    }
   }
 
   return (
@@ -48,17 +77,7 @@ export const DistrictPage: FC = () => {
         animationSpeed="slow"
       />
 
-      <GameHeader
-        variant="main"
-        level={playerStats.level}
-        currentExp={playerStats.currentExp}
-        maxExp={playerStats.maxExp}
-        energy={playerStats.energy}
-        maxEnergy={playerStats.maxEnergy}
-        money={playerStats.money}
-        bankRate={playerStats.bankRate}
-        inflation={playerStats.inflation}
-      />
+      <GameHeaderContainer />
 
       <div className={styles.content}>
         <div className={styles.container}>
@@ -76,7 +95,17 @@ export const DistrictPage: FC = () => {
             </h1>
           </div>
 
-          <div className={styles.districtMap}>
+          <div
+            className={styles.districtMap}
+            style={{
+              backgroundImage: getDistrictBackgroundImage(district.id)
+                ? `url(${getDistrictBackgroundImage(district.id)})`
+                : undefined
+            }}
+          >
+            {/* Оверлей для лучшей видимости зданий */}
+            <div className={styles.mapOverlay}></div>
+
             <div className={styles.buildings}>
               {district.buildings.map(building => (
                 <div
