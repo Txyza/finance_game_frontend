@@ -8,7 +8,7 @@ import styles from './SavingsWithdrawPage.module.css'
 export const SavingsWithdrawPage: FC = () => {
   const { accountId } = useParams<{ accountId: string }>()
   const navigate = useNavigate()
-  const { withdraw, isLoading, error: apiError } = useSavings()
+  const { getAccount, withdraw, isLoading, error: apiError } = useSavings()
   const [account, setAccount] = useState<SavingsAccount | null>(null)
   const [amount, setAmount] = useState<string>('')
   const [error, setError] = useState<string>('')
@@ -20,48 +20,21 @@ export const SavingsWithdrawPage: FC = () => {
 
       setLoadingAccount(true)
 
-      // Мок данные для демонстрации (на основе ID)
-      const mockAccountsData: { [key: string]: SavingsAccount } = {
-        'acc_12345678': {
-          id: 'acc_12345678',
-          type: 'basic',
-          name: 'Накопительный счет',
-          balance: 125000,
-          interest_rate: 7.5,
-          created_at: '2024-01-15T10:30:00Z',
-          status: 'active'
-        },
-        'acc_87654321': {
-          id: 'acc_87654321',
-          type: 'premium',
-          name: 'Премиум',
-          balance: 750000,
-          interest_rate: 7.0,
-          created_at: '2024-02-20T14:45:00Z',
-          status: 'active'
-        },
-        'acc_11223344': {
-          id: 'acc_11223344',
-          type: 'basic',
-          name: 'Накопительный счет',
-          balance: 45000,
-          interest_rate: 7.5,
-          created_at: '2024-03-10T09:15:00Z',
-          status: 'active'
-        }
-      }
-
-      setTimeout(() => {
-        const accountData = mockAccountsData[accountId]
+      try {
+        const accountData = await getAccount(accountId)
         if (accountData) {
           setAccount(accountData)
         }
+      } catch (error) {
+        console.error('Ошибка загрузки счета:', error)
+        setAccount(null)
+      } finally {
         setLoadingAccount(false)
-      }, 500)
+      }
     }
 
     loadAccountData()
-  }, [accountId])
+  }, [accountId, getAccount])
 
   const quickAmounts = account
     ? [5000, 10000, 25000, 50000].filter(amt => amt <= account.balance)
@@ -71,8 +44,8 @@ export const SavingsWithdrawPage: FC = () => {
     return new Intl.NumberFormat('ru-RU').format(value)
   }
 
-  const getAccountTypeName = (type: string) => {
-    return type === 'premium' ? 'Премиум' : 'Накопительный счет'
+  const getAccountTypeName = () => {
+    return 'Накопительный счет'
   }
 
   const handleAmountChange = (value: string) => {
@@ -109,12 +82,18 @@ export const SavingsWithdrawPage: FC = () => {
       return
     }
 
-    // Здесь будет API вызов для снятия
-    // const result = await withdraw(accountId!, numericAmount)
-
-    // Для демонстрации - просто переходим обратно
-    alert(`Снятие ${formatAmount(numericAmount)} ₽ выполнено успешно! Средства переведены на дебетовую карту.`)
-    navigate(`/savings/account/${accountId}`)
+    try {
+      const result = await withdraw(accountId!, numericAmount)
+      if (result) {
+        // Операция успешна - перенаправляем на страницу счета
+        navigate(`/savings/account/${accountId}`)
+      } else {
+        setError('Ошибка при снятии средств')
+      }
+    } catch (error) {
+      console.error('Ошибка снятия:', error)
+      setError('Ошибка при снятии средств')
+    }
   }
 
   if (loadingAccount) {
@@ -167,13 +146,13 @@ export const SavingsWithdrawPage: FC = () => {
             <h1 className={styles.title}>Снятие со счета</h1>
           </div>
 
-          <div className={`${styles.formCard} ${account.type === 'premium' ? styles.premium : ''}`}>
+          <div className={styles.formCard}>
             <div className={styles.accountInfo}>
               <h2 className={styles.accountName}>
-                {getAccountTypeName(account.type)}
+                {getAccountTypeName()}
               </h2>
               <p className={styles.accountNumber}>
-                №{account.id.slice(-8).toUpperCase()}
+                №{account.account_number}
               </p>
             </div>
 

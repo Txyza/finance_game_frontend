@@ -3,12 +3,13 @@ import { FeatureLockedTooltip } from '@shared/ui/FeatureLockedTooltip'
 import { isFeatureUnlocked, getFeatureUnlockMessage, FeatureType } from '@shared/utils/featureUnlock'
 import styles from './BottomNavigation.module.css'
 
-export type TabType = 'shop' | 'analytics' | 'character'
+export type TabType = 'shop' | 'analytics' | 'character' | 'accounts'
 
 interface BottomNavigationProps {
   activeTab: TabType
   onTabChange: (tab: TabType) => void
   onCityClick: () => void
+  onAccountsClick: () => void
   currentLevel: number
 }
 
@@ -16,6 +17,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({
   activeTab,
   onTabChange,
   onCityClick,
+  onAccountsClick,
   currentLevel
 }) => {
   const [lockedTooltip, setLockedTooltip] = useState<string | null>(null)
@@ -23,6 +25,11 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({
   const handleTabClick = (tab: TabType) => {
     if (tab === 'character') {
       onTabChange(tab)
+      return
+    }
+
+    if (tab === 'accounts') {
+      onAccountsClick()
       return
     }
 
@@ -58,6 +65,11 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({
       id: 'character' as TabType,
       icon: '👤',
       label: 'Персонаж'
+    },
+    {
+      id: 'accounts' as TabType,
+      icon: '💳',
+      label: 'Счета'
     }
   ]
 
@@ -65,7 +77,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({
     <div className={styles.bottomNav}>
       {/* Навигационные вкладки */}
       {tabs.map(tab => {
-        const isUnlocked = tab.id === 'character' || isFeatureUnlocked(tab.id as FeatureType, currentLevel)
+        const isUnlocked = tab.id === 'character' || tab.id === 'accounts' || isFeatureUnlocked(tab.id as FeatureType, currentLevel)
         return (
           <button
             key={tab.id}
@@ -88,6 +100,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({
             className={`${styles.navButton} ${styles.cityButton} ${!isCityUnlocked ? styles.lockedButton : ''}`}
             onClick={handleCityClick}
             aria-label="Город"
+            data-tour="city-button"
           >
             <span className={styles.navIcon}>🏙️</span>
             <span className={styles.navLabel}>Город</span>

@@ -11,7 +11,6 @@ interface CharacterAreaProps {
   onLeaderboardClick: () => void
   onFriendsClick: () => void
   onWorkClick: () => void
-  onCityClick: () => void
 }
 
 export const CharacterArea: FC<CharacterAreaProps> = ({
@@ -21,8 +20,7 @@ export const CharacterArea: FC<CharacterAreaProps> = ({
   onNotificationsClick,
   onLeaderboardClick,
   onFriendsClick,
-  onWorkClick,
-  onCityClick
+  onWorkClick
 }) => {
   return (
     <div className={styles.characterArea}>

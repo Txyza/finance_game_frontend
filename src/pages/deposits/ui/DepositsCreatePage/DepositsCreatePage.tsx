@@ -1,7 +1,7 @@
 import { FC, useState, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ParticleBackground, GameHeaderContainer, Button } from '@shared/ui'
-import { useUser } from '@shared/hooks'
+import { useUser, useDeposits } from '@shared/hooks'
 import styles from './DepositsCreatePage.module.css'
 
 type PaymentMethod = 'endOfTerm' | 'monthlyCapitalized' | 'monthlyToAccount'
@@ -23,6 +23,7 @@ export const DepositsCreatePage: FC = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { user } = useUser()
+  const { createDeposit, error } = useDeposits()
   const [isCreating, setIsCreating] = useState(false)
 
   const keyRate = parseFloat(user?.key_rate || '8.5')
@@ -138,23 +139,47 @@ export const DepositsCreatePage: FC = () => {
   const handleCreate = async () => {
     setIsCreating(true)
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    try {
+      // Преобразуем метод выплаты в формат API
+      const apiPaymentMethod = paymentMethod === 'endOfTerm' ? 'at_end' :
+                               paymentMethod === 'monthlyCapitalized' ? 'monthly_capitalized' :
+                               'monthly_to_account'
 
-    // Navigate to success page with deposit data
-    const depositId = `deposit_${Date.now()}`
-    const searchQuery = new URLSearchParams({
-      id: depositId,
-      type: depositTypeId,
-      amount: amount,
-      term: term.toString(),
-      method: paymentMethod,
-      rate: calculatedData.rate.toString(),
-      income: calculatedData.income.toString(),
-      total: calculatedData.total.toString()
-    }).toString()
+      // Определяем правильное имя депозита для API
+      const apiDepositName = depositTypeId === 'save' ? 'kopit' :
+                             depositTypeId === 'plus' ? 'v_pluse' :
+                             selectedDeposit.name
 
-    navigate(`/deposits/success?${searchQuery}`)
+      // Вызываем API для создания депозита
+      const result = await createDeposit({
+        deposit_name: apiDepositName,
+        amount: parseInt(amount),
+        term_days: term,
+        interest_rate: calculatedData.rate,
+        interest_payment_method: apiPaymentMethod
+      })
+
+      if (result) {
+        // Переходим на страницу успеха с данными депозита
+        const searchQuery = new URLSearchParams({
+          id: result.deposit_id,
+          account_number: result.account_number,
+          type: depositTypeId,
+          amount: amount,
+          term: term.toString(),
+          method: paymentMethod,
+          rate: calculatedData.rate.toString(),
+          income: calculatedData.income.toString(),
+          total: calculatedData.total.toString()
+        }).toString()
+
+        navigate(`/deposits/success?${searchQuery}`)
+      }
+    } catch (err) {
+      console.error('Ошибка при создании депозита:', err)
+    } finally {
+      setIsCreating(false)
+    }
   }
 
   const handleBack = () => {
@@ -261,6 +286,12 @@ export const DepositsCreatePage: FC = () => {
                 <li>Автоматическое продление на тот же срок при окончании</li>
               </ul>
             </div>
+
+            {error && (
+              <div className={styles.errorMessage}>
+                <p>{error}</p>
+              </div>
+            )}
 
             <div className={styles.actions}>
               <Button

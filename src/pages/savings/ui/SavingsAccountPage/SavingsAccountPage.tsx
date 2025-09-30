@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ParticleBackground, GameHeaderContainer, Button } from '@shared/ui'
 import { useSavings } from '@shared/hooks'
-import { SavingsAccount } from '@shared/api'
+import { SavingsAccount, SavingsTransaction, savingsApi } from '@shared/api'
 import styles from './SavingsAccountPage.module.css'
 
 interface Operation {
@@ -16,9 +16,10 @@ interface Operation {
 export const SavingsAccountPage: FC = () => {
   const { accountId } = useParams<{ accountId: string }>()
   const navigate = useNavigate()
-  const { isLoading, error } = useSavings()
+  const { getAccount, getOperations, isLoading, error } = useSavings()
   const [account, setAccount] = useState<SavingsAccount | null>(null)
   const [operations, setOperations] = useState<Operation[]>([])
+  const [transactions, setTransactions] = useState<SavingsTransaction[]>([])
   const [loadingAccount, setLoadingAccount] = useState(true)
 
   useEffect(() => {
@@ -27,131 +28,55 @@ export const SavingsAccountPage: FC = () => {
 
       setLoadingAccount(true)
 
-      // Мок данные на основе ID счета для демонстрации
-      const mockAccountsData: { [key: string]: SavingsAccount } = {
-        'acc_12345678': {
-          id: 'acc_12345678',
-          type: 'basic',
-          name: 'Накопительный счет',
-          balance: 125000,
-          interest_rate: 7.5,
-          created_at: '2024-01-15T10:30:00Z',
-          status: 'active'
-        },
-        'acc_87654321': {
-          id: 'acc_87654321',
-          type: 'premium',
-          name: 'Премиум',
-          balance: 750000,
-          interest_rate: 7.0,
-          created_at: '2024-02-20T14:45:00Z',
-          status: 'active'
-        },
-        'acc_11223344': {
-          id: 'acc_11223344',
-          type: 'basic',
-          name: 'Накопительный счет',
-          balance: 45000,
-          interest_rate: 7.5,
-          created_at: '2024-03-10T09:15:00Z',
-          status: 'active'
-        }
-      }
-
-      const mockOperationsData: { [key: string]: Operation[] } = {
-        'acc_12345678': [
-          {
-            id: '1',
-            type: 'deposit',
-            amount: 100000,
-            date: '2024-01-15T10:30:00Z',
-            description: 'Первоначальное пополнение'
-          },
-          {
-            id: '2',
-            type: 'deposit',
-            amount: 25000,
-            date: '2024-01-22T14:15:00Z',
-            description: 'Пополнение счета'
-          },
-          {
-            id: '3',
-            type: 'interest',
-            amount: 856,
-            date: '2024-02-01T00:00:00Z',
-            description: 'Начисление процентов за январь'
-          },
-          {
-            id: '4',
-            type: 'interest',
-            amount: 924,
-            date: '2024-03-01T00:00:00Z',
-            description: 'Начисление процентов за февраль'
-          }
-        ],
-        'acc_87654321': [
-          {
-            id: '1',
-            type: 'deposit',
-            amount: 500000,
-            date: '2024-02-20T14:45:00Z',
-            description: 'Первоначальное пополнение (Премиум)'
-          },
-          {
-            id: '2',
-            type: 'deposit',
-            amount: 200000,
-            date: '2024-02-25T10:30:00Z',
-            description: 'Дополнительное пополнение'
-          },
-          {
-            id: '3',
-            type: 'interest',
-            amount: 4110,
-            date: '2024-03-01T00:00:00Z',
-            description: 'Начисление процентов за февраль'
-          },
-          {
-            id: '4',
-            type: 'deposit',
-            amount: 50000,
-            date: '2024-03-15T16:20:00Z',
-            description: 'Пополнение счета'
-          }
-        ],
-        'acc_11223344': [
-          {
-            id: '1',
-            type: 'deposit',
-            amount: 45000,
-            date: '2024-03-10T09:15:00Z',
-            description: 'Первоначальное пополнение'
-          },
-          {
-            id: '2',
-            type: 'interest',
-            amount: 180,
-            date: '2024-04-01T00:00:00Z',
-            description: 'Начисление процентов за март'
-          }
-        ]
-      }
-
-      setTimeout(() => {
-        const accountData = mockAccountsData[accountId]
-        const operationsData = mockOperationsData[accountId] || []
+      try {
+        // Загружаем данные счета и транзакции параллельно
+        const [accountData, transactionsData] = await Promise.all([
+          getAccount(accountId),
+          savingsApi.getTransactions(accountId)
+        ])
 
         if (accountData) {
           setAccount(accountData)
-          setOperations(operationsData)
+          setTransactions(transactionsData.transactions)
         }
-
+      } catch (error) {
+        console.error('Ошибка загрузки данных счета:', error)
+        setAccount(null)
+        setTransactions([])
+      } finally {
         setLoadingAccount(false)
-      }, 800)
+      }
     }
 
     loadAccountData()
-  }, [accountId])
+  }, [accountId, getAccount])
+
+  // Обновляем данные когда возвращаемся на страницу (например, после операций)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        const loadAccountData = async () => {
+          if (!accountId) return
+          try {
+            const [accountData, transactionsData] = await Promise.all([
+              getAccount(accountId),
+              savingsApi.getTransactions(accountId)
+            ])
+            if (accountData) {
+              setAccount(accountData)
+              setTransactions(transactionsData.transactions)
+            }
+          } catch (error) {
+            console.error('Ошибка обновления данных:', error)
+          }
+        }
+        loadAccountData()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [accountId, getAccount])
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ru-RU').format(amount)
@@ -161,28 +86,34 @@ export const SavingsAccountPage: FC = () => {
     return new Date(dateString).toLocaleDateString('ru-RU', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      year: 'numeric'
     })
   }
 
-  const getOperationTypeLabel = (type: Operation['type']) => {
-    switch (type) {
-      case 'deposit':
-        return 'Пополнение'
-      case 'withdrawal':
-        return 'Снятие'
-      case 'interest':
-        return 'Начисление процентов'
-      default:
-        return 'Операция'
+
+  const getAccountTypeName = () => {
+    if (account?.account_type === 'premium') {
+      return 'Premium'
     }
+    return 'Накопительный счет'
   }
 
-  const getAccountTypeName = (type: string) => {
-    return type === 'premium' ? 'Премиум' : 'Накопительный счет'
+  const isPremiumAccount = () => {
+    return account?.account_type === 'premium'
   }
+
+  const handleBack = () => {
+    navigate('/savings')
+  }
+
+  const handleDeposit = () => {
+    navigate(`/savings/deposit/${accountId}`)
+  }
+
+  const handleWithdraw = () => {
+    navigate(`/savings/withdraw/${accountId}`)
+  }
+
 
   if (loadingAccount) {
     return (
@@ -190,25 +121,30 @@ export const SavingsAccountPage: FC = () => {
         <ParticleBackground />
         <GameHeaderContainer />
         <div className={styles.content}>
-          <div className={styles.loading}>
-            <p>Загрузка данных счета...</p>
+          <div className={styles.container}>
+            <div className={styles.loading}>
+              <p>Загрузка данных счета...</p>
+            </div>
           </div>
         </div>
       </div>
     )
   }
 
-  if (!account) {
+  if (error || !account) {
     return (
       <div className="common-page-background">
         <ParticleBackground />
         <GameHeaderContainer />
         <div className={styles.content}>
-          <div className={styles.error}>
-            <p>Счет не найден</p>
-            <Button onClick={() => navigate('/savings')}>
-              Вернуться к счетам
-            </Button>
+          <div className={styles.container}>
+            <div className={styles.error}>
+              <h2>Ошибка загрузки</h2>
+              <p>{error || 'Счет не найден'}</p>
+              <Button variant="primary" onClick={handleBack}>
+                Вернуться к счетам
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -226,88 +162,116 @@ export const SavingsAccountPage: FC = () => {
             <Button
               variant="outline"
               size="small"
-              onClick={() => navigate('/savings')}
+              onClick={handleBack}
             >
-              ← Назад к счетам
+              ← Назад
             </Button>
 
-            <h1 className={styles.title}>Детали счета</h1>
+            <h1 className={styles.title}>
+              {getAccountTypeName()}
+            </h1>
           </div>
 
-          <div className={`${styles.accountCard} ${account.type === 'premium' ? styles.premium : ''}`}>
-            <div className={styles.accountHeader}>
-              <h2 className={styles.accountName}>
-                {getAccountTypeName(account.type)}
-              </h2>
-              <span className={styles.accountNumber}>
-                №{account.id.slice(-8).toUpperCase()}
-              </span>
+          <div className={`${styles.accountCard} ${isPremiumAccount() ? styles.premiumCard : ''}`}>
+            <div className={styles.cardHeader}>
+              <div className={styles.cardTitle}>
+                <div className={styles.accountNumber}>
+                  Счет № {account.account_number}
+                  {isPremiumAccount() && (
+                    <span className={styles.premiumBadge}>
+                      👑 Premium
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className={styles.accountStatus}>
+                <span className={styles.statusIndicator}></span>
+                <span className={styles.statusText}>Активен</span>
+              </div>
+            </div>
+
+            <div className={styles.mainBalance}>
+              <div className={styles.balanceLabel}>Баланс счета</div>
+              <div className={styles.balanceAmount}>
+                {formatAmount(account.balance)} ₽
+              </div>
             </div>
 
             <div className={styles.accountDetails}>
-              <div className={`${styles.detailCard} ${styles.balanceCard}`}>
-                <p className={styles.detailLabel}>Баланс счета</p>
-                <p className={styles.detailValue}>
-                  {formatAmount(account.balance)} ₽
-                </p>
+              <div className={styles.detailCard}>
+                <div className={styles.detailIcon}>📈</div>
+                <div className={styles.detailContent}>
+                  <div className={styles.detailLabel}>Процентная ставка</div>
+                  <div className={styles.detailValue}>
+                    {account.current_interest_rate.toFixed(1)}% годовых
+                  </div>
+                </div>
               </div>
 
-              <div className={`${styles.detailCard} ${styles.rateCard}`}>
-                <p className={styles.detailLabel}>Процентная ставка</p>
-                <p className={styles.detailValue}>
-                  {account.interest_rate.toFixed(1)}% годовых
-                </p>
-              </div>
 
+              {account.expires_at && (
+                <div className={styles.detailCard}>
+                  <div className={styles.detailIcon}>⏰</div>
+                  <div className={styles.detailContent}>
+                    <div className={styles.detailLabel}>Действует до</div>
+                    <div className={styles.detailValue}>
+                      {formatDate(account.expires_at)}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
+          </div>
 
-            <div className={styles.actions}>
+          <div className={styles.actionsSection}>
+            <div className={styles.actionsGrid}>
               <Button
                 variant="primary"
-                size="medium"
-                onClick={() => navigate(`/savings/deposit/${account.id}`)}
+                size="large"
+                onClick={handleDeposit}
+                className={styles.actionButton}
               >
-                Пополнить
+                💰 Пополнить
               </Button>
               <Button
                 variant="outline"
-                size="medium"
-                onClick={() => navigate(`/savings/withdraw/${account.id}`)}
+                size="large"
+                onClick={handleWithdraw}
+                className={styles.actionButton}
               >
-                Снять
-              </Button>
-              <Button variant="outline" size="medium">
-                Закрыть счет
+                💳 Снять
               </Button>
             </div>
           </div>
 
           <div className={styles.operationsSection}>
-            <h3 className={styles.sectionTitle}>История операций</h3>
+            <h3 className={styles.operationsTitle}>История операций</h3>
 
-            {operations.length === 0 ? (
+            {transactions.length === 0 ? (
               <div className={styles.emptyOperations}>
-                <p>Операции по счету отсутствуют</p>
+                <p>Операций пока нет</p>
               </div>
             ) : (
-              <div className={styles.operationsList}>
-                {operations.map((operation) => (
-                  <div key={operation.id} className={styles.operationItem}>
-                    <div className={styles.operationInfo}>
-                      <p className={styles.operationType}>
-                        {getOperationTypeLabel(operation.type)}
-                      </p>
-                      <p className={styles.operationDate}>
-                        {formatDate(operation.date)}
-                      </p>
+              <div className={styles.transactionsList}>
+                {transactions.map((transaction) => (
+                  <div key={transaction.id} className={styles.transactionItem}>
+                    <div className={styles.transactionInfo}>
+                      <div className={styles.transactionName}>
+                        {transaction.name}
+                      </div>
+                      <div className={styles.transactionDate}>
+                        {new Date(transaction.datetime_start).toLocaleDateString('ru-RU', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </div>
                     </div>
-                    <div
-                      className={`${styles.operationAmount} ${
-                        operation.type === 'withdrawal' ? styles.negative : styles.positive
-                      }`}
-                    >
-                      {operation.type === 'withdrawal' ? '-' : '+'}
-                      {formatAmount(operation.amount)} ₽
+
+                    <div className={styles.transactionAmount}>
+                      {formatAmount(transaction.amount)} ₽
                     </div>
                   </div>
                 ))}

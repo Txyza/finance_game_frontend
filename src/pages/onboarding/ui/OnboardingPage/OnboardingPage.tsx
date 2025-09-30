@@ -97,7 +97,7 @@ export const OnboardingPage: React.FC = () => {
 
   const isNameValid = (name: string) => {
     const trimmedName = name.trim()
-    return trimmedName.length >= 2 && trimmedName.length <= 50 && /^[a-zA-Zа-яА-ЯёЁ\s]+$/.test(trimmedName)
+    return trimmedName.length >= 3 && trimmedName.length <= 50 && /^[a-zA-Zа-яА-ЯёЁ\s]+$/.test(trimmedName)
   }
 
   const handleNameNext = () => {
@@ -253,7 +253,7 @@ export const OnboardingPage: React.FC = () => {
 
                 {name.length > 0 && !isNameValid(name) && (
                   <div className={`${styles.validationHint} ${styles.error}`}>
-                    Имя должно содержать только буквы и пробелы (от 2 до 15 символов)
+                    Имя должно содержать только буквы и пробелы (от 3 до 15 символов)
                   </div>
                 )}
               </div>

@@ -12,8 +12,9 @@ import styles from './MainPage.module.css'
 export const MainPage: FC = () => {
   const navigate = useNavigate()
   const { user } = useUserContext()
-  const { shouldShowMainTour, setMainPageVisited, setMainTourCompletedAndWorkPageVisited, isStateLoaded } = useTourContext()
+  const { shouldShowMainTour, shouldShowCityTour, setMainPageVisited, setMainTourCompletedAndWorkPageVisited, setCityTourCompleted, isStateLoaded, setCityTourActive } = useTourContext()
   const [runTour, setRunTour] = useState(false)
+  const [runCityTour, setRunCityTour] = useState(false)
 
   const mainTourSteps: Step[] = [
     {
@@ -78,6 +79,44 @@ export const MainPage: FC = () => {
     }
   ]
 
+  const cityTourSteps: Step[] = [
+    {
+      target: '[data-tour="character"]',
+      content: (
+        <div>
+          <h4>🎉 Поздравляем с достижением 3-го уровня!</h4>
+          <p>Отличная работа! Теперь у тебя открылись новые возможности!</p>
+          <p>Я покажу тебе, что нового стало доступно в игре.</p>
+        </div>
+      ),
+      placement: 'bottom',
+      disableBeacon: true,
+    },
+    {
+      target: '[data-tour="city-button"]',
+      content: (
+        <div>
+          <h4>🏛️ Добро пожаловать в финансовый город!</h4>
+          <p>Теперь тебе доступна кнопка <strong>"Город"</strong> внизу экрана!</p>
+          <p>В нашем финансовом городе открываются новые возможности для инвестирования:</p>
+          <ul>
+            <li>💰 <strong>Вклады и накопительные счета</strong> - современные пассивы</li>
+            <li>📈 <strong>Инвестиции в акции</strong> - покупай акции компаний</li>
+            <li>🏢 <strong>Недвижимость</strong> - инвестируй в квартиры и дома</li>
+            <li>💎 <strong>Драгоценные металлы</strong> - золото, серебро, платина</li>
+          </ul>
+          <p><strong>Нажми на кнопку "Город" внизу, чтобы начать инвестировать!</strong></p>
+        </div>
+      ),
+      placement: 'top',
+      disableBeacon: true,
+      hideFooter: true,
+      spotlightClicks: true,
+      disableScrollParentFix: true,
+      spotlightPadding: 20
+    }
+  ]
+
   // Отмечаем посещение страницы при монтировании
   useEffect(() => {
     console.log('MainPage загружена')
@@ -85,9 +124,9 @@ export const MainPage: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // Пустой массив зависимостей - выполняется только при монтировании
 
-  // Отдельный эффект для запуска тура
+  // Отдельный эффект для запуска главного тура
   useEffect(() => {
-    console.log('Проверка запуска тура. shouldShowMainTour:', shouldShowMainTour, 'isStateLoaded:', isStateLoaded)
+    console.log('Проверка запуска главного тура. shouldShowMainTour:', shouldShowMainTour, 'isStateLoaded:', isStateLoaded)
     if (shouldShowMainTour && isStateLoaded) {
       // Ждем отрисовки всех компонентов, особенно маскота
       const checkElementsAndStartTour = () => {
@@ -145,6 +184,62 @@ export const MainPage: FC = () => {
     }
   }, [shouldShowMainTour, isStateLoaded]) // Зависим от shouldShowMainTour и isStateLoaded
 
+  // Отдельный эффект для запуска тура города
+  useEffect(() => {
+    console.log('Проверка запуска тура города. shouldShowCityTour:', shouldShowCityTour, 'isStateLoaded:', isStateLoaded)
+    if (shouldShowCityTour && isStateLoaded) {
+      // Ждем отрисовки всех компонентов, особенно кнопки города
+      const checkElementsAndStartCityTour = () => {
+        const characterElement = document.querySelector('[data-tour="character"]')
+        const cityButtonElement = document.querySelector('[data-tour="city-button"]')
+
+        // Проверяем не только наличие, но и видимость элементов
+        const isElementVisible = (element: Element | null) => {
+          if (!element) return false
+          const rect = element.getBoundingClientRect()
+          return rect.width > 0 && rect.height > 0
+        }
+
+        console.log('City tour elements check:', {
+          characterElement: !!characterElement,
+          cityButtonElement: !!cityButtonElement,
+          cityButtonVisible: cityButtonElement ? isElementVisible(cityButtonElement) : false
+        })
+
+        if (characterElement && cityButtonElement &&
+            isElementVisible(characterElement) && isElementVisible(cityButtonElement)) {
+          setRunCityTour(true)
+          setCityTourActive(true)
+        } else {
+          // Если элементы еще не готовы, проверяем снова через 100мс
+          setTimeout(checkElementsAndStartCityTour, 100)
+        }
+      }
+
+      // Проверяем загрузку изображения маскота
+      const checkMaskotImageLoadedForCityTour = () => {
+        const maskotImage = document.querySelector('[data-tour="character"] img') as HTMLImageElement
+        if (maskotImage && maskotImage.complete && maskotImage.naturalHeight !== 0) {
+          // Изображение загружено, запускаем проверку элементов
+          setTimeout(checkElementsAndStartCityTour, 100)
+        } else if (maskotImage) {
+          // Изображение еще загружается, ждем события load
+          maskotImage.addEventListener('load', () => {
+            setTimeout(checkElementsAndStartCityTour, 100)
+          }, { once: true })
+          // Также устанавливаем таймаут на случай проблем с загрузкой
+          setTimeout(checkElementsAndStartCityTour, 2000)
+        } else {
+          // Изображение еще не найдено, ждем
+          setTimeout(checkMaskotImageLoadedForCityTour, 100)
+        }
+      }
+
+      // Начинаем проверку через 200мс после монтирования
+      setTimeout(checkMaskotImageLoadedForCityTour, 200)
+    }
+  }, [shouldShowCityTour, isStateLoaded]) // Зависим от shouldShowCityTour и isStateLoaded
+
   const handleTourCallback = (data: CallBackProps) => {
     const { status, action, index, type } = data
 
@@ -172,6 +267,29 @@ export const MainPage: FC = () => {
     }
   }
 
+  const handleCityTourCallback = (data: CallBackProps) => {
+    const { status, action, index, type } = data
+
+    // Логируем для отладки
+    console.log('City tour callback:', { status, action, index, type })
+
+    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status as any)) {
+      setRunCityTour(false)
+      setCityTourActive(false)
+      setCityTourCompleted()
+    }
+
+    // Если на последнем шаге кликнули на spotlight элемент (кнопка "Город")
+    if (index === 1 && (type === EVENTS.STEP_AFTER || type === EVENTS.TARGET_NOT_FOUND)) {
+      console.log('Клик по spotlight на кнопке "Город" в BottomNavigation, завершаем тур и переходим')
+      setRunCityTour(false)
+      setCityTourActive(false)
+      setCityTourCompleted()
+      // Переходим в город
+      navigate('/city')
+    }
+  }
+
   // Обработчик клика на кнопку "Работать" во время тура
   const handleWorkClickDuringTour = () => {
     console.log('handleWorkClickDuringTour вызван, runTour:', runTour)
@@ -185,6 +303,7 @@ export const MainPage: FC = () => {
     console.log('Переходим на /work')
     navigate('/work')
   }
+
 
   // Mock данные игрока - мемоизируем чтобы избежать ненужных перерисовок
   const playerStats: PlayerStats = useMemo(() => ({
@@ -209,8 +328,7 @@ export const MainPage: FC = () => {
     onNotificationsClick: () => navigate('/news'),
     onLeaderboardClick: () => navigate('/leaderboard'),
     onFriendsClick: () => console.log('Friends clicked'),
-    onWorkClick: handleWorkClickDuringTour,
-    onCityClick: () => console.log('City clicked')
+    onWorkClick: handleWorkClickDuringTour
   }), [navigate, handleWorkClickDuringTour])
 
   return (
@@ -288,6 +406,73 @@ export const MainPage: FC = () => {
         }}
       />
 
+      <Joyride
+        steps={cityTourSteps}
+        run={runCityTour}
+        callback={handleCityTourCallback}
+        continuous
+        showSkipButton={false}
+        showProgress={false}
+        hideCloseButton
+        disableOverlayClose
+        disableCloseOnEsc
+        spotlightClicks
+        styles={{
+          options: {
+            primaryColor: '#ffd700',
+            backgroundColor: '#060698',
+            textColor: '#ffffff',
+            arrowColor: '#ffd700',
+            overlayColor: 'rgba(0, 0, 0, 0.8)',
+            spotlightShadow: '0 0 25px rgba(255, 215, 0, 1)',
+          },
+          spotlight: {
+            borderRadius: '12px',
+            border: '3px solid #ffd700',
+            boxShadow: '0 0 25px rgba(255, 215, 0, 0.8), inset 0 0 25px rgba(255, 215, 0, 0.2)',
+          },
+          tooltip: {
+            backgroundColor: '#060698',
+            color: '#ffffff',
+            fontSize: '14px',
+            borderRadius: '12px',
+            padding: '16px',
+            border: '2px solid #ffd700',
+            boxShadow: '0 8px 25px rgba(255, 215, 0, 0.3)',
+            maxWidth: '350px',
+          },
+          tooltipContent: {
+            color: '#ffffff',
+            padding: '0',
+          },
+          buttonNext: {
+            backgroundColor: '#ffd700',
+            color: '#060698',
+            borderRadius: '8px',
+            padding: '8px 16px',
+            fontWeight: '600',
+            border: 'none',
+            fontSize: '14px',
+          },
+          buttonBack: {
+            color: '#ffd700',
+            marginRight: '8px',
+            border: '2px solid #ffd700',
+            borderRadius: '8px',
+            padding: '8px 16px',
+            backgroundColor: 'transparent',
+            fontWeight: '600',
+            fontSize: '14px',
+          },
+        }}
+        locale={{
+          back: 'Назад',
+          close: 'Закрыть',
+          last: 'Понятно!',
+          next: 'Далее',
+        }}
+      />
+
       <div className="common-page-background">
       {/* Анимированный фон с частицами */}
       <ParticleBackground
@@ -312,7 +497,6 @@ export const MainPage: FC = () => {
           onLeaderboardClick={gameActions.onLeaderboardClick}
           onFriendsClick={gameActions.onFriendsClick}
           onWorkClick={gameActions.onWorkClick}
-          onCityClick={gameActions.onCityClick}
         />
       </div>
     </div>

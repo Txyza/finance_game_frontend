@@ -1,6 +1,6 @@
 import { FC, ReactNode, useState, useCallback, useEffect } from 'react'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
-import { useUserContext } from '@shared/context'
+import { useUserContext, useTourContext } from '@shared/context'
 import { calculateLevel } from '@shared/utils/levelCalculator'
 import { BottomNavigation, TabType } from '@pages/main/ui/BottomNavigation'
 
@@ -12,6 +12,7 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   const navigate = useNavigate()
   const location = useLocation()
   const { user } = useUserContext()
+  const { isCityTourActive, setCityTourActive, setCityTourCompleted } = useTourContext()
   const [activeTab, setActiveTab] = useState<TabType>('character')
 
   const currentLevel = user ? calculateLevel(user.experience) : 1
@@ -22,6 +23,8 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
       setActiveTab('shop')
     } else if (location.pathname === '/analytics') {
       setActiveTab('analytics')
+    } else if (location.pathname === '/accounts') {
+      setActiveTab('accounts')
     } else if (location.pathname === '/' || location.pathname === '/tasks' || location.pathname === '/news' || location.pathname === '/leaderboard') {
       setActiveTab('character')
     }
@@ -34,13 +37,24 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
       navigate('/shop')
     } else if (tab === 'analytics') {
       navigate('/analytics')
+    } else if (tab === 'accounts') {
+      navigate('/accounts')
     } else if (tab === 'character') {
       navigate('/')
     }
   }, [navigate])
 
   const handleCityClick = useCallback(() => {
+    // Если активен тур города, завершаем его
+    if (isCityTourActive) {
+      setCityTourActive(false)
+      setCityTourCompleted()
+    }
     navigate('/city')
+  }, [navigate, isCityTourActive, setCityTourActive, setCityTourCompleted])
+
+  const handleAccountsClick = useCallback(() => {
+    navigate('/accounts')
   }, [navigate])
 
   // Не показываем навигацию на определенных страницах
@@ -54,6 +68,7 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
           activeTab={activeTab}
           onTabChange={handleTabChange}
           onCityClick={handleCityClick}
+          onAccountsClick={handleAccountsClick}
           currentLevel={currentLevel}
         />
       )}

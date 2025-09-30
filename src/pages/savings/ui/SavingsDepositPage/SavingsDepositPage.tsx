@@ -9,7 +9,7 @@ export const SavingsDepositPage: FC = () => {
   const { accountId } = useParams<{ accountId: string }>()
   const navigate = useNavigate()
   const { user } = useUser()
-  const { deposit, isLoading, error: apiError } = useSavings()
+  const { getAccount, deposit, isLoading, error: apiError } = useSavings()
   const [account, setAccount] = useState<SavingsAccount | null>(null)
   const [amount, setAmount] = useState<string>('')
   const [error, setError] = useState<string>('')
@@ -23,48 +23,21 @@ export const SavingsDepositPage: FC = () => {
 
       setLoadingAccount(true)
 
-      // Мок данные для демонстрации (на основе ID)
-      const mockAccountsData: { [key: string]: SavingsAccount } = {
-        'acc_12345678': {
-          id: 'acc_12345678',
-          type: 'basic',
-          name: 'Накопительный счет',
-          balance: 125000,
-          interest_rate: 7.5,
-          created_at: '2024-01-15T10:30:00Z',
-          status: 'active'
-        },
-        'acc_87654321': {
-          id: 'acc_87654321',
-          type: 'premium',
-          name: 'Премиум',
-          balance: 750000,
-          interest_rate: 7.0,
-          created_at: '2024-02-20T14:45:00Z',
-          status: 'active'
-        },
-        'acc_11223344': {
-          id: 'acc_11223344',
-          type: 'basic',
-          name: 'Накопительный счет',
-          balance: 45000,
-          interest_rate: 7.5,
-          created_at: '2024-03-10T09:15:00Z',
-          status: 'active'
-        }
-      }
-
-      setTimeout(() => {
-        const accountData = mockAccountsData[accountId]
+      try {
+        const accountData = await getAccount(accountId)
         if (accountData) {
           setAccount(accountData)
         }
+      } catch (error) {
+        console.error('Ошибка загрузки счета:', error)
+        setAccount(null)
+      } finally {
         setLoadingAccount(false)
-      }, 500)
+      }
     }
 
     loadAccountData()
-  }, [accountId])
+  }, [accountId, getAccount])
 
   const quickAmounts = [10000, 25000, 50000, 100000].filter(amt => amt <= userBalance)
 
@@ -72,8 +45,8 @@ export const SavingsDepositPage: FC = () => {
     return new Intl.NumberFormat('ru-RU').format(value)
   }
 
-  const getAccountTypeName = (type: string) => {
-    return type === 'premium' ? 'Премиум' : 'Накопительный счет'
+  const getAccountTypeName = () => {
+    return 'Накопительный счет'
   }
 
   const handleAmountChange = (value: string) => {
@@ -108,12 +81,18 @@ export const SavingsDepositPage: FC = () => {
       return
     }
 
-    // Здесь будет API вызов для пополнения
-    // const result = await deposit(accountId!, numericAmount)
-
-    // Для демонстрации - просто переходим обратно
-    alert(`Пополнение на ${formatAmount(numericAmount)} ₽ выполнено успешно!`)
-    navigate(`/savings/account/${accountId}`)
+    try {
+      const result = await deposit(accountId!, numericAmount)
+      if (result) {
+        // Операция успешна - перенаправляем на страницу счета
+        navigate(`/savings/account/${accountId}`)
+      } else {
+        setError('Ошибка при пополнении счета')
+      }
+    } catch (error) {
+      console.error('Ошибка пополнения:', error)
+      setError('Ошибка при пополнении счета')
+    }
   }
 
   if (loadingAccount) {
@@ -166,13 +145,13 @@ export const SavingsDepositPage: FC = () => {
             <h1 className={styles.title}>Пополнение счета</h1>
           </div>
 
-          <div className={`${styles.formCard} ${account.type === 'premium' ? styles.premium : ''}`}>
+          <div className={styles.formCard}>
             <div className={styles.accountInfo}>
               <h2 className={styles.accountName}>
-                {getAccountTypeName(account.type)}
+                {getAccountTypeName()}
               </h2>
               <p className={styles.accountNumber}>
-                №{account.id.slice(-8).toUpperCase()}
+                №{account.account_number}
               </p>
             </div>
 

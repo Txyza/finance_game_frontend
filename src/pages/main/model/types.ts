@@ -15,7 +15,6 @@ export interface GameActions {
   onLeaderboardClick: () => void
   onFriendsClick: () => void
   onWorkClick: () => void
-  onCityClick: () => void
 }
 
 export type NavigationTab = 'analytics' | 'character' | 'rating'

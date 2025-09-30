@@ -31,6 +31,7 @@ export const DepositsCalculatorPage: FC = () => {
 
   const keyRate = parseFloat(user?.key_rate || '8.5')
   const depositTypeId = searchParams.get('type') || 'save'
+  const userBalance = parseFloat(user?.debet_money || '0')
 
   const depositTypes: Record<string, DepositType> = useMemo(() => ({
     save: {
@@ -70,6 +71,16 @@ export const DepositsCalculatorPage: FC = () => {
   const selectedDeposit = depositTypes[depositTypeId]
 
   const availableTerms = Object.keys(selectedDeposit?.rates || {}).map(Number).sort((a, b) => a - b)
+
+  const quickAmounts = useMemo(() => {
+    const amounts = []
+    if (userBalance >= 25000) amounts.push(25000)
+    if (userBalance >= 50000) amounts.push(50000)
+    if (userBalance >= 100000) amounts.push(100000)
+    if (userBalance >= 500000) amounts.push(500000)
+    if (userBalance >= 1000000) amounts.push(1000000)
+    return amounts
+  }, [userBalance])
 
   useEffect(() => {
     if (availableTerms.length > 0 && !availableTerms.includes(term)) {
@@ -140,6 +151,10 @@ export const DepositsCalculatorPage: FC = () => {
     if (numericValue === '' || parseInt(numericValue) <= selectedDeposit.maxAmount) {
       setAmount(numericValue)
     }
+  }
+
+  const handleQuickAmountSelect = (value: number) => {
+    setAmount(value.toString())
   }
 
   const handleContinue = () => {
@@ -226,6 +241,26 @@ export const DepositsCalculatorPage: FC = () => {
                   Минимальная сумма: {formatAmount(selectedDeposit.minAmount)} ₽
                 </p>
               </div>
+
+              {quickAmounts.length > 0 && (
+                <div className={styles.quickAmountsSection}>
+                  <label className={styles.label}>Быстрый выбор суммы</label>
+                  <div className={styles.quickAmounts}>
+                    {quickAmounts.map((quickAmount) => (
+                      <button
+                        key={quickAmount}
+                        onClick={() => handleQuickAmountSelect(quickAmount)}
+                        className={`${styles.quickAmount} ${
+                          amount === quickAmount.toString() ? styles.selected : ''
+                        }`}
+                        type="button"
+                      >
+                        {formatAmount(quickAmount)} ₽
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className={styles.termSelect}>
                 <label className={styles.label}>Срок вклада</label>

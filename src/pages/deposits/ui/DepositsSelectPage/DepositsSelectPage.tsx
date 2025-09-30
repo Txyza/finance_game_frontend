@@ -99,7 +99,7 @@ export const DepositsSelectPage: FC = () => {
             <Button
               variant="outline"
               size="small"
-              onClick={() => navigate('/deposits')}
+              onClick={() => navigate('/city/district/safe')}
             >
               ← Назад
             </Button>

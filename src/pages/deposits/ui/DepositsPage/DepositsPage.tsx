@@ -1,74 +1,32 @@
 import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ParticleBackground, GameHeaderContainer, Button } from '@shared/ui'
-import { useUser } from '@shared/hooks'
+import { useUser, useDeposits } from '@shared/hooks'
+import { DepositListItem } from '@shared/api'
 import styles from './DepositsPage.module.css'
-
-interface Deposit {
-  id: string
-  type: 'save' | 'plus'
-  name: string
-  balance: number
-  maturity_date: string
-  interest_rate: number
-  created_at: string
-  status: 'active' | 'closed'
-}
 
 export const DepositsPage: FC = () => {
   const navigate = useNavigate()
   const { user } = useUser()
-  const [deposits, setDeposits] = useState<Deposit[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const { getDeposits, isLoading, error } = useDeposits()
+  const [deposits, setDeposits] = useState<DepositListItem[]>([])
 
   const keyRate = parseFloat(user?.key_rate || '8.5')
   const maxDepositRate = keyRate - 2
 
   useEffect(() => {
     const loadDeposits = async () => {
-      // Мок данные для демонстрации
-      const mockDeposits: Deposit[] = [
-        {
-          id: 'dep_12345678',
-          type: 'save',
-          name: 'Вклад «Копить»',
-          balance: 150000,
-          maturity_date: '2025-04-15T00:00:00Z',
-          interest_rate: 7.7,
-          created_at: '2024-01-15T10:30:00Z',
-          status: 'active'
-        },
-        {
-          id: 'dep_87654321',
-          type: 'plus',
-          name: 'Вклад «В плюсе»',
-          balance: 250000,
-          maturity_date: '2025-05-20T00:00:00Z',
-          interest_rate: 7.8,
-          created_at: '2024-02-20T14:45:00Z',
-          status: 'active'
-        },
-        {
-          id: 'dep_11223344',
-          type: 'save',
-          name: 'Вклад «Копить»',
-          balance: 75000,
-          maturity_date: '2025-03-10T00:00:00Z',
-          interest_rate: 8.0,
-          created_at: '2024-03-10T09:15:00Z',
-          status: 'active'
-        }
-      ]
-
-      // Имитируем загрузку
-      setTimeout(() => {
-        setDeposits(mockDeposits)
-        setIsLoading(false)
-      }, 1000)
+      try {
+        const depositsData = await getDeposits()
+        setDeposits(depositsData)
+      } catch (error) {
+        console.error('Failed to load deposits:', error)
+        setDeposits([])
+      }
     }
 
     loadDeposits()
-  }, [])
+  }, [getDeposits])
 
   const handleOpenDeposit = () => {
     navigate('/deposits/select')
@@ -90,13 +48,6 @@ export const DepositsPage: FC = () => {
     })
   }
 
-  const getDaysRemaining = (maturityDate: string) => {
-    const now = new Date()
-    const endDate = new Date(maturityDate)
-    const diffTime = endDate.getTime() - now.getTime()
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    return Math.max(0, diffDays)
-  }
 
   const getDaysRemainingText = (days: number) => {
     if (days === 0) return 'Срок истек'
@@ -111,6 +62,17 @@ export const DepositsPage: FC = () => {
     return `${days} дней`
   }
 
+  const getDepositDisplayName = (depositName: string) => {
+    switch (depositName) {
+      case 'kopit':
+        return 'Вклад «Копить»'
+      case 'v_pluse':
+        return 'Вклад «В Плюсе»'
+      default:
+        return depositName
+    }
+  }
+
   return (
     <div className="common-page-background">
       <ParticleBackground />
@@ -118,11 +80,31 @@ export const DepositsPage: FC = () => {
 
       <div className={styles.content}>
         <div className={styles.container}>
-          <h1 className={styles.title}>Вклады</h1>
+          <div className={styles.header}>
+            <Button
+              variant="outline"
+              size="small"
+              onClick={() => navigate('/city/district/safe')}
+            >
+              ← Назад
+            </Button>
+            <h1 className={styles.title}>Вклады</h1>
+          </div>
 
           {isLoading ? (
             <div className={styles.loading}>
               <p>Загрузка вкладов...</p>
+            </div>
+          ) : error ? (
+            <div className={styles.error}>
+              <h2>Ошибка загрузки</h2>
+              <p>{error}</p>
+              <Button
+                variant="primary"
+                onClick={() => window.location.reload()}
+              >
+                Повторить
+              </Button>
             </div>
           ) : deposits.length === 0 ? (
             <div className={styles.welcomeSection}>
@@ -170,10 +152,10 @@ export const DepositsPage: FC = () => {
                   >
                     <div className={styles.depositHeader}>
                       <h3 className={styles.depositName}>
-                        {deposit.name}
+                        {getDepositDisplayName(deposit.deposit_name)}
                       </h3>
                       <span className={styles.depositNumber}>
-                        №{deposit.id.slice(-8).toUpperCase()}
+                        №{deposit.account_number}
                       </span>
                     </div>
 
@@ -188,14 +170,14 @@ export const DepositsPage: FC = () => {
                       <div className={styles.depositRate}>
                         <span className={styles.rateLabel}>Ставка</span>
                         <span className={styles.rateValue}>
-                          {deposit.interest_rate.toFixed(1)}%
+                          {deposit.current_interest_rate.toFixed(1)}%
                         </span>
                       </div>
 
                       <div className={styles.depositMaturity}>
                         <span className={styles.maturityLabel}>Осталось</span>
                         <span className={styles.maturityDate}>
-                          {getDaysRemainingText(getDaysRemaining(deposit.maturity_date))}
+                          {getDaysRemainingText(deposit.days_remaining)}
                         </span>
                       </div>
                     </div>

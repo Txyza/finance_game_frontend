@@ -9,6 +9,7 @@ interface DistrictProps {
   isAccessible: boolean
   onClick: () => void
   onHover: (districtId: DistrictId | null) => void
+  dataTour?: string
 }
 
 export const District: FC<DistrictProps> = ({
@@ -16,7 +17,8 @@ export const District: FC<DistrictProps> = ({
   isHovered,
   isAccessible,
   onClick,
-  onHover
+  onHover,
+  dataTour
 }) => {
   return (
     <g>
@@ -56,6 +58,7 @@ export const District: FC<DistrictProps> = ({
         onMouseLeave={() => onHover(null)}
         onTouchStart={() => onHover(district.id)}
         onTouchEnd={() => onHover(null)}
+        data-tour={dataTour}
         style={{
           cursor: isAccessible ? 'pointer' : 'not-allowed',
           transition: 'all 0.3s ease-out',

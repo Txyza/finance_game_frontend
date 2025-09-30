@@ -85,7 +85,7 @@ export const SavingsSelectPage: FC = () => {
             <Button
               variant="outline"
               size="small"
-              onClick={() => navigate('/savings')}
+              onClick={() => navigate('/city/district/safe')}
             >
               ← Назад
             </Button>

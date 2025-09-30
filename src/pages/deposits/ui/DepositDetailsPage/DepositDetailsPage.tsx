@@ -1,91 +1,45 @@
 import { FC, useState, useEffect, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ParticleBackground, GameHeaderContainer, Button } from '@shared/ui'
-import { useUser } from '@shared/hooks'
+import { useUser, useDeposits } from '@shared/hooks'
+import { DepositDetail, DepositTransaction, depositsApi } from '@shared/api'
 import styles from './DepositDetailsPage.module.css'
-
-interface Deposit {
-  id: string
-  type: 'save' | 'plus'
-  name: string
-  balance: number
-  initial_amount: number
-  maturity_date: string
-  interest_rate: number
-  created_at: string
-  status: 'active' | 'closed'
-  payment_method: 'endOfTerm' | 'monthlyCapitalized' | 'monthlyToAccount'
-  term_days: number
-  total_income: number
-}
-
-type PaymentMethod = 'endOfTerm' | 'monthlyCapitalized' | 'monthlyToAccount'
 
 export const DepositDetailsPage: FC = () => {
   const navigate = useNavigate()
   const { depositId } = useParams<{ depositId: string }>()
   const { user } = useUser()
-  const [deposit, setDeposit] = useState<Deposit | null>(null)
+  const { getDeposit, closeDeposit, isLoading: depositsLoading } = useDeposits()
+  const [deposit, setDeposit] = useState<DepositDetail | null>(null)
+  const [transactions, setTransactions] = useState<DepositTransaction[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showCloseConfirm, setShowCloseConfirm] = useState(false)
 
   useEffect(() => {
-    const loadDeposit = async () => {
-      // Мок данные для демонстрации
-      const mockDeposits: Record<string, Deposit> = {
-        'dep_12345678': {
-          id: 'dep_12345678',
-          type: 'save',
-          name: 'Вклад «Копить»',
-          balance: 150000,
-          initial_amount: 150000,
-          maturity_date: '2025-04-15T00:00:00Z',
-          interest_rate: 7.7,
-          created_at: '2024-01-15T10:30:00Z',
-          status: 'active',
-          payment_method: 'endOfTerm',
-          term_days: 90,
-          total_income: 2850
-        },
-        'dep_87654321': {
-          id: 'dep_87654321',
-          type: 'plus',
-          name: 'Вклад «В плюсе»',
-          balance: 250000,
-          initial_amount: 250000,
-          maturity_date: '2025-05-20T00:00:00Z',
-          interest_rate: 7.8,
-          created_at: '2024-02-20T14:45:00Z',
-          status: 'active',
-          payment_method: 'monthlyCapitalized',
-          term_days: 180,
-          total_income: 9750
-        },
-        'dep_11223344': {
-          id: 'dep_11223344',
-          type: 'save',
-          name: 'Вклад «Копить»',
-          balance: 75000,
-          initial_amount: 75000,
-          maturity_date: '2025-03-10T00:00:00Z',
-          interest_rate: 8.0,
-          created_at: '2024-03-10T09:15:00Z',
-          status: 'active',
-          payment_method: 'monthlyToAccount',
-          term_days: 60,
-          total_income: 1000
-        }
-      }
+    const loadDepositData = async () => {
+      if (!depositId) return
 
-      setTimeout(() => {
-        const foundDeposit = depositId ? mockDeposits[depositId] : null
-        setDeposit(foundDeposit)
+      setIsLoading(true)
+
+      try {
+        // Load deposit details from API
+        const depositData = await getDeposit(depositId)
+        setDeposit(depositData)
+
+        // Load transactions from API
+        const transactionsData = await depositsApi.getTransactions(depositId)
+        setTransactions(transactionsData.transactions)
+      } catch (error) {
+        console.error('Error loading deposit data:', error)
+        setDeposit(null)
+        setTransactions([])
+      } finally {
         setIsLoading(false)
-      }, 800)
+      }
     }
 
-    loadDeposit()
-  }, [depositId])
+    loadDepositData()
+  }, [depositId, getDeposit])
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ru-RU').format(amount)
@@ -99,14 +53,27 @@ export const DepositDetailsPage: FC = () => {
     })
   }
 
-  const getPaymentMethodName = (method: PaymentMethod) => {
+  const getDepositDisplayName = (depositName: string) => {
+    switch (depositName) {
+      case 'kopit':
+        return 'Вклад «Копить»'
+      case 'v_pluse':
+        return 'Вклад «В Плюсе»'
+      default:
+        return depositName
+    }
+  }
+
+  const getPaymentMethodName = (method: string) => {
     switch (method) {
-      case 'endOfTerm':
+      case 'at_end':
         return 'В конце срока'
-      case 'monthlyCapitalized':
+      case 'monthly_capitalized':
         return 'Ежемесячно с капитализацией'
-      case 'monthlyToAccount':
+      case 'monthly_to_account':
         return 'Ежемесячно на счет'
+      default:
+        return method
     }
   }
 
@@ -118,18 +85,14 @@ export const DepositDetailsPage: FC = () => {
 
   const getRemainingDays = useMemo(() => {
     if (!deposit) return 0
-    const now = new Date()
-    const maturityDate = new Date(deposit.maturity_date)
-    const diffTime = maturityDate.getTime() - now.getTime()
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    return Math.max(0, diffDays)
+    return deposit.days_remaining
   }, [deposit])
 
   const getProgressPercentage = useMemo(() => {
     if (!deposit) return 0
     const now = new Date()
-    const startDate = new Date(deposit.created_at)
-    const maturityDate = new Date(deposit.maturity_date)
+    const startDate = new Date(deposit.opened_at)
+    const maturityDate = new Date(deposit.expires_at)
 
     const totalDuration = maturityDate.getTime() - startDate.getTime()
     const elapsed = now.getTime() - startDate.getTime()
@@ -139,8 +102,15 @@ export const DepositDetailsPage: FC = () => {
   }, [deposit])
 
   const handleCloseDeposit = async () => {
-    setShowCloseConfirm(false)
-    navigate('/deposits')
+    if (!depositId) return
+
+    try {
+      await closeDeposit(depositId)
+      navigate('/deposits')
+    } catch (error) {
+      console.error('Error closing deposit:', error)
+      setShowCloseConfirm(false)
+    }
   }
 
   const handleBack = () => {
@@ -195,15 +165,15 @@ export const DepositDetailsPage: FC = () => {
               size="small"
               onClick={handleBack}
             >
-              ← Вклады
+              ← Назад
             </Button>
 
-            <h1 className={styles.title}>{deposit.name}</h1>
+            <h1 className={styles.title}>{getDepositDisplayName(deposit.deposit_name)}</h1>
           </div>
 
           <div className={styles.depositInfo}>
             <div className={styles.depositNumber}>
-              Вклад № {deposit.id.slice(-8).toUpperCase()}
+              Вклад № {deposit.account_number}
             </div>
 
             <div className={styles.balanceSection}>
@@ -226,7 +196,7 @@ export const DepositDetailsPage: FC = () => {
               </div>
               <div className={styles.progressInfo}>
                 <span>Осталось {getRemainingDays} дней</span>
-                <span>до {formatDate(deposit.maturity_date)}</span>
+                <span>до {formatDate(deposit.expires_at)}</span>
               </div>
             </div>
           </div>
@@ -236,55 +206,63 @@ export const DepositDetailsPage: FC = () => {
               <h3 className={styles.cardTitle}>Условия вклада</h3>
               <div className={styles.detailsList}>
                 <div className={styles.detailItem}>
-                  <span className={styles.detailLabel}>Первоначальная сумма</span>
-                  <span className={styles.detailValue}>{formatAmount(deposit.initial_amount)} ₽</span>
-                </div>
-
-                <div className={styles.detailItem}>
                   <span className={styles.detailLabel}>Процентная ставка</span>
-                  <span className={styles.detailValue}>{deposit.interest_rate.toFixed(1)}% годовых</span>
-                </div>
-
-                <div className={styles.detailItem}>
-                  <span className={styles.detailLabel}>Срок размещения</span>
-                  <span className={styles.detailValue}>{getTermText(deposit.term_days)}</span>
+                  <span className={styles.detailValue}>{deposit.current_interest_rate.toFixed(1)}% годовых</span>
                 </div>
 
                 <div className={styles.detailItem}>
                   <span className={styles.detailLabel}>Выплата процентов</span>
                   <span className={styles.detailValue}>
-                    {getPaymentMethodName(deposit.payment_method)}
+                    {getPaymentMethodName(deposit.interest_payment_method)}
                   </span>
                 </div>
 
                 <div className={styles.detailItem}>
                   <span className={styles.detailLabel}>Дата открытия</span>
                   <span className={styles.detailValue}>
-                    {formatDate(deposit.created_at)}
+                    {formatDate(deposit.opened_at)}
+                  </span>
+                </div>
+
+                <div className={styles.detailItem}>
+                  <span className={styles.detailLabel}>Дата погашения</span>
+                  <span className={styles.detailValue}>
+                    {formatDate(deposit.expires_at)}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className={styles.detailCard}>
-              <h3 className={styles.cardTitle}>Доходность</h3>
-              <div className={styles.incomeInfo}>
-                <div className={styles.incomeItem}>
-                  <span className={styles.incomeLabel}>Ожидаемый доход</span>
-                  <span className={styles.incomeValue}>
-                    +{formatAmount(deposit.total_income)} ₽
-                  </span>
-                </div>
-
-                <div className={styles.incomeItem}>
-                  <span className={styles.incomeLabel}>К получению в итоге</span>
-                  <span className={styles.totalValue}>
-                    {formatAmount(deposit.balance + deposit.total_income)} ₽
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
+
+          {transactions.length > 0 && (
+            <div className={styles.transactionsSection}>
+              <h3 className={styles.sectionTitle}>История операций</h3>
+              <div className={styles.transactionsList}>
+                {transactions.map((transaction) => (
+                  <div key={transaction.id} className={styles.transactionItem}>
+                    <div className={styles.transactionInfo}>
+                      <div className={styles.transactionName}>
+                        {transaction.name}
+                      </div>
+                      <div className={styles.transactionDate}>
+                        {new Date(transaction.datetime_start).toLocaleDateString('ru-RU', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </div>
+                    </div>
+                    <div className={styles.transactionAmount}>
+                      {formatAmount(transaction.amount)} ₽
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className={styles.actionsSection}>
             <div className={styles.warning}>
@@ -311,7 +289,7 @@ export const DepositDetailsPage: FC = () => {
                 <h3 className={styles.modalTitle}>Подтвердите закрытие</h3>
                 <p className={styles.modalText}>
                   Вы действительно хотите закрыть вклад досрочно?
-                  Вы получите только первоначальную сумму {formatAmount(deposit.initial_amount)} ₽.
+                  При досрочном закрытии могут применяться штрафы согласно условиям договора.
                 </p>
 
                 <div className={styles.modalActions}>

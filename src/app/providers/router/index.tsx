@@ -10,8 +10,9 @@ import { TasksPage } from '@pages/tasks/ui/TasksPage'
 import { NewsPage } from '@pages/news/ui/NewsPage'
 import { ShopPage } from '@pages/shop/ui/ShopPage'
 import { CityPage, DistrictPage } from '@pages/city'
-import { SavingsPage, SavingsSelectPage, SavingsCreatePage, SavingsSuccessPage, SavingsAccountPage, SavingsDepositPage, SavingsWithdrawPage } from '@pages/savings'
+import { SavingsPage, SavingsSelectPage, SavingsCreatePage, SavingsSuccessPage, SavingsAccountPage, SavingsAccountSuccessPage, SavingsDepositPage, SavingsWithdrawPage } from '@pages/savings'
 import { DepositsPage, DepositsSelectPage, DepositsCalculatorPage, DepositsCreatePage, DepositsSuccessPage, DepositDetailsPage } from '@pages/deposits'
+import { AccountsPage } from '@pages/accounts'
 import { OnboardingPage } from '@pages/onboarding'
 import { NotFoundPage } from '@pages/NotFound'
 import { AuthManager } from '@shared/components'
@@ -31,6 +32,7 @@ const AppContent = () => {
             <Route path="/tasks" element={<TasksPage />} />
             <Route path="/news" element={<NewsPage />} />
             <Route path="/shop" element={<ShopPage />} />
+            <Route path="/accounts" element={<AccountsPage />} />
             <Route path="/city" element={<CityPage />} />
             <Route path="/city/district/:districtId" element={<DistrictPage />} />
             <Route path="/savings" element={<SavingsPage />} />
@@ -38,6 +40,7 @@ const AppContent = () => {
             <Route path="/savings/create" element={<SavingsCreatePage />} />
             <Route path="/savings/success" element={<SavingsSuccessPage />} />
             <Route path="/savings/account/:accountId" element={<SavingsAccountPage />} />
+            <Route path="/savings/account-success" element={<SavingsAccountSuccessPage />} />
             <Route path="/savings/deposit/:accountId" element={<SavingsDepositPage />} />
             <Route path="/savings/withdraw/:accountId" element={<SavingsWithdrawPage />} />
             <Route path="/deposits" element={<DepositsPage />} />

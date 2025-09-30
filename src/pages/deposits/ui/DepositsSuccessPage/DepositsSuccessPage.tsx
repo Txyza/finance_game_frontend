@@ -11,6 +11,7 @@ export const DepositsSuccessPage: FC = () => {
 
   const depositData = useMemo(() => {
     const id = searchParams.get('id')
+    const account_number = searchParams.get('account_number')
     const type = searchParams.get('type')
     const amount = searchParams.get('amount')
     const term = searchParams.get('term')
@@ -19,12 +20,13 @@ export const DepositsSuccessPage: FC = () => {
     const income = searchParams.get('income')
     const total = searchParams.get('total')
 
-    if (!id || !type || !amount || !term || !method || !rate || !income || !total) {
+    if (!id || !account_number || !type || !amount || !term || !method || !rate || !income || !total) {
       return null
     }
 
     return {
       id,
+      account_number,
       type,
       amount: parseInt(amount),
       term: parseInt(term),
@@ -135,7 +137,7 @@ export const DepositsSuccessPage: FC = () => {
               <div className={styles.summaryGrid}>
                 <div className={styles.summaryItem}>
                   <span className={styles.summaryLabel}>Номер вклада</span>
-                  <span className={styles.summaryValue}>№ {depositData.id}</span>
+                  <span className={styles.summaryValue}>№ {depositData.account_number}</span>
                 </div>
 
                 <div className={styles.summaryItem}>

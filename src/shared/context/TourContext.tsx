@@ -5,20 +5,34 @@ import { calculateLevel } from '@shared/utils/levelCalculator'
 interface TourState {
   mainPageVisited: boolean
   workPageVisited: boolean
+  cityPageVisited: boolean
   completedMainTour: boolean
   completedWorkTour: boolean
+  completedCityTour: boolean
+  completedCityFirstVisitTour: boolean
+  completedSafeDistrictFirstVisitTour: boolean
 }
 
 interface TourContextType {
   tourState: TourState
   shouldShowMainTour: boolean
   shouldShowWorkTour: boolean
+  shouldShowCityTour: boolean
+  shouldShowCityFirstVisitTour: boolean
+  shouldShowSafeDistrictFirstVisitTour: boolean
   setMainPageVisited: () => void
   setWorkPageVisited: () => void
+  setCityPageVisited: () => void
   setMainTourCompleted: () => void
   setWorkTourCompleted: () => void
+  setCityTourCompleted: () => void
+  setCityFirstVisitTourCompleted: () => void
+  setSafeDistrictFirstVisitTourCompleted: () => void
   setMainTourCompletedAndWorkPageVisited: () => void
+  isCityTourActive: boolean
+  setCityTourActive: (active: boolean) => void
   isNewUser: boolean
+  isLevel3User: boolean
   isStateLoaded: boolean
 }
 
@@ -35,12 +49,20 @@ export const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
   const [tourState, setTourState] = useState<TourState>({
     mainPageVisited: false,
     workPageVisited: false,
+    cityPageVisited: false,
     completedMainTour: false,
-    completedWorkTour: false
+    completedWorkTour: false,
+    completedCityTour: false,
+    completedCityFirstVisitTour: false,
+    completedSafeDistrictFirstVisitTour: false
   })
   const [isStateLoaded, setIsStateLoaded] = useState(false)
+  const [isCityTourActive, setIsCityTourActive] = useState(false)
 
   const isNewUser = user ? calculateLevel(user.experience) === 1 : false
+  const isLevel3User = user ? calculateLevel(user.experience) >= 3 : false
+  // Временно: если пользователь не новичок, но и не 3-го уровня, показываем тур города как тест
+  const shouldTestCityTour = user && !isNewUser && calculateLevel(user.experience) < 3
 
   // Загружаем состояние туров из localStorage
   useEffect(() => {
@@ -84,6 +106,11 @@ export const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
     saveTourState(newState)
   }
 
+  const setCityPageVisited = () => {
+    const newState = { ...tourState, cityPageVisited: true }
+    saveTourState(newState)
+  }
+
   const setMainTourCompleted = () => {
     const newState = { ...tourState, completedMainTour: true }
     saveTourState(newState)
@@ -94,6 +121,21 @@ export const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
     saveTourState(newState)
   }
 
+  const setCityTourCompleted = () => {
+    const newState = { ...tourState, completedCityTour: true }
+    saveTourState(newState)
+  }
+
+  const setCityFirstVisitTourCompleted = () => {
+    const newState = { ...tourState, completedCityFirstVisitTour: true }
+    saveTourState(newState)
+  }
+
+  const setSafeDistrictFirstVisitTourCompleted = () => {
+    const newState = { ...tourState, completedSafeDistrictFirstVisitTour: true }
+    saveTourState(newState)
+  }
+
   const setMainTourCompletedAndWorkPageVisited = () => {
     const newState = { ...tourState, completedMainTour: true, workPageVisited: true }
     saveTourState(newState)
@@ -101,6 +143,9 @@ export const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
 
   const shouldShowMainTour = isNewUser && isStateLoaded && !tourState.completedMainTour
   const shouldShowWorkTour = isNewUser && isStateLoaded && !tourState.completedWorkTour
+  const shouldShowCityTour = (isLevel3User || shouldTestCityTour) && isStateLoaded && !tourState.completedCityTour
+  const shouldShowCityFirstVisitTour = isLevel3User && isStateLoaded && !tourState.completedCityFirstVisitTour
+  const shouldShowSafeDistrictFirstVisitTour = isLevel3User && isStateLoaded && !tourState.completedSafeDistrictFirstVisitTour
 
   // Отладка для вычисления shouldShowWorkTour
   console.log('Вычисляем shouldShowWorkTour:', {
@@ -111,18 +156,40 @@ export const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
     tourState
   })
 
+  // Отладка для вычисления shouldShowCityTour
+  console.log('Вычисляем shouldShowCityTour:', {
+    isLevel3User,
+    shouldTestCityTour,
+    isStateLoaded,
+    completedCityTour: tourState.completedCityTour,
+    shouldShowCityTour,
+    userLevel: user ? calculateLevel(user.experience) : 'no user',
+    userExperience: user?.experience || 'no user',
+    tourState
+  })
+
   return (
     <TourContext.Provider
       value={{
         tourState,
         shouldShowMainTour,
         shouldShowWorkTour,
+        shouldShowCityTour,
+        shouldShowCityFirstVisitTour,
+        shouldShowSafeDistrictFirstVisitTour,
         setMainPageVisited,
         setWorkPageVisited,
+        setCityPageVisited,
         setMainTourCompleted,
         setWorkTourCompleted,
+        setCityTourCompleted,
+        setCityFirstVisitTourCompleted,
+        setSafeDistrictFirstVisitTourCompleted,
         setMainTourCompletedAndWorkPageVisited,
+        isCityTourActive,
+        setCityTourActive: setIsCityTourActive,
         isNewUser,
+        isLevel3User,
         isStateLoaded
       }}
     >

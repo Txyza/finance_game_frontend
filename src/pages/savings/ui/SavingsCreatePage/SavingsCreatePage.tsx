@@ -90,13 +90,13 @@ export const SavingsCreatePage: FC = () => {
       }
     }
 
-    const account = await createAccount({
-      type: accountType as 'basic' | 'premium',
-      initial_amount: numericAmount
+    const result = await createAccount({
+      account_type: accountType,
+      initial_deposit: numericAmount
     })
 
-    if (account) {
-      navigate(`/savings/success?type=${accountType}&amount=${amount}&accountId=${account.id}`)
+    if (result) {
+      navigate(`/savings/account-success?type=${accountType}&amount=${amount}&accountId=${result.account_id}`)
     }
   }
 

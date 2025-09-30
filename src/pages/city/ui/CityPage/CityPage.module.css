@@ -121,3 +121,67 @@
     font-size: var(--font-size-sm);
   }
 }
+
+/* Уведомление о заблокированном районе */
+.notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  animation: notificationAppear 0.3s ease-out;
+}
+
+@keyframes notificationAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.notificationContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  background: rgba(239, 68, 68, 0.95);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(239, 68, 68, 0.6);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3);
+  max-width: 400px;
+}
+
+.notificationIcon {
+  font-size: var(--font-size-xl);
+  flex-shrink: 0;
+}
+
+.notificationText {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Адаптивность для уведомления */
+@media (max-width: 480px) {
+  .notificationContent {
+    padding: var(--space-3) var(--space-4);
+    max-width: 90vw;
+    margin: 0 var(--space-2);
+  }
+
+  .notificationText {
+    font-size: var(--font-size-sm);
+  }
+
+  .notificationIcon {
+    font-size: var(--font-size-lg);
+  }
+}

@@ -8,7 +8,7 @@ import styles from './SavingsPage.module.css'
 export const SavingsPage: FC = () => {
   const navigate = useNavigate()
   const { user } = useUser()
-  const { getAccounts, isLoading } = useSavings()
+  const { getAccounts, isLoading, error } = useSavings()
   const [accounts, setAccounts] = useState<SavingsAccount[]>([])
 
   const keyRate = parseFloat(user?.key_rate || '8.5')
@@ -16,45 +16,14 @@ export const SavingsPage: FC = () => {
 
   useEffect(() => {
     const loadAccounts = async () => {
-      // Мок данные для демонстрации
-      const mockAccounts: SavingsAccount[] = [
-        {
-          id: 'acc_12345678',
-          type: 'basic',
-          name: 'Накопительный счет',
-          balance: 125000,
-          interest_rate: 7.5,
-          created_at: '2024-01-15T10:30:00Z',
-          status: 'active'
-        },
-        {
-          id: 'acc_87654321',
-          type: 'premium',
-          name: 'Премиум',
-          balance: 750000,
-          interest_rate: 7.0,
-          created_at: '2024-02-20T14:45:00Z',
-          status: 'active'
-        },
-        {
-          id: 'acc_11223344',
-          type: 'basic',
-          name: 'Накопительный счет',
-          balance: 45000,
-          interest_rate: 7.5,
-          created_at: '2024-03-10T09:15:00Z',
-          status: 'active'
-        }
-      ]
-
-      // Имитируем загрузку
-      setTimeout(() => {
-        setAccounts(mockAccounts)
-      }, 1000)
-
-      // Реальный API вызов (закомментирован)
-      // const accountsData = await getAccounts()
-      // setAccounts(accountsData)
+      try {
+        const accountsData = await getAccounts()
+        setAccounts(accountsData)
+      } catch (error) {
+        console.error('Failed to load accounts:', error)
+        // Fallback to empty array if API fails
+        setAccounts([])
+      }
     }
 
     loadAccounts()
@@ -72,8 +41,8 @@ export const SavingsPage: FC = () => {
     return new Intl.NumberFormat('ru-RU').format(amount)
   }
 
-  const getAccountTypeName = (type: string) => {
-    return type === 'premium' ? 'Премиум' : 'Накопительный счет'
+  const getAccountTypeName = () => {
+    return 'Накопительный счет'
   }
 
   return (
@@ -83,11 +52,31 @@ export const SavingsPage: FC = () => {
 
       <div className={styles.content}>
         <div className={styles.container}>
-          <h1 className={styles.title}>Накопительные счета</h1>
+          <div className={styles.header}>
+            <Button
+              variant="outline"
+              size="small"
+              onClick={() => navigate('/city/district/safe')}
+            >
+              ← Назад
+            </Button>
+            <h1 className={styles.title}>Накопительные счета</h1>
+          </div>
 
           {isLoading ? (
             <div className={styles.loading}>
               <p>Загрузка счетов...</p>
+            </div>
+          ) : error ? (
+            <div className={styles.error}>
+              <h2>Ошибка загрузки</h2>
+              <p>{error}</p>
+              <Button
+                variant="primary"
+                onClick={() => window.location.reload()}
+              >
+                Повторить
+              </Button>
             </div>
           ) : accounts.length === 0 ? (
             <div className={styles.welcomeSection}>
@@ -130,17 +119,15 @@ export const SavingsPage: FC = () => {
                 {accounts.map((account) => (
                   <div
                     key={account.id}
-                    className={`${styles.accountCard} ${
-                      account.type === 'premium' ? styles.premium : ''
-                    }`}
+                    className={styles.accountCard}
                     onClick={() => handleAccountClick(account.id)}
                   >
                     <div className={styles.accountHeader}>
                       <h3 className={styles.accountName}>
-                        {getAccountTypeName(account.type)}
+                        {getAccountTypeName()}
                       </h3>
                       <span className={styles.accountNumber}>
-                        №{account.id.slice(-8).toUpperCase()}
+                        №{account.account_number}
                       </span>
                     </div>
 
@@ -154,7 +141,7 @@ export const SavingsPage: FC = () => {
                     <div className={styles.accountRate}>
                       <span className={styles.rateLabel}>Ставка</span>
                       <span className={styles.rateValue}>
-                        {account.interest_rate.toFixed(1)}%
+                        {account.current_interest_rate.toFixed(1)}%
                       </span>
                     </div>
                   </div>

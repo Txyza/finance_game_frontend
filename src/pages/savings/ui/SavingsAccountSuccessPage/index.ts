@@ -1,0 +1,1 @@
+export { SavingsAccountSuccessPage } from './SavingsAccountSuccessPage'

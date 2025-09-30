@@ -56,7 +56,7 @@ export const DISTRICTS_DATA: District[] = [
       }
     ],
     isUnlocked: true,
-    requiredLevel: 1
+    requiredLevel: 3
   },
   {
     id: 'credit',
@@ -87,7 +87,7 @@ export const DISTRICTS_DATA: District[] = [
       }
     ],
     isUnlocked: false,
-    requiredLevel: 5
+    requiredLevel: 4
   },
   {
     id: 'shopping',
@@ -127,7 +127,7 @@ export const DISTRICTS_DATA: District[] = [
       }
     ],
     isUnlocked: false,
-    requiredLevel: 5
+    requiredLevel: 4
   },
   {
     id: 'stock',

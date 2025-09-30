@@ -30,12 +30,9 @@ export const CityMap: FC<CityMapProps> = ({
               district={district}
               isHovered={hoveredDistrict === district.id}
               isAccessible={playerLevel >= district.requiredLevel}
-              onClick={() => {
-                if (playerLevel >= district.requiredLevel) {
-                  onDistrictClick(district.id)
-                }
-              }}
+              onClick={() => onDistrictClick(district.id)}
               onHover={onDistrictHover}
+              dataTour={district.id === 'safe' ? 'safe-district' : undefined}
             />
           ))}
         </svg>
