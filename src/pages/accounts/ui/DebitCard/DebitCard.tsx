@@ -1,12 +1,15 @@
 import { FC } from 'react'
+import { formatGameDate } from '@shared/utils'
 import styles from './DebitCard.module.css'
 
 interface DebitCardProps {
   cardType: 'smart_mir' | 'supreme_mir'
   balance: number
+  name?: string
+  openedAt?: string
 }
 
-export const DebitCard: FC<DebitCardProps> = ({ cardType, balance }) => {
+export const DebitCard: FC<DebitCardProps> = ({ cardType, balance, name, openedAt }) => {
   const formatBalance = (amount: number) => {
     return new Intl.NumberFormat('ru-RU').format(amount)
   }
@@ -30,7 +33,10 @@ export const DebitCard: FC<DebitCardProps> = ({ cardType, balance }) => {
     <div className={styles.cardContainer}>
       <div className={`${styles.cardVisual} ${card.className}`}>
         <div className={styles.cardContent}>
-          <div className={styles.cardLogo}>ГАЗПРОМБАНК</div>
+          <div className={styles.cardTop}>
+            <div className={styles.cardLogo}>ГАЗПРОМБАНК</div>
+            {name && <div className={styles.cardName}>{name}</div>}
+          </div>
           <div className={styles.cardChip}></div>
 
           {cardType === 'smart_mir' ? (
@@ -46,14 +52,16 @@ export const DebitCard: FC<DebitCardProps> = ({ cardType, balance }) => {
             <div className={styles.cardBalance}>
               <div className={styles.balanceLabel}>Баланс</div>
               <div className={styles.balanceAmount}>{formatBalance(balance)} ₽</div>
+              {openedAt && (
+                <div className={styles.cardDate}>
+                  Открыта {formatGameDate(openedAt)}
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      <div className={styles.cardInfo}>
-        <h3 className={styles.cardName}>{card.name}</h3>
-      </div>
     </div>
   )
 }

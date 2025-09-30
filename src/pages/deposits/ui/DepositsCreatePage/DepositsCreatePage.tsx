@@ -38,13 +38,13 @@ export const DepositsCreatePage: FC = () => {
       name: 'Вклад «Копить»',
       description: 'Без пополнения и снятия',
       rates: {
+        1: { endOfTerm: keyRate - 0.5, monthlyCapitalized: keyRate - 0.7, monthlyToAccount: keyRate - 0.8 },
         2: { endOfTerm: keyRate - 0.8, monthlyCapitalized: keyRate - 1, monthlyToAccount: keyRate - 1 },
-        4: { endOfTerm: keyRate - 1.2, monthlyCapitalized: keyRate - 1.4, monthlyToAccount: keyRate - 1.5 },
+        3: { endOfTerm: keyRate - 1.0, monthlyCapitalized: keyRate - 1.2, monthlyToAccount: keyRate - 1.3 },
         6: { endOfTerm: keyRate - 1.2, monthlyCapitalized: keyRate - 1.5, monthlyToAccount: keyRate - 1.5 },
         8: { endOfTerm: keyRate - 2.3, monthlyCapitalized: keyRate - 2.6, monthlyToAccount: keyRate - 2.7 },
         10: { endOfTerm: keyRate - 2.6, monthlyCapitalized: keyRate - 2.9, monthlyToAccount: keyRate - 3 },
-        12: { endOfTerm: keyRate - 3.5, monthlyCapitalized: keyRate - 3.8, monthlyToAccount: keyRate - 3.9 },
-        15: { endOfTerm: keyRate - 4.6, monthlyCapitalized: keyRate - 5, monthlyToAccount: keyRate - 5.1 }
+        12: { endOfTerm: keyRate - 3.5, monthlyCapitalized: keyRate - 3.8, monthlyToAccount: keyRate - 3.9 }
       }
     },
     plus: {
@@ -52,13 +52,13 @@ export const DepositsCreatePage: FC = () => {
       name: 'Вклад «В плюсе»',
       description: 'Без пополнения и снятия',
       rates: {
+        1: { endOfTerm: keyRate - 0.6, monthlyCapitalized: keyRate - 0.8, monthlyToAccount: keyRate - 1.0 },
         2: { endOfTerm: keyRate - 0.85, monthlyCapitalized: keyRate - 1, monthlyToAccount: keyRate - 1.2 },
-        4: { endOfTerm: keyRate - 0.75, monthlyCapitalized: keyRate - 0.9, monthlyToAccount: keyRate - 1.1 },
+        3: { endOfTerm: keyRate - 0.9, monthlyCapitalized: keyRate - 1.1, monthlyToAccount: keyRate - 1.3 },
         6: { endOfTerm: keyRate - 0.7, monthlyCapitalized: keyRate - 0.8, monthlyToAccount: keyRate - 1 },
         8: { endOfTerm: keyRate - 2, monthlyCapitalized: keyRate - 2.2, monthlyToAccount: keyRate - 2.4 },
         10: { endOfTerm: keyRate - 2.1, monthlyCapitalized: keyRate - 2.4, monthlyToAccount: keyRate - 2.6 },
-        12: { endOfTerm: keyRate - 3.2, monthlyCapitalized: keyRate - 3.4, monthlyToAccount: keyRate - 3.5 },
-        15: { endOfTerm: keyRate - 4.3, monthlyCapitalized: keyRate - 4.6, monthlyToAccount: keyRate - 4.8 }
+        12: { endOfTerm: keyRate - 3.2, monthlyCapitalized: keyRate - 3.4, monthlyToAccount: keyRate - 3.5 }
       }
     }
   }), [keyRate])
@@ -71,29 +71,30 @@ export const DepositsCreatePage: FC = () => {
     }
 
     const principal = parseInt(amount)
-    const dailyRate = selectedDeposit.rates[term][paymentMethod] / 100 // Ставка уже дневная
+    const weeklyRate = selectedDeposit.rates[term][paymentMethod] / 100 / 52 // Годовая ставка -> недельная
+    const termInWeeks = term
 
     let total = 0
     let income = 0
 
     if (paymentMethod === 'endOfTerm') {
-      // Простые проценты с ежедневным начислением
-      income = principal * dailyRate * term
+      // Простые проценты с еженедельным начислением
+      income = principal * weeklyRate * termInWeeks
       total = principal + income
     } else if (paymentMethod === 'monthlyCapitalized') {
-      // Ежемесячная капитализация с ежедневным начислением
+      // Ежемесячная капитализация с еженедельным начислением
       let currentBalance = principal
       let accumulatedIncome = 0
 
-      // Рассчитываем по дням
-      for (let day = 1; day <= term; day++) {
-        const dayIncome = currentBalance * dailyRate
-        accumulatedIncome += dayIncome
+      // Рассчитываем по неделям
+      for (let week = 1; week <= termInWeeks; week++) {
+        const weekIncome = currentBalance * weeklyRate
+        accumulatedIncome += weekIncome
 
-        // В конце каждого месяца (каждые 30 дней) капитализируем
-        if (day % 30 === 0 || day === term) {
+        // В конце каждого месяца (каждые 4 недели) капитализируем
+        if (week % 4 === 0 || week === termInWeeks) {
           currentBalance += accumulatedIncome
-          if (day !== term) {
+          if (week !== termInWeeks) {
             accumulatedIncome = 0 // Сбрасываем накопленный доход после капитализации
           }
         }
@@ -102,9 +103,9 @@ export const DepositsCreatePage: FC = () => {
       total = currentBalance
       income = total - principal
     } else { // monthlyToAccount
-      // Ежемесячная выплата на счет с ежедневным начислением
-      // Доход каждый день с основной суммы
-      income = principal * dailyRate * term
+      // Ежемесячная выплата на счет с еженедельным начислением
+      // Доход каждую неделю с основной суммы
+      income = principal * weeklyRate * termInWeeks
       total = principal + income
     }
 
@@ -130,10 +131,10 @@ export const DepositsCreatePage: FC = () => {
     }
   }
 
-  const getTermText = (days: number) => {
-    if (days === 1) return '1 день'
-    if (days < 5) return `${days} дня`
-    return `${days} дней`
+  const getTermText = (weeks: number) => {
+    if (weeks === 1) return '1 неделя'
+    if (weeks < 5) return `${weeks} недели`
+    return `${weeks} недель`
   }
 
   const handleCreate = async () => {
@@ -154,7 +155,7 @@ export const DepositsCreatePage: FC = () => {
       const result = await createDeposit({
         deposit_name: apiDepositName,
         amount: parseInt(amount),
-        term_days: term,
+        term_days: term * 7, // Конвертируем недели в дни для API
         interest_rate: calculatedData.rate,
         interest_payment_method: apiPaymentMethod
       })

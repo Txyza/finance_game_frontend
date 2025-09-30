@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { ParticleBackground, GameHeaderContainer, Button } from '@shared/ui'
 import { useUser, useDeposits } from '@shared/hooks'
 import { DepositDetail, DepositTransaction, depositsApi } from '@shared/api'
+import { formatGameDate, formatRemainingTime } from '@shared/utils'
 import styles from './DepositDetailsPage.module.css'
 
 export const DepositDetailsPage: FC = () => {
@@ -46,11 +47,7 @@ export const DepositDetailsPage: FC = () => {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ru-RU', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    })
+    return formatGameDate(dateString)
   }
 
   const getDepositDisplayName = (depositName: string) => {
@@ -69,18 +66,16 @@ export const DepositDetailsPage: FC = () => {
       case 'at_end':
         return 'В конце срока'
       case 'monthly_capitalized':
-        return 'Ежемесячно с капитализацией'
+        return 'Еженедельно с капитализацией'
       case 'monthly_to_account':
-        return 'Ежемесячно на счет'
+        return 'Еженедельно на счет'
       default:
         return method
     }
   }
 
-  const getTermText = (days: number) => {
-    if (days === 1) return '1 день'
-    if (days < 5) return `${days} дня`
-    return `${days} дней`
+  const getWeeksRemaining = (expiresAt: string) => {
+    return formatRemainingTime(expiresAt)
   }
 
   const getRemainingDays = useMemo(() => {
@@ -195,7 +190,7 @@ export const DepositDetailsPage: FC = () => {
                 />
               </div>
               <div className={styles.progressInfo}>
-                <span>Осталось {getRemainingDays} дней</span>
+                <span>{getWeeksRemaining(deposit.expires_at)}</span>
                 <span>до {formatDate(deposit.expires_at)}</span>
               </div>
             </div>
@@ -246,13 +241,7 @@ export const DepositDetailsPage: FC = () => {
                         {transaction.name}
                       </div>
                       <div className={styles.transactionDate}>
-                        {new Date(transaction.datetime_start).toLocaleDateString('ru-RU', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
+                        {formatGameDate(transaction.datetime_start)}
                       </div>
                     </div>
                     <div className={styles.transactionAmount}>
