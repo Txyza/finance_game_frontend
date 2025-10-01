@@ -93,8 +93,6 @@ services:
       - ENVIRONMENT=development
       - DEBUG=True
     depends_on:
-      api:
-        condition: service_healthy
       postgres:
         condition: service_healthy
       redis:
@@ -104,8 +102,7 @@ services:
     restart: unless-stopped
     command: >
       sh -c "
-        alembic upgrade head &&
-        celery -A app.celery worker --loglevel=info --beat
+        celery -A app.celery worker --loglevel=info --beat -Q financial,maintenance,celery
       "
 
   # Frontend сервис (dev with hot reload)
