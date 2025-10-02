@@ -8,7 +8,8 @@ interface ShopItemProps {
   icon?: ReactNode
   reward: string
   price: string
-  currency?: 'rub' | 'premium'
+  currency?: 'rub' | 'premium' | 'game'
+  disabled?: boolean
   onPurchase: () => void
   className?: string
 }

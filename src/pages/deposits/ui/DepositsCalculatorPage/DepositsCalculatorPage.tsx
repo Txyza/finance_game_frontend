@@ -31,7 +31,7 @@ export const DepositsCalculatorPage: FC = () => {
 
   const keyRate = parseFloat(user?.key_rate || '8.5')
   const depositTypeId = searchParams.get('type') || 'save'
-  const userBalance = parseFloat(user?.debet_money || '0')
+  const userBalance = parseFloat(String(user?.debet_money || 0))
 
   const depositTypes: Record<string, DepositType> = useMemo(() => ({
     save: {

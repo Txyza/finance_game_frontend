@@ -55,7 +55,7 @@ export const ShopPage: FC = () => {
   }
 
   // Функция для получения иконки из image ID
-  const getItemIcon = (imageId: string | null): string => {
+  const getItemIcon = (imageId: string | null | undefined): string => {
     if (!imageId) return '🛍️'
 
     // Маппинг ID иконок на эмодзи

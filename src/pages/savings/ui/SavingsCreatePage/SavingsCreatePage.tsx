@@ -13,7 +13,7 @@ export const SavingsCreatePage: FC = () => {
   const [error, setError] = useState<string>('')
 
   const accountType = searchParams.get('type') || 'basic'
-  const userBalance = parseFloat(user?.debet_money || '0')
+  const userBalance = parseFloat(String(user?.debet_money || 0))
 
   const accountInfo = useMemo(() => {
     const keyRate = parseFloat(user?.key_rate || '8.5')

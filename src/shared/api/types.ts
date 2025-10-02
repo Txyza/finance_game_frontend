@@ -8,6 +8,7 @@ export interface UserProfileResponse {
   key_rate: string
   inflation: string
   name: string
+  card_type?: 'smart_mir' | 'supreme_mir'
   ready_to_reward_tasks_counts: Record<string, number>
 }
 

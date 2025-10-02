@@ -107,10 +107,11 @@ export const useAnalyticsSummary = (): UseAnalyticsSummaryReturn => {
 
         Object.entries(response.income || {}).forEach(([groupName, groupData]) => {
           Object.entries(groupData).forEach(([itemName, amount]) => {
-            if (amount > 0) {
+            const numAmount = typeof amount === 'number' ? amount : 0
+            if (numAmount > 0) {
               categories.push({
                 name: getCategoryName(groupName, itemName),
-                amount: amount,
+                amount: numAmount,
                 color: incomeColors[colorIndex % incomeColors.length]
               })
               colorIndex++
@@ -127,10 +128,11 @@ export const useAnalyticsSummary = (): UseAnalyticsSummaryReturn => {
 
         Object.entries(response.expense || {}).forEach(([groupName, groupData]) => {
           Object.entries(groupData).forEach(([itemName, amount]) => {
-            if (amount > 0) {
+            const numAmount = typeof amount === 'number' ? amount : 0
+            if (numAmount > 0) {
               categories.push({
                 name: getCategoryName(groupName, itemName),
-                amount: amount,
+                amount: numAmount,
                 color: expenseColors[colorIndex % expenseColors.length]
               })
               colorIndex++

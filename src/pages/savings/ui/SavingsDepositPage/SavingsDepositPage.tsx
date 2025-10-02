@@ -15,7 +15,7 @@ export const SavingsDepositPage: FC = () => {
   const [error, setError] = useState<string>('')
   const [loadingAccount, setLoadingAccount] = useState(true)
 
-  const userBalance = parseFloat(user?.debet_money || '0')
+  const userBalance = parseFloat(String(user?.debet_money || 0))
 
   useEffect(() => {
     const loadAccountData = async () => {

@@ -62,7 +62,7 @@ export const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
   const isNewUser = user ? calculateLevel(user.experience) === 1 : false
   const isLevel3User = user ? calculateLevel(user.experience) >= 3 : false
   // Временно: если пользователь не новичок, но и не 3-го уровня, показываем тур города как тест
-  const shouldTestCityTour = user && !isNewUser && calculateLevel(user.experience) < 3
+  const shouldTestCityTour = Boolean(user && !isNewUser && calculateLevel(user.experience) < 3)
 
   // Загружаем состояние туров из localStorage
   useEffect(() => {
@@ -73,7 +73,9 @@ export const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
       if (savedState) {
         try {
           const parsed = JSON.parse(savedState)
-          setTourState(parsed)
+          if (parsed && typeof parsed === 'object') {
+            setTourState(parsed)
+          }
         } catch (error) {
           console.error('Failed to parse tour state:', error)
         }
