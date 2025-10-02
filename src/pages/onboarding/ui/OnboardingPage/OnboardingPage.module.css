@@ -1,0 +1,546 @@
+/* Welcome Screen */
+.welcome {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #2f13af 0%, #2f13af 50%, #3c1ac2 50%, #3c1ac2 100%);
+}
+
+.welcomeImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  user-select: none;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.welcome:hover .welcomeImage {
+  transform: scale(1.02);
+}
+
+/* Main Container */
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.content {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  backdrop-filter: blur(20px);
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+  animation: fadeInUp var(--duration-slow) var(--ease-out);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(
+    270deg,
+    var(--color-mint) 0%,
+    var(--color-melissa) 25%,
+    var(--color-violet) 50%,
+    var(--color-raspberry) 75%,
+    var(--color-mint) 100%
+  );
+  background-size: 400% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 6s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--font-size-lg);
+  text-align: center;
+  margin: 0;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+.inputContainer {
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: relative;
+}
+
+.nameInput {
+  width: 100%;
+  padding: var(--space-5) var(--space-6);
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-2xl);
+  color: var(--color-white);
+  font-size: var(--font-size-xl);
+  font-weight: 500;
+  text-align: center;
+  font-family: var(--font-primary);
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
+}
+
+.nameInput::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+.nameInput:focus {
+  outline: none;
+  border-color: var(--color-mint);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 4px rgba(88, 255, 255, 0.15), var(--shadow-mint);
+  transform: translateY(-2px);
+}
+
+.nameInput:hover:not(:focus) {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.continueButton {
+  min-width: 240px;
+  position: relative;
+  overflow: hidden;
+}
+
+.continueButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left var(--duration-slow) var(--ease-out);
+}
+
+.continueButton:hover::before {
+  left: 100%;
+}
+
+/* Индикатор валидации */
+.inputValidation {
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.inputValidation.valid {
+  background: var(--color-melissa);
+  color: var(--color-black);
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+.inputValidation.invalid {
+  opacity: 0;
+  transform: translateY(-50%) scale(0.8);
+}
+
+/* Символы для валидации */
+.inputValidation.valid::after {
+  content: '✓';
+}
+
+/* Счетчик символов */
+.characterCounter {
+  font-size: var(--font-size-xs);
+  color: rgba(255, 255, 255, 0.5);
+  text-align: right;
+  margin-top: var(--space-1);
+}
+
+.characterCounter.warning {
+  color: var(--color-sakura);
+}
+
+.characterCounter.error {
+  color: var(--color-raspberry);
+}
+
+/* Подсказка для валидации */
+.validationHint {
+  font-size: var(--font-size-xs);
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  border-left: 3px solid var(--color-mint);
+}
+
+.validationHint.hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.validationHint.error {
+  border-left-color: var(--color-raspberry);
+  background: rgba(221, 65, 219, 0.1);
+}
+
+/* Стили для Joyride */
+:global(.react-joyride__tooltip) {
+  font-family: var(--font-primary) !important;
+}
+
+:global(.react-joyride__tooltip h4) {
+  margin: 0 0 var(--space-2) 0 !important;
+  color: var(--color-mint) !important;
+  font-family: var(--font-accent) !important;
+  font-size: var(--font-size-base) !important;
+  font-weight: 600 !important;
+}
+
+:global(.react-joyride__tooltip p) {
+  margin: var(--space-1) 0 !important;
+  font-size: var(--font-size-sm) !important;
+  line-height: 1.4 !important;
+}
+
+:global(.react-joyride__tooltip ul) {
+  margin: var(--space-2) 0 !important;
+  padding-left: var(--space-4) !important;
+}
+
+:global(.react-joyride__tooltip li) {
+  margin-bottom: var(--space-1) !important;
+  line-height: 1.4 !important;
+  font-size: var(--font-size-sm) !important;
+}
+
+:global(.react-joyride__tooltip strong) {
+  color: var(--color-melissa) !important;
+}
+
+/* Скрываем прогресс и ненужные элементы */
+:global(.react-joyride__tooltip .react-joyride__tooltip__footer) {
+  margin-top: var(--space-3) !important;
+  padding: 0 !important;
+}
+
+:global(.react-joyride__tooltip .react-joyride__tooltip__footer button) {
+  font-family: var(--font-primary) !important;
+}
+
+/* Скрываем все элементы с текстом Step */
+:global(.react-joyride__tooltip .react-joyride__tooltip__header) {
+  display: none !important;
+}
+
+:global(.react-joyride__tooltip [class*="step"]) {
+  display: none !important;
+}
+
+:global(.react-joyride__tooltip [class*="progress"]) {
+  display: none !important;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+.cardWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cardWrapper:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cardWrapper.selected {
+  border-color: var(--color-primary);
+  background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+.cardVisual {
+  width: 100%;
+  height: 200px;
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.cardSmart {
+  background: linear-gradient(135deg, #4A90E2 0%, #2E5BBA 50%, #FF8C42 100%);
+}
+
+.cardSupreme {
+  background: linear-gradient(135deg, #2C2C2C 0%, #1A1A1A 50%, #8B1538 100%);
+}
+
+.cardContent {
+  position: absolute;
+  inset: 0;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cardLogo {
+  color: white;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cardLogo::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.cardChip {
+  width: 40px;
+  height: 30px;
+  background: linear-gradient(135deg, #E5E5E5, #CCCCCC);
+  border-radius: var(--radius-sm);
+  position: absolute;
+  top: 60px;
+  left: var(--space-4);
+}
+
+.cardCashback {
+  position: absolute;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  font-size: 48px;
+  font-weight: 900;
+  color: #FF8C42;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.cardSupremeText {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  text-align: right;
+}
+
+.cardSupremeText > div:first-child {
+  color: white;
+  font-size: var(--font-size-lg);
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+.mirLogo {
+  color: white;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: var(--space-2);
+}
+
+.cardInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.cardName {
+  color: var(--color-white);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin: 0;
+}
+
+.cardService {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: var(--font-size-sm);
+}
+
+.price {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.benefits {
+  flex: 1;
+}
+
+.benefitsTitle {
+  color: var(--color-white);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  margin: 0 0 var(--space-2) 0;
+}
+
+.benefitsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.benefitItem {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--font-size-xs);
+  line-height: 1.4;
+  position: relative;
+  padding-left: var(--space-3);
+}
+
+.benefitItem::before {
+  content: '•';
+  color: var(--color-primary);
+  position: absolute;
+  left: 0;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: center;
+  width: 100%;
+}
+
+.completeButton {
+  min-width: 200px;
+}
+
+.error {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  text-align: center;
+}
+
+/* Мобильная адаптивность */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--space-2);
+  }
+
+  .content {
+    padding: var(--space-6);
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .cardsGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .cardVisual {
+    height: 160px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: var(--space-4);
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .cardVisual {
+    height: 140px;
+  }
+
+  .cardCashback {
+    font-size: 36px;
+  }
+}

@@ -1,0 +1,161 @@
+version: '3.8'
+
+services:
+  # Backend database (dev)
+  postgres:
+    image: postgres:15
+    container_name: cash-lvl-postgres-dev
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-finance_game}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    networks:
+      - cash-lvl-network-dev
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Backend cache (dev)
+  redis:
+    image: redis:7-alpine
+    container_name: cash-lvl-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data_dev:/data
+    command: redis-server --appendonly yes
+    networks:
+      - cash-lvl-network-dev
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  # Backend API (dev)
+  api:
+    build:
+      context: ../finance_game_backend
+      dockerfile: Dockerfile.dev
+    container_name: cash-lvl-api-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-finance_password_dev}
+      - POSTGRES_DB=${POSTGRES_DB:-finance_game}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-for-development-only}
+      - ENVIRONMENT=development
+      - API_V1_STR=${API_V1_STR:-/api/v1}
+      - DEBUG=True
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ../finance_game_backend/app:/app/app
+      - ../finance_game_backend/alembic:/app/alembic
+    networks:
+      - cash-lvl-network-dev
+    restart: unless-stopped
+    command: >
+      sh -c "
+        alembic upgrade head &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+  # worker
+  celery_worker:
+    build:
+      context: ../finance_game_backend
+      dockerfile: Dockerfile.dev
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SECRET_KEY=${SECRET_KEY}
+      - ENVIRONMENT=development
+      - DEBUG=True
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - cash-lvl-network-dev
+    restart: unless-stopped
+    command: >
+      sh -c "
+        celery -A app.celery worker --loglevel=info --beat -Q financial,maintenance,celery
+      "
+
+  # Frontend сервис (dev with hot reload)
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile.dev
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8080/api}
+        - VITE_APP_NAME=${VITE_APP_NAME:-Cash Level}
+        - VITE_APP_VERSION=${VITE_APP_VERSION:-1.0.0}
+    container_name: cash-lvl-frontend-dev
+    ports:
+      - "5173:3000"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8080/api}
+      - VITE_APP_NAME=${VITE_APP_NAME:-Cash Level}
+      - VITE_APP_VERSION=${VITE_APP_VERSION:-1.0.0}
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./index.html:/app/index.html
+      - ./vite.config.ts:/app/vite.config.ts
+    networks:
+      - cash-lvl-network-dev
+    restart: unless-stopped
+    command: npm run dev -- --host 0.0.0.0
+
+  # Nginx сервис (dev)
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile.dev
+    container_name: cash-lvl-nginx-dev
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+      - frontend-dev
+    volumes:
+      - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - cash-lvl-network-dev
+    restart: unless-stopped
+
+networks:
+  cash-lvl-network-dev:
+    driver: bridge
+    name: cash-lvl-dev
+
+volumes:
+  postgres_data_dev:
+    driver: local
+  redis_data_dev:
+    driver: local

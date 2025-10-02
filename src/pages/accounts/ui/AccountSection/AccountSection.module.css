@@ -1,0 +1,153 @@
+.section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(20px);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.clickable {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  padding: 8px;
+  margin: -8px;
+  border-radius: 8px;
+}
+
+.clickable:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.expandIcon {
+  color: #fbbf24;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.sectionTitle {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.itemCount {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.accountsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+  margin-top: 16px;
+}
+
+.accountItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.accountItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.accountIcon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(251, 191, 36, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.accountDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.accountName {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.accountBalance {
+  color: #fbbf24;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.accountInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.accountRate {
+  color: #4ade80;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.accountDate {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+}
+
+.accountTerm {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+}
+
+.accountRemaining {
+  color: #fbbf24;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.moreItems {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.viewAllButton {
+  width: 100%;
+  justify-content: center;
+}

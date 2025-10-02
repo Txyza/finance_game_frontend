@@ -1,0 +1,633 @@
+.page {
+  min-height: 100vh;
+  background: var(--gradient-black-cumin);
+  color: var(--color-white);
+  padding: var(--space-8) 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-16);
+}
+
+.title {
+  font-family: var(--font-accent);
+  font-size: var(--font-size-5xl);
+  font-weight: 800;
+  margin-bottom: var(--space-4);
+  background: var(--gradient-mint-melissa);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: var(--font-size-xl);
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: var(--line-height-relaxed);
+}
+
+.section {
+  margin-bottom: var(--space-16);
+}
+
+.sectionTitle {
+  font-family: var(--font-accent);
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  margin-bottom: var(--space-8);
+  color: var(--color-mint);
+}
+
+.subsection {
+  margin-bottom: var(--space-10);
+}
+
+.subsectionTitle {
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin-bottom: var(--space-6);
+  color: var(--color-white);
+}
+
+/* Цветовая палитра */
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.colorCard {
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 120px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.colorCard:hover {
+  transform: translateY(-4px);
+}
+
+.colorName {
+  font-weight: 600;
+  font-size: var(--font-size-lg);
+}
+
+.colorCode {
+  font-family: monospace;
+  font-size: var(--font-size-sm);
+  opacity: 0.8;
+}
+
+.gradientGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-4);
+}
+
+.gradientCard {
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+  text-align: center;
+  transition: transform var(--duration-normal) var(--ease-out);
+  color: var(--color-white);
+}
+
+.gradientCard:hover {
+  transform: translateY(-4px);
+}
+
+.gradientName {
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Кнопки */
+.buttonGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+/* Баблы */
+.bubbleGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+/* Карточки */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-6);
+}
+
+.cardGrid h4 {
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-lg);
+}
+
+.cardGrid p {
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Составные компоненты */
+.compositeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: var(--space-6);
+}
+
+/* Компоненты игры 2048 */
+.tilesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-4);
+  max-width: 800px;
+}
+
+.tileWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tileWrapper > div {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+}
+
+.tileLabel {
+  color: var(--color-white);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-align: center;
+}
+
+.gameComponentWrapper {
+  background: var(--gradient-violet-cumin);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.gameComponentWrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 0;
+}
+
+.gameComponentWrapper > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Демо компоненты навигации */
+.navigationDemo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+}
+
+.leftSection,
+.rightSection {
+  flex: 0 0 auto;
+  min-width: 80px;
+}
+
+.leftSection {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.rightSection {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.centerSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.gameTitle {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  text-align: center;
+}
+
+.scoreBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.scoreLabel {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.scoreValue {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+/* Демо модального окна */
+.modalDemo {
+  padding: var(--space-4);
+}
+
+.modalContent {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  max-width: 400px;
+  margin: 0 auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modalHeader {
+  text-align: center;
+  margin-bottom: var(--space-4);
+}
+
+.modalTitle {
+  color: var(--color-black);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin: 0;
+}
+
+.modalBody {
+  margin-bottom: var(--space-6);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.statItem {
+  text-align: center;
+  padding: var(--space-3);
+  background: var(--gradient-violet-cumin);
+  border-radius: var(--radius-md);
+  color: var(--color-white);
+}
+
+.statLabel {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-1);
+  opacity: 0.8;
+}
+
+.statValue {
+  font-family: var(--font-accent);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+.achievement {
+  text-align: center;
+  padding: var(--space-4);
+  background: linear-gradient(135deg, var(--color-raspberry), var(--color-sakura));
+  border-radius: var(--radius-md);
+}
+
+.achievementText {
+  color: var(--color-white);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  margin: 0;
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+.modalActions button {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* Типографика */
+.typographyExample {
+  background: rgba(255, 255, 255, 0.05);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.typographyExample h1,
+.typographyExample h2,
+.typographyExample h3,
+.typographyExample h4 {
+  margin-bottom: var(--space-3);
+}
+
+.typographyExample p {
+  margin-bottom: var(--space-4);
+}
+
+.typographyExample p:last-child {
+  margin-bottom: 0;
+}
+
+/* Компоненты игры Memory */
+.memoryCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-4);
+  max-width: 600px;
+}
+
+.memoryCardWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.memoryCardWrapper > div {
+  width: 80px;
+  height: 80px;
+}
+
+.memoryCardLabel {
+  color: var(--color-white);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-align: center;
+}
+
+.memoryNavigationDemo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+}
+
+.memoryGameStats {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.memoryStatBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 60px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .subtitle {
+    font-size: var(--font-size-lg);
+  }
+
+  .colorGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .gradientGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .compositeGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .buttonGrid {
+    justify-content: center;
+  }
+
+  .bubbleGrid {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--space-3);
+  }
+
+  .page {
+    padding: var(--space-6) 0;
+  }
+
+  .section {
+    margin-bottom: var(--space-12);
+  }
+
+  .sectionTitle {
+    font-size: var(--font-size-2xl);
+  }
+
+  .subsectionTitle {
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* Analytics components */
+.analyticsComponentWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+
+.analyticsCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.transactionsList {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.categoryTagsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .analyticsCardsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .categoryTagsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .analyticsComponentWrapper {
+    padding: var(--space-3);
+  }
+
+  .transactionsList {
+    padding: var(--space-3);
+  }
+
+  .categoryTagsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: var(--space-2);
+  }
+}
+
+/* Shop components */
+.shopComponentWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+
+.shopItemsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.shopSectionHeadersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.sectionHeaderExample {
+  width: 100%;
+}
+
+.shopSectionBubble {
+  width: 100% !important;
+  min-width: 100%;
+  padding: var(--space-4) var(--space-6) !important;
+  font-size: var(--font-size-xl) !important;
+  font-weight: 700 !important;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .shopItemsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+  }
+
+  .shopSectionBubble {
+    padding: var(--space-3) var(--space-4) !important;
+    font-size: var(--font-size-lg) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .shopComponentWrapper {
+    padding: var(--space-3);
+  }
+
+  .shopItemsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-2);
+  }
+
+  .shopSectionBubble {
+    padding: var(--space-2) var(--space-3) !important;
+    font-size: var(--font-size-base) !important;
+  }
+}

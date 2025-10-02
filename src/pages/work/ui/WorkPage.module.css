@@ -1,0 +1,118 @@
+.workPage {
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport для новых браузеров */
+  background: var(--gradient-violet-cumin);
+  color: var(--color-white);
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-primary);
+}
+
+.content {
+  position: fixed;
+  top: 100px; /* После header */
+  left: 0;
+  right: 0;
+  bottom: 100px; /* Перед footer */
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+/* Viewport настройки для мобильных A4 */
+@media (max-width: 480px) {
+  .workPage {
+    /* Запрет горизонтального скролла */
+    overflow-x: hidden;
+  }
+
+.content {
+    /* Убираем backdrop-filter на маленьких экранах для производительности */
+    backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.05);
+    top: 85px;
+    bottom: 90px;
+  }
+}
+
+@media (max-width: 360px) {
+.content {
+    background: transparent;
+    top: 70px;
+    bottom: 85px;
+  }
+}
+
+/* Portrait ориентация (основная для A4 мобильных) */
+@media (orientation: portrait) {
+  .workPage {
+    min-height: 100dvh; /* Dynamic viewport height для новых браузеров */
+  }
+
+}
+
+/* Landscape поддержка (опционально) */
+@media (orientation: landscape) and (max-height: 600px) {
+  .content {
+    min-height: 100vh;
+    padding: var(--space-2) 0;
+  }
+}
+
+/* Safe area для новых iPhone */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .workPage {
+    padding-top: env(safe-area-inset-top);
+    background-attachment: fixed;
+  }
+
+  .content {
+    padding-top: 0;
+  }
+}
+
+/* Расширение фона на всю область экрана iPhone */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .workPage {
+    padding-bottom: env(safe-area-inset-bottom);
+    background-attachment: fixed;
+  }
+}
+
+/* Высокие экраны */
+@media (min-height: 800px) {
+  .content {
+    justify-content: space-between;
+  }
+}
+
+/* Очень маленькие экраны */
+@media (max-height: 600px) {
+  .content {
+    min-height: 100vh;
+  }
+}
+
+/* Оптимизация для touch устройств */
+@media (hover: none) and (pointer: coarse) {
+  .workPage {
+    /* Убираем hover эффекты для touch устройств */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* Prefers-reduced-motion для пользователей с ограниченными возможностями */
+@media (prefers-reduced-motion: reduce) {
+  .workPage *,
+  .workPage *::before,
+  .workPage *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

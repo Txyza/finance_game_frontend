@@ -1,0 +1,196 @@
+.tile {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-accent);
+  font-weight: 700;
+  font-size: 2rem;
+  transition: all var(--duration-normal) var(--ease-out);
+  z-index: 1;
+}
+
+.tileEmpty {
+  background: transparent;
+  border: 2px solid var(--color-mint);
+  opacity: 0.3;
+}
+
+.tileFilled {
+  background: var(--color-violet);
+  color: var(--color-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.tileInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Анимации */
+.tileNew {
+  animation: tileAppear var(--duration-normal) var(--ease-out);
+}
+
+.tileMerged {
+  animation: tileMerge var(--duration-fast) var(--ease-out);
+}
+
+@keyframes tileAppear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes tileMerge {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Цвета плиток в зависимости от значения */
+.tile2 {
+  background: var(--color-violet);
+  opacity: 0.6;
+}
+
+.tile4 {
+  background: var(--color-violet);
+  opacity: 0.7;
+}
+
+.tile8 {
+  background: var(--color-violet);
+  opacity: 0.8;
+}
+
+.tile16 {
+  background: var(--color-violet);
+  opacity: 0.9;
+}
+
+.tile32 {
+  background: var(--color-violet);
+}
+
+.tile64 {
+  background: linear-gradient(135deg, var(--color-violet), var(--color-mint));
+}
+
+.tile128 {
+  background: linear-gradient(135deg, var(--color-mint), var(--color-melissa));
+  font-size: 1.8rem;
+}
+
+.tile256 {
+  background: linear-gradient(135deg, var(--color-melissa), var(--color-cumin));
+  font-size: 1.8rem;
+}
+
+.tile512 {
+  background: linear-gradient(135deg, var(--color-cumin), var(--color-raspberry));
+  font-size: 1.6rem;
+}
+
+.tile1024 {
+  background: linear-gradient(135deg, var(--color-raspberry), var(--color-violet));
+  font-size: 1.4rem;
+}
+
+.tile2048 {
+  background: linear-gradient(135deg, var(--color-violet), var(--color-mint));
+  box-shadow: 0 0 20px var(--color-mint);
+  font-size: 1.4rem;
+  animation: tileWin 1s infinite alternate;
+}
+
+.tileSuper {
+  background: linear-gradient(135deg, var(--color-mint), var(--color-white));
+  color: var(--color-black);
+  font-size: 1.2rem;
+  box-shadow: 0 0 30px var(--color-mint);
+}
+
+@keyframes tileWin {
+  0% {
+    box-shadow: 0 0 20px var(--color-mint);
+  }
+  100% {
+    box-shadow: 0 0 30px var(--color-mint), 0 0 40px var(--color-mint);
+  }
+}
+
+/* Цвет текста */
+.textDark {
+  color: var(--color-black);
+}
+
+.textLight {
+  color: var(--color-white);
+}
+
+/* Адаптивность для мобильных A4 */
+@media (max-width: 480px) {
+  .tile {
+    font-size: 1.8rem;
+  }
+
+  .tile128,
+  .tile256 {
+    font-size: 1.6rem;
+  }
+
+  .tile512 {
+    font-size: 1.4rem;
+  }
+
+  .tile1024,
+  .tile2048 {
+    font-size: 1.2rem;
+  }
+
+  .tileSuper {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .tile {
+    font-size: 1.6rem;
+  }
+
+  .tile128,
+  .tile256 {
+    font-size: 1.4rem;
+  }
+
+  .tile512 {
+    font-size: 1.2rem;
+  }
+
+  .tile1024,
+  .tile2048 {
+    font-size: 1rem;
+  }
+
+  .tileSuper {
+    font-size: 0.9rem;
+  }
+}

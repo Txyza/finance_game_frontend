@@ -1,0 +1,146 @@
+.mainPage {
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport для новых браузеров */
+  background: var(--gradient-violet-cumin);
+  color: var(--color-white);
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-primary);
+}
+
+.content {
+  position: fixed;
+  top: 100px; /* После header */
+  left: 0;
+  right: 0;
+  bottom: 100px; /* Перед footer */
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Без скролла */
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+/* Viewport настройки для мобильных A4 */
+@media (max-width: 480px) {
+  .mainPage {
+    /* Запрет горизонтального скролла */
+    overflow-x: hidden;
+  }
+
+.content {
+    /* Убираем backdrop-filter на маленьких экранах для производительности */
+    backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.05);
+    top: 75px;
+    bottom: 90px;
+  }
+}
+
+@media (max-width: 360px) {
+.content {
+    background: transparent;
+    top: 65px;
+    bottom: 85px;
+  }
+}
+
+/* Portrait ориентация (основная для A4 мобильных) */
+@media (orientation: portrait) {
+  .mainPage {
+    min-height: 100dvh; /* Dynamic viewport height для новых браузеров */
+  }
+
+}
+
+/* Landscape поддержка (опционально) */
+@media (orientation: landscape) and (max-height: 600px) {
+  .content {
+    min-height: 100vh;
+    padding: var(--space-2) 0;
+  }
+}
+
+/* Safe area для новых iPhone */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .mainPage {
+    padding-top: env(safe-area-inset-top);
+    background-attachment: fixed;
+  }
+
+  .content {
+    padding-top: 0;
+  }
+}
+
+/* Расширение фона на всю область экрана iPhone */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .mainPage {
+    padding-bottom: env(safe-area-inset-bottom);
+    background-attachment: fixed;
+  }
+}
+
+/* Высокие экраны */
+@media (min-height: 800px) {
+  .content {
+    justify-content: space-between;
+  }
+}
+
+/* Очень маленькие экраны */
+@media (max-height: 600px) {
+  .content {
+    min-height: 100vh;
+  }
+}
+
+/* Оптимизация для touch устройств */
+@media (hover: none) and (pointer: coarse) {
+  .mainPage {
+    /* Убираем hover эффекты для touch устройств */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* Prefers-reduced-motion для пользователей с ограниченными возможностями */
+@media (prefers-reduced-motion: reduce) {
+  .mainPage *,
+  .mainPage *::before,
+  .mainPage *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Стили для Joyride туров */
+:global(.react-joyride__tooltip) {
+  font-family: var(--font-primary) !important;
+}
+
+:global(.react-joyride__tooltip h4) {
+  margin: 0 0 var(--space-2) 0 !important;
+  color: var(--color-mint) !important;
+  font-family: var(--font-accent) !important;
+  font-size: var(--font-size-base) !important;
+  font-weight: 600 !important;
+}
+
+:global(.react-joyride__tooltip p) {
+  margin: var(--space-1) 0 !important;
+  font-size: var(--font-size-sm) !important;
+  line-height: 1.4 !important;
+}
+
+:global(.react-joyride__tooltip strong) {
+  color: var(--color-melissa) !important;
+}
+
+/* Скрытие footer для последнего шага */
+:global(.react-joyride__tooltip--step-3 .react-joyride__tooltip__footer) {
+  display: none !important;
+}

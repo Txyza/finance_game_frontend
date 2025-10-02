@@ -1,0 +1,151 @@
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: fixed;
+  top: 88px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.leftSection,
+.rightSection {
+  flex: 0 0 auto;
+  min-width: 80px;
+}
+
+.leftSection {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.rightSection {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.centerSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.gameTitle {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  text-align: center;
+}
+
+.gameStats {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.statBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 50px;
+}
+
+.statLabel {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.statValue {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  text-align: center;
+}
+
+.backButton,
+.newGameButton {
+  white-space: nowrap;
+}
+
+/* Адаптивность для мобильных A4 */
+@media (max-width: 480px) {
+  .navigation {
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-2);
+    top: 80px;
+  }
+
+  .leftSection,
+  .rightSection {
+    min-width: 70px;
+  }
+
+  .gameTitle {
+    font-size: var(--font-size-lg);
+  }
+
+  .gameStats {
+    gap: var(--space-2);
+  }
+
+  .statBlock {
+    min-width: 45px;
+  }
+
+  .statValue {
+    font-size: var(--font-size-sm);
+  }
+
+  .statLabel {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .navigation {
+    padding: var(--space-1) var(--space-2);
+    top: 72px;
+  }
+
+  .leftSection,
+  .rightSection {
+    min-width: 60px;
+  }
+
+  .gameTitle {
+    font-size: var(--font-size-base);
+  }
+
+  .gameStats {
+    gap: var(--space-1);
+  }
+
+  .statBlock {
+    min-width: 40px;
+  }
+
+  .statValue {
+    font-size: var(--font-size-xs);
+  }
+
+  .statLabel {
+    font-size: 9px;
+  }
+}

@@ -1,0 +1,93 @@
+.boardContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  aspect-ratio: 1;
+}
+
+.board {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: var(--space-2);
+  width: 100%;
+  height: 100%;
+  padding: var(--space-3);
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-lg);
+  outline: none;
+  touch-action: none;
+  user-select: none;
+}
+
+
+.gameOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: var(--radius-lg);
+  z-index: 10;
+}
+
+.gameOverText {
+  color: var(--color-white);
+  font-family: var(--font-accent);
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Адаптивность для мобильных A4 */
+@media (max-width: 480px) {
+  .boardContainer {
+    max-width: 350px;
+  }
+
+  .board {
+    gap: var(--space-1);
+    padding: var(--space-2);
+  }
+
+  .gameOverText {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .boardContainer {
+    max-width: 320px;
+  }
+
+  .board {
+    gap: 6px;
+    padding: var(--space-1);
+  }
+
+  .gameOverText {
+    font-size: 1.6rem;
+  }
+}
+
+/* Touch-friendly для мобильных */
+@media (hover: none) and (pointer: coarse) {
+  .board {
+    cursor: default;
+  }
+}
+
+/* Focus стили для accessibility - убираем для игрового поля */
+.board:focus {
+  outline: none;
+}

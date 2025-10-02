@@ -1,0 +1,68 @@
+/* Gazprombank Sans */
+@font-face {
+  font-family: 'Gazprombank Sans';
+  src: url('/fonts/gazprombank-sans/Gazprombank_Sans_Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gazprombank Sans';
+  src: url('/fonts/gazprombank-sans/Gazprombank_Sans_Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gazprombank Sans';
+  src: url('/fonts/gazprombank-sans/Gazprombank_Sans_DemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gazprombank Sans';
+  src: url('/fonts/gazprombank-sans/Gazprombank_Sans_Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gazprombank Sans';
+  src: url('/fonts/gazprombank-sans/Gazprombank_Sans_Bold_Italic.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Halvar Breitschrift */
+@font-face {
+  font-family: 'Halvar Breitschrift';
+  src: url('/fonts/halvar/Halvar Breitschrift-ExtraThin-Web.woff2') format('woff2'),
+       url('/fonts/halvar/Halvar Breitschrift-ExtraThin-Web.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Halvar Breitschrift';
+  src: url('/fonts/halvar/Halvar Breitschrift-Regular-Web.woff2') format('woff2'),
+       url('/fonts/halvar/Halvar Breitschrift-Regular-Web.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Halvar Breitschrift';
+  src: url('/fonts/halvar/Halvar Breitschrift-ExtraBold-Web.woff2') format('woff2'),
+       url('/fonts/halvar/Halvar Breitschrift-ExtraBold-Web.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
