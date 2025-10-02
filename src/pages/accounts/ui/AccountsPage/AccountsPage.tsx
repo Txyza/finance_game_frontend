@@ -23,26 +23,14 @@ export const AccountsPage: FC = () => {
     const loadData = async () => {
       setIsLoading(true)
       try {
-        console.log('🔄 Loading banking instruments...')
-
-        // Прямой вызов для проверки
-        const response = await fetch('/api/v1/banking/instruments')
-        const data = await response.json()
-        console.log('📦 Raw API response:', data)
+        const data = await bankingApi.getInstruments()
 
         setDebitCards(data.debit_cards || [])
         setSavingsAccounts(data.savings_accounts || [])
         setDeposits(data.deposits || [])
         setTotalBalance(data.total_balance || 0)
-
-        console.log('✅ State updated:', {
-          debitCards: data.debit_cards?.length || 0,
-          savingsAccounts: data.savings_accounts?.length || 0,
-          deposits: data.deposits?.length || 0,
-          totalBalance: data.total_balance || 0
-        })
       } catch (error) {
-        console.error('❌ Failed to load banking instruments:', error)
+        console.error('Failed to load banking instruments:', error)
         setDebitCards([])
         setSavingsAccounts([])
         setDeposits([])
@@ -90,15 +78,6 @@ export const AccountsPage: FC = () => {
 
   const sectionsWithData = sections.filter(section => section.items.length > 0)
 
-  console.log('🎨 Render state:', {
-    isLoading,
-    debitCardsLength: debitCards.length,
-    savingsLength: savingsAccounts.length,
-    depositsLength: deposits.length,
-    sectionsWithDataLength: sectionsWithData.length,
-    sectionsWithData: sectionsWithData.map(s => ({ title: s.title, itemsCount: s.items.length }))
-  })
-
   return (
     <div className="common-page-background">
       <ParticleBackground />
@@ -116,24 +95,6 @@ export const AccountsPage: FC = () => {
             openedAt={debitCards.length > 0 ? debitCards[0].opened_at : undefined}
           />
 
-          {/* DEBUG INFO */}
-          <div style={{
-            background: 'rgba(255,255,255,0.1)',
-            padding: '15px',
-            marginBottom: '20px',
-            borderRadius: '8px',
-            color: 'white',
-            fontSize: '14px'
-          }}>
-            <h4>🔍 Debug Info</h4>
-            <p>Loading: {String(isLoading)}</p>
-            <p>Debit Cards: {debitCards.length} items</p>
-            <p>Savings Accounts: {savingsAccounts.length} items</p>
-            <p>Deposits: {deposits.length} items</p>
-            <p>Total Balance: {totalBalance}</p>
-            <p>Sections with data: {sectionsWithData.length}</p>
-            <p>Section titles: {sectionsWithData.map(s => s.title).join(', ')}</p>
-          </div>
 
           {/* Разделы счетов */}
           {isLoading ? (
