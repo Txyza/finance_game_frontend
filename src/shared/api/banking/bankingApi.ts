@@ -7,6 +7,6 @@ export const bankingApi = {
    */
   getInstruments: async (): Promise<BankingInstrumentsResponse> => {
     const response = await apiClient.get<BankingInstrumentsResponse>('/api/v1/banking/instruments')
-    return response.data
+    return response
   }
 }
